@@ -2,125 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tashi Tash — Personal Site</title>
   <meta name="description" content="Notes, projects, and ideas by Tashi." />
-
-  <!-- Elegant Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville&display=swap" rel="stylesheet">
 
   <style>
     :root { --max: 860px; }
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
-      font: 16px/1.6 'Lora', serif;
-      color: white;
-      background: black;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #fff;
+      background: #000;
     }
-
     header {
       padding: 64px 20px;
       text-align: center;
-      background: #111;
+      background: #000;
       border-bottom: 1px solid #333;
     }
-
     header h1 {
       margin: 0 0 8px;
-      font-family: 'Playfair Display', serif;
-      font-size: 48px;
-      letter-spacing: .5px;
-      color: white;
+      font-family: 'Great Vibes', cursive;
+      font-size: 60px;
+      letter-spacing: 1px;
+      color: #ffb6c1; /* soft romantic pink */
     }
-
     header p {
       margin: 0;
-      color: #bbb;
+      color: #ccc;
     }
-
     main {
       max-width: var(--max);
       margin: 32px auto;
       padding: 0 20px;
     }
-
-    .grid { display: grid; gap: 16px; }
-    @media (min-width: 720px) {
-      .grid { grid-template-columns: 2fr 1fr; }
+    .grid {
+      display: grid;
+      gap: 16px;
     }
-
+    @media (min-width: 720px) {
+      .grid {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
     article, aside, footer {
       background: #111;
       border: 1px solid #333;
       border-radius: 14px;
       padding: 20px;
     }
-
     h2 {
       margin-top: 0;
-      font-family: 'Playfair Display', serif;
-      color: white;
+      font-family: 'Great Vibes', cursive;
+      color: #ffb6c1;
+      font-size: 36px;
     }
-
     a {
-      color: #ffcc66;
+      color: #ffb6c1;
       text-decoration: none;
-      transition: color 0.2s ease;
     }
-    a:hover { color: #ffe6b3; text-decoration: underline; }
-
-    .post { margin: 0 0 18px; }
+    a:hover {
+      text-decoration: underline;
+    }
+    .post {
+      margin: 0 0 18px;
+    }
     .post h3 {
       margin: 0 0 6px;
-      font-size: 20px;
-      font-family: 'Playfair Display', serif;
-      color: white;
+      font-size: 22px;
+      font-family: 'Libre Baskerville', serif;
+      color: #fff;
     }
     .muted {
-      color: #888;
+      color: #999;
       font-size: 14px;
     }
-
     footer {
       text-align: center;
       margin: 32px 0;
-      color: #666;
+      color: #777;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Hi, I’m Tashi 🌸</h1>
+    <p>Welcome to my corner of the web. I share notes, projects, and ideas here.</p>
+  </header>
 
-<header>
-  <h1>Hi, I’m Tashi 👋</h1>
-  <p>Welcome to my corner of the web. I share notes, projects, and ideas here.</p>
-</header>
+  <main class="grid">
+    <article>
+      <h2>Latest posts</h2>
+      <section class="post">
+        <h3>First post — hello world</h3>
+        <p class="muted">August 2025 · tags: personal, setup</p>
+        <p>I just set up my site! More posts soon. 🌙</p>
+      </section>
+    </article>
 
-<main class="grid">
-  <article>
-    <h2>Latest posts</h2>
+    <aside>
+      <h2>About</h2>
+      <p>I’m Tashi. I like building things and writing short notes.</p>
+      <p>Email: <a href="mailto:hello@tashitash.com">hello@tashitash.com</a></p>
+    </aside>
+  </main>
 
-    <!-- Duplicate this block for new entries -->
-    <section class="post">
-      <h3>First post – hello world</h3>
-      <p class="muted">August 13, 2025 · tags: personal, setup</p>
-      <p>I just set up my site! More posts soon. ✨</p>
-    </section>
-
-  </article>
-
-  <aside>
-    <h2>About</h2>
-    <p>I’m Tashi. I like building things and writing short notes. 📚</p>
-    <p>Email: <a href="mailto:hello@tashitash.com">hello@tashitash.com</a></p>
-  </aside>
-</main>
-
-<footer>
-  <span>© 2025 Tashi Tash</span>
-</footer>
-
+  <footer>
+    <span>&copy; 2025 Tashi Tash</span>
+  </footer>
 </body>
 </html>
-
