@@ -7,47 +7,55 @@
   <meta name="description" content="Notes, projects, and ideas by Tashi." />
   
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
   <style>
     :root { --max: 860px; }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: 'Libre Baskerville', serif;
+      font-family: 'Lato', sans-serif;
       font-size: 16px;
       line-height: 1.6;
       color: #fff;
       background: #000;
     }
     header {
-      padding: 64px 20px;
+      padding: 48px 20px 32px;
       text-align: center;
       background: #000;
       border-bottom: 1px solid #333;
     }
     header h1 {
-      margin: 0 0 8px;
-      font-family: 'Great Vibes', cursive;
-      font-size: 60px;
+      margin: 0 0 16px;
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
       letter-spacing: 1px;
       color: #ffb6c1;
     }
     header p {
-      margin: 0;
+      margin: 0 auto 20px;
+      max-width: 600px;
       color: #ccc;
+      font-size: 18px;
+    }
+    header img {
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      max-width: 300px;
+      height: auto;
+      border: 2px solid #333;
     }
     main {
       max-width: var(--max);
       margin: 32px auto;
       padding: 0 20px;
-    }
-    .grid {
       display: grid;
       gap: 16px;
     }
     @media (min-width: 720px) {
-      .grid {
+      main {
         grid-template-columns: 2fr 1fr;
       }
     }
@@ -59,9 +67,9 @@
     }
     h2 {
       margin-top: 0;
-      font-family: 'Great Vibes', cursive;
+      font-family: 'Playfair Display', serif;
       color: #ffb6c1;
-      font-size: 36px;
+      font-size: 32px;
     }
     a {
       color: #ffb6c1;
@@ -75,8 +83,8 @@
     }
     .post h3 {
       margin: 0 0 6px;
-      font-size: 22px;
-      font-family: 'Libre Baskerville', serif;
+      font-size: 20px;
+      font-family: 'Playfair Display', serif;
       color: #fff;
     }
     .muted {
@@ -92,18 +100,18 @@
 </head>
 <body>
   <header>
-    <h1>Hi, I’m Tashi 🌸</h1>
+    <h1>Hi, I’m Tashi</h1>
     <p>I'm in love with life, love travelling, adventure, and more recently writing code — stay tuned, some exciting stuff to come!</p>
+    <img src="tash.jpg" alt="Tash">
   </header>
-main>
-  <img src="tash.jpg" alt="Tash" width="300">
-</main>  <main class="grid">
+
+  <main>
     <article>
       <h2>Latest posts</h2>
       <section class="post">
         <h3>First post — hello world</h3>
         <p class="muted">August 2025 · tags: personal, setup</p>
-        <p>I just set up my site! More posts soon. 🌙</p>
+        <p>I just set up my site! More posts soon.</p>
       </section>
     </article>
 
