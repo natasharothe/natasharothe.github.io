@@ -4,14 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tashi Tash — Music, Movement, Visual Notes</title>
-  <meta name="description" content="A personal blog with music sets, rollerblading videos, pictures, and notes by Tashi Tash." />
+  <meta
+    name="description"
+    content="A personal blog with music sets, rollerblading videos, pictures, and notes by Tashi Tash."
+  />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
 
   <style>
-    :root{
+    :root {
       --bg: #070707;
       --panel: rgba(255,255,255,0.03);
       --line: rgba(255,255,255,0.08);
@@ -94,7 +100,8 @@
     nav a:hover,
     .footer-links a:hover,
     .info-value a:hover,
-    .meta-line a:hover {
+    .meta-line a:hover,
+    .mini-link:hover {
       color: var(--text);
     }
 
@@ -172,7 +179,8 @@
       margin-top: 24px;
     }
 
-    .pill {
+    .pill,
+    .mini-link {
       display: inline-flex;
       align-items: center;
       min-height: 42px;
@@ -201,6 +209,7 @@
     .portrait {
       aspect-ratio: 4 / 5;
       object-fit: cover;
+      object-position: center;
       width: 100%;
       border-radius: 18px;
       border: 1px solid var(--line);
@@ -428,7 +437,7 @@
         </div>
 
         <aside class="hero-card">
-          <img class="portrait" src="your-image.jpg" alt="Portrait of Tashi Tash" />
+          <img class="portrait" src="IMG_4998%25203.JPG" alt="Portrait of Tashi Tash" />
           <div class="hero-meta">
             <strong>Tashi Tash</strong>
             <span>Music · Rollerblading · Visual diary</span>
@@ -481,7 +490,7 @@
         <div class="grid-3">
           <article class="card">
             <span class="kicker">Video</span>
-            <img class="video-thumb" src="video-thumb-1.jpg" alt="Rollerblading video preview" />
+            <img class="video-thumb" src="IMG_4998%25203.JPG" alt="Rollerblading video preview" />
             <h3>City Lines</h3>
             <p>A short line through the city, filmed at dusk.</p>
             <div class="meta-line">
@@ -491,7 +500,7 @@
 
           <article class="card">
             <span class="kicker">Video</span>
-            <img class="video-thumb" src="video-thumb-2.jpg" alt="Rollerblading video preview" />
+            <img class="video-thumb" src="IMG_4998%25203.JPG" alt="Rollerblading video preview" />
             <h3>Night Ride</h3>
             <p>Movement, speed, and low light. Keep the text minimal.</p>
             <div class="meta-line">
@@ -501,7 +510,7 @@
 
           <article class="card">
             <span class="kicker">Video</span>
-            <img class="video-thumb" src="video-thumb-3.jpg" alt="Rollerblading video preview" />
+            <img class="video-thumb" src="IMG_4998%25203.JPG" alt="Rollerblading video preview" />
             <h3>Concrete Study</h3>
             <p>Another short entry with one clean sentence.</p>
             <div class="meta-line">
@@ -521,17 +530,17 @@
 
         <div class="photo-grid">
           <article class="photo-card">
-            <img class="photo-thumb" src="photo-1.jpg" alt="Photo journal image 1" />
+            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Photo journal image 1" />
             <p>After midnight.</p>
           </article>
 
           <article class="photo-card">
-            <img class="photo-thumb" src="photo-2.jpg" alt="Photo journal image 2" />
+            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Photo journal image 2" />
             <p>Street light / stillness.</p>
           </article>
 
           <article class="photo-card">
-            <img class="photo-thumb" src="photo-3.jpg" alt="Photo journal image 3" />
+            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Photo journal image 3" />
             <p>On the way back.</p>
           </article>
         </div>
@@ -594,12 +603,8 @@
             </div>
           </div>
           <div class="info-row">
-            <span class="info-label">Email</span>
-            <div class="info-value">your@email.com</div>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Location</span>
-            <div class="info-value">Munich, Germany</div>
+            <span class="info-label">Focus</span>
+            <div class="info-value">Music, movement, visual notes</div>
           </div>
         </aside>
       </div>
@@ -612,7 +617,6 @@
       <div class="footer-links">
         <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
         <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a href="#">Email</a>
       </div>
     </div>
   </footer>
