@@ -111,7 +111,7 @@
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.15fr 0.85fr;
       gap: 28px;
       align-items: stretch;
     }
@@ -128,6 +128,9 @@
 
     .hero-copy {
       padding: 46px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .eyebrow,
@@ -209,7 +212,7 @@
     .portrait {
       aspect-ratio: 4 / 5;
       object-fit: cover;
-      object-position: center;
+      object-position: left center;
       width: 100%;
       border-radius: 18px;
       border: 1px solid var(--line);
@@ -289,11 +292,11 @@
       text-transform: uppercase;
     }
 
-    .video-thumb,
-    .photo-thumb {
+    .video-thumb {
       width: 100%;
       aspect-ratio: 16 / 10;
       object-fit: cover;
+      object-position: center;
       border-radius: 18px;
       border: 1px solid var(--line);
       margin-bottom: 16px;
@@ -302,7 +305,7 @@
 
     .photo-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 18px;
     }
 
@@ -310,9 +313,15 @@
       padding: 14px;
     }
 
-    .photo-card p {
-      padding: 2px 4px 0;
-      font-size: 14px;
+    .photo-thumb {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      margin-bottom: 14px;
+      background: #0d0d0d;
     }
 
     .about-grid {
@@ -372,11 +381,16 @@
       flex-wrap: wrap;
     }
 
+    @media (max-width: 1100px) {
+      .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     @media (max-width: 980px) {
       .hero-grid,
       .grid-3,
       .grid-2,
-      .photo-grid,
       .about-grid {
         grid-template-columns: 1fr;
       }
@@ -400,6 +414,10 @@
       .lead {
         font-size: 16px;
       }
+
+      .photo-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -411,6 +429,7 @@
         <a href="#sets">Sets</a>
         <a href="#videos">Videos</a>
         <a href="#photos">Photos</a>
+        <a href="#gallery">Gallery</a>
         <a href="#notes">Notes</a>
         <a href="#about">About</a>
         <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
@@ -430,14 +449,14 @@
             More journal than portfolio. More atmosphere than noise.
           </p>
           <div class="hero-actions">
-            <a class="pill primary" href="#sets">Listen to sets</a>
+            <a class="pill primary" href="#photos">View photos</a>
             <a class="pill" href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
             <a class="pill" href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
           </div>
         </div>
 
         <aside class="hero-card">
-          <img class="portrait" src="IMG_4998%25203.JPG" alt="Portrait of Tashi Tash" />
+          <img class="portrait" src="IMG_4998%25203.JPG" alt="Tashi Tash on a sailboat" />
           <div class="hero-meta">
             <strong>Tashi Tash</strong>
             <span>Music · Rollerblading · Visual diary</span>
@@ -451,7 +470,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Latest sets</h2>
-          <p>Link to actual mixes or sets. Do not leave fake embeds or placeholder tracks on a live site.</p>
+          <p>Use this section for actual published mixes. Keep it lean.</p>
         </div>
 
         <div class="grid-2">
@@ -470,7 +489,7 @@
             <span class="kicker">Featured mix</span>
             <h3>Next featured set</h3>
             <p>
-              Replace this card with a real set title, short description, and direct link once you publish one.
+              Replace this with a real set title, short description, and direct link once you publish one.
             </p>
             <div class="meta-line">
               <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">View all sets</a>
@@ -483,36 +502,36 @@
     <section class="section" id="videos">
       <div class="container">
         <div class="section-head">
-          <h2>Rollerblading videos</h2>
-          <p>Use stills that look cinematic. Bad thumbnails will cheapen the whole site instantly.</p>
+          <h2>Visual entries</h2>
+          <p>Right now these are still images used as visual placeholders for future clips and posts.</p>
         </div>
 
         <div class="grid-3">
           <article class="card">
-            <span class="kicker">Video</span>
-            <img class="video-thumb" src="IMG_4998%25203.JPG" alt="Rollerblading video preview" />
-            <h3>City Lines</h3>
-            <p>A short line through the city, filmed at dusk.</p>
+            <span class="kicker">Entry 01</span>
+            <img class="video-thumb" src="IMG_6945.JPG" alt="Visual entry 1" />
+            <h3>Motion study</h3>
+            <p>A visual placeholder for a future rollerblading or city clip.</p>
             <div class="meta-line">
               <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Watch on Instagram</a>
             </div>
           </article>
 
           <article class="card">
-            <span class="kicker">Video</span>
-            <img class="video-thumb" src="IMG_4998%25203.JPG" alt="Rollerblading video preview" />
-            <h3>Night Ride</h3>
-            <p>Movement, speed, and low light. Keep the text minimal.</p>
+            <span class="kicker">Entry 02</span>
+            <img class="video-thumb" src="IMG_8869.JPG" alt="Visual entry 2" />
+            <h3>Night frame</h3>
+            <p>Use this card later for an actual reel, skate clip, or visual post.</p>
             <div class="meta-line">
               <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Watch on Instagram</a>
             </div>
           </article>
 
           <article class="card">
-            <span class="kicker">Video</span>
-            <img class="video-thumb" src="IMG_4998%25203.JPG" alt="Rollerblading video preview" />
-            <h3>Concrete Study</h3>
-            <p>Another short entry with one clean sentence.</p>
+            <span class="kicker">Entry 03</span>
+            <img class="video-thumb" src="tash.jpg" alt="Visual entry 3" />
+            <h3>Portrait frame</h3>
+            <p>A still image can work here until you replace it with real video content.</p>
             <div class="meta-line">
               <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Watch on Instagram</a>
             </div>
@@ -525,23 +544,59 @@
       <div class="container">
         <div class="section-head">
           <h2>Photo journal</h2>
-          <p>This should feel curated, not like a random camera roll dump.</p>
+          <p>All currently usable uploaded images are shown here.</p>
         </div>
 
         <div class="photo-grid">
           <article class="photo-card">
-            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Photo journal image 1" />
-            <p>After midnight.</p>
+            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Boat photo" />
+            <p>Water, wind, stillness.</p>
           </article>
 
           <article class="photo-card">
-            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Photo journal image 2" />
-            <p>Street light / stillness.</p>
+            <img class="photo-thumb" src="IMG_6945.JPG" alt="Photo journal image 2" />
+            <p>Another frame from the archive.</p>
           </article>
 
           <article class="photo-card">
-            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Photo journal image 3" />
-            <p>On the way back.</p>
+            <img class="photo-thumb" src="IMG_8869.JPG" alt="Photo journal image 3" />
+            <p>A second visual note.</p>
+          </article>
+
+          <article class="photo-card">
+            <img class="photo-thumb" src="tash.jpg" alt="Photo journal image 4" />
+            <p>A portrait entry.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="gallery">
+      <div class="container">
+        <div class="section-head">
+          <h2>Gallery</h2>
+          <p>A clean grid using every image file I can reference exactly from your screenshot.</p>
+        </div>
+
+        <div class="photo-grid">
+          <article class="photo-card">
+            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Gallery image 1" />
+            <p>Hero image.</p>
+          </article>
+
+          <article class="photo-card">
+            <img class="photo-thumb" src="IMG_6945.JPG" alt="Gallery image 2" />
+            <p>Archive image 2.</p>
+          </article>
+
+          <article class="photo-card">
+            <img class="photo-thumb" src="IMG_8869.JPG" alt="Gallery image 3" />
+            <p>Archive image 3.</p>
+          </article>
+
+          <article class="photo-card">
+            <img class="photo-thumb" src="tash.jpg" alt="Gallery image 4" />
+            <p>Archive image 4.</p>
           </article>
         </div>
       </div>
@@ -556,7 +611,7 @@
 
         <div class="grid-2">
           <article class="card">
-            <span class="kicker">Note · March 2026</span>
+            <span class="kicker">Note</span>
             <h3>Why I started posting sets here</h3>
             <p>
               One short paragraph. Personal, clear, not overdramatic.
@@ -564,10 +619,10 @@
           </article>
 
           <article class="card">
-            <span class="kicker">Journal · March 2026</span>
+            <span class="kicker">Journal</span>
             <h3>Movement changes how a city feels</h3>
             <p>
-              A small text about skating, rhythm, or filming.
+              A small text about skating, rhythm, travel, or filming.
             </p>
           </article>
         </div>
@@ -594,6 +649,7 @@
               </a>
             </div>
           </div>
+
           <div class="info-row">
             <span class="info-label">Instagram</span>
             <div class="info-value">
@@ -602,9 +658,18 @@
               </a>
             </div>
           </div>
+
           <div class="info-row">
             <span class="info-label">Focus</span>
             <div class="info-value">Music, movement, visual notes</div>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Missing one file</span>
+            <div class="info-value">
+              Rename the long truncated filename beginning with <code>425497555_...</code> to something simple like
+              <code>gallery-5.jpg</code> and then add it to the gallery.
+            </div>
           </div>
         </aside>
       </div>
