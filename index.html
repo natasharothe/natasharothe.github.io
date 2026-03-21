@@ -13,7 +13,6 @@
   <style>
     :root{
       --bg: #070707;
-      --bg-soft: #111;
       --panel: rgba(255,255,255,0.03);
       --line: rgba(255,255,255,0.08);
       --text: #f2ede6;
@@ -26,7 +25,6 @@
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -93,7 +91,10 @@
       transition: color 0.2s ease;
     }
 
-    nav a:hover {
+    nav a:hover,
+    .footer-links a:hover,
+    .info-value a:hover,
+    .meta-line a:hover {
       color: var(--text);
     }
 
@@ -110,7 +111,8 @@
 
     .hero-copy,
     .hero-card,
-    .card {
+    .card,
+    .photo-card {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -256,13 +258,15 @@
       transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
     }
 
-    .card:hover {
+    .card:hover,
+    .photo-card:hover {
       transform: translateY(-4px);
       border-color: rgba(183,156,114,0.35);
       background: rgba(255,255,255,0.045);
     }
 
-    .card p {
+    .card p,
+    .photo-card p {
       margin: 0;
       color: var(--muted);
       font-size: 15px;
@@ -274,19 +278,6 @@
       font-size: 13px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-    }
-
-    .embed-card {
-      padding: 18px;
-    }
-
-    .soundcloud-frame {
-      width: 100%;
-      height: 166px;
-      border: 0;
-      border-radius: 18px;
-      overflow: hidden;
-      background: #0d0d0d;
     }
 
     .video-thumb,
@@ -307,18 +298,12 @@
     }
 
     .photo-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 22px;
       padding: 14px;
-      box-shadow: var(--shadow);
     }
 
     .photo-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
       padding: 2px 4px 0;
+      font-size: 14px;
     }
 
     .about-grid {
@@ -378,10 +363,6 @@
       flex-wrap: wrap;
     }
 
-    .footer-links a:hover {
-      color: var(--text);
-    }
-
     @media (max-width: 980px) {
       .hero-grid,
       .grid-3,
@@ -423,7 +404,8 @@
         <a href="#photos">Photos</a>
         <a href="#notes">Notes</a>
         <a href="#about">About</a>
-        <a href="https://soundcloud.com/your-soundcloud-name" target="_blank" rel="noopener noreferrer">SoundCloud</a>
+        <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
+        <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
       </nav>
     </div>
   </header>
@@ -440,8 +422,8 @@
           </p>
           <div class="hero-actions">
             <a class="pill primary" href="#sets">Listen to sets</a>
-            <a class="pill" href="#videos">Watch videos</a>
-            <a class="pill" href="https://soundcloud.com/your-soundcloud-name" target="_blank" rel="noopener noreferrer">Open SoundCloud</a>
+            <a class="pill" href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
+            <a class="pill" href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
           </div>
         </div>
 
@@ -460,31 +442,30 @@
       <div class="container">
         <div class="section-head">
           <h2>Latest sets</h2>
-          <p>Keep this section tight. Fewer entries, better curation.</p>
+          <p>Link to actual mixes or sets. Do not leave fake embeds or placeholder tracks on a live site.</p>
         </div>
 
         <div class="grid-2">
-          <article class="card embed-card">
-            <span class="kicker">SoundCloud set</span>
-            <h3>Night Session 001</h3>
-            <iframe
-              class="soundcloud-frame"
-              scrolling="no"
-              frameborder="no"
-              allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/your-soundcloud-name/your-track&color=%23000000&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true">
-            </iframe>
-            <div class="meta-line">Replace with your actual track embed link</div>
+          <article class="card">
+            <span class="kicker">SoundCloud</span>
+            <h3>Tashi Tash on SoundCloud</h3>
+            <p>
+              Listen to published sets and follow new uploads directly on SoundCloud.
+            </p>
+            <div class="meta-line">
+              <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">Open profile</a>
+            </div>
           </article>
 
           <article class="card">
             <span class="kicker">Featured mix</span>
-            <h3>Late Hours / Mixed Set</h3>
+            <h3>Next featured set</h3>
             <p>
-              Short description of the mood, the place, or the idea behind the set.
-              Keep it personal, but not rambling.
+              Replace this card with a real set title, short description, and direct link once you publish one.
             </p>
-            <div class="meta-line">March 2026</div>
+            <div class="meta-line">
+              <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">View all sets</a>
+            </div>
           </article>
         </div>
       </div>
@@ -494,7 +475,7 @@
       <div class="container">
         <div class="section-head">
           <h2>Rollerblading videos</h2>
-          <p>Use stills that look cinematic. Bad thumbnails destroy the whole site.</p>
+          <p>Use stills that look cinematic. Bad thumbnails will cheapen the whole site instantly.</p>
         </div>
 
         <div class="grid-3">
@@ -503,7 +484,9 @@
             <img class="video-thumb" src="video-thumb-1.jpg" alt="Rollerblading video preview" />
             <h3>City Lines</h3>
             <p>A short line through the city, filmed at dusk.</p>
-            <div class="meta-line"><a href="#">Watch video</a></div>
+            <div class="meta-line">
+              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Watch on Instagram</a>
+            </div>
           </article>
 
           <article class="card">
@@ -511,7 +494,9 @@
             <img class="video-thumb" src="video-thumb-2.jpg" alt="Rollerblading video preview" />
             <h3>Night Ride</h3>
             <p>Movement, speed, and low light. Keep the text minimal.</p>
-            <div class="meta-line"><a href="#">Watch video</a></div>
+            <div class="meta-line">
+              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Watch on Instagram</a>
+            </div>
           </article>
 
           <article class="card">
@@ -519,7 +504,9 @@
             <img class="video-thumb" src="video-thumb-3.jpg" alt="Rollerblading video preview" />
             <h3>Concrete Study</h3>
             <p>Another short entry with one clean sentence.</p>
-            <div class="meta-line"><a href="#">Watch video</a></div>
+            <div class="meta-line">
+              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Watch on Instagram</a>
+            </div>
           </article>
         </div>
       </div>
@@ -593,14 +580,18 @@
           <div class="info-row">
             <span class="info-label">SoundCloud</span>
             <div class="info-value">
-              <a href="https://soundcloud.com/your-soundcloud-name" target="_blank" rel="noopener noreferrer">
-                soundcloud.com/your-soundcloud-name
+              <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">
+                soundcloud.com/tashitash
               </a>
             </div>
           </div>
           <div class="info-row">
-            <span class="info-label">Instagram / Video</span>
-            <div class="info-value">@yourhandle</div>
+            <span class="info-label">Instagram</span>
+            <div class="info-value">
+              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">
+                instagram.com/tashitashiii
+              </a>
+            </div>
           </div>
           <div class="info-row">
             <span class="info-label">Email</span>
@@ -619,8 +610,8 @@
     <div class="container footer-inner">
       <div>© 2026 Tashi Tash</div>
       <div class="footer-links">
-        <a href="https://soundcloud.com/your-soundcloud-name" target="_blank" rel="noopener noreferrer">SoundCloud</a>
-        <a href="#">Instagram</a>
+        <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
+        <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
         <a href="#">Email</a>
       </div>
     </div>
