@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tashi Tash — Music, Movement, Visual Notes</title>
+  <title>Tashi Tash — Sets, Movement, Journal</title>
   <meta
     name="description"
-    content="A personal blog with music sets, rollerblading videos, pictures, and notes by Tashi Tash."
+    content="A personal journal of music, movement, travel, and selected visual notes by Tashi Tash."
   />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,15 +19,17 @@
   <style>
     :root {
       --bg: #070707;
-      --panel: rgba(255,255,255,0.03);
-      --line: rgba(255,255,255,0.08);
+      --bg-2: #0b0b0b;
+      --panel: rgba(255, 255, 255, 0.035);
+      --line: rgba(255, 255, 255, 0.08);
       --text: #f2ede6;
       --muted: #a69f97;
       --soft: #d8cec0;
       --accent: #b79c72;
       --max: 1180px;
       --radius: 24px;
-      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+      --radius-sm: 18px;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
     }
 
     * { box-sizing: border-box; }
@@ -63,9 +65,9 @@
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 30;
       backdrop-filter: blur(14px);
-      background: rgba(8,8,8,0.72);
+      background: rgba(8, 8, 8, 0.72);
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
@@ -91,7 +93,10 @@
       flex-wrap: wrap;
     }
 
-    nav a {
+    nav a,
+    .footer-links a,
+    .meta-line a,
+    .info-value a {
       font-size: 14px;
       color: var(--muted);
       transition: color 0.2s ease;
@@ -99,19 +104,18 @@
 
     nav a:hover,
     .footer-links a:hover,
-    .info-value a:hover,
     .meta-line a:hover,
-    .mini-link:hover {
+    .info-value a:hover {
       color: var(--text);
     }
 
     .hero {
-      padding: 90px 0 50px;
+      padding: 90px 0 54px;
     }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.1fr 0.9fr;
       gap: 28px;
       align-items: stretch;
     }
@@ -119,7 +123,8 @@
     .hero-copy,
     .hero-card,
     .card,
-    .photo-card {
+    .about-image-card,
+    .gallery-card {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -128,6 +133,9 @@
 
     .hero-copy {
       padding: 46px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .eyebrow,
@@ -148,14 +156,14 @@
     }
 
     h1 {
-      font-size: clamp(3.2rem, 7vw, 5.6rem);
-      line-height: 0.94;
+      font-size: clamp(3.1rem, 7vw, 5.5rem);
+      line-height: 0.93;
       margin-bottom: 18px;
-      max-width: 8ch;
+      max-width: 9ch;
     }
 
     h2 {
-      font-size: clamp(2.1rem, 4vw, 3.3rem);
+      font-size: clamp(2.1rem, 4vw, 3.2rem);
       line-height: 0.98;
     }
 
@@ -172,7 +180,8 @@
       margin-bottom: 28px;
     }
 
-    .hero-actions {
+    .hero-actions,
+    .button-row {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
@@ -190,6 +199,14 @@
       background: rgba(255,255,255,0.02);
       font-size: 14px;
       color: var(--text);
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .pill:hover,
+    .mini-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(183,156,114,0.35);
+      background: rgba(255,255,255,0.045);
     }
 
     .pill.primary {
@@ -206,12 +223,12 @@
       gap: 18px;
     }
 
-    .portrait {
+    .hero-photo {
+      width: 100%;
       aspect-ratio: 4 / 5;
       object-fit: cover;
       object-position: center;
-      width: 100%;
-      border-radius: 18px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--line);
     }
 
@@ -221,8 +238,8 @@
     }
 
     .hero-meta strong {
-      font-weight: 500;
       font-size: 16px;
+      font-weight: 500;
     }
 
     .hero-meta span {
@@ -250,32 +267,49 @@
       font-size: 15px;
     }
 
-    .grid-3 {
+    .grid-2,
+    .grid-3,
+    .gallery-grid,
+    .about-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
       gap: 18px;
     }
 
     .grid-2 {
-      display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
     }
 
-    .card {
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .gallery-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .about-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+      align-items: stretch;
+    }
+
+    .card,
+    .about-image-card,
+    .gallery-card {
       padding: 24px;
       transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
     }
 
     .card:hover,
-    .photo-card:hover {
+    .about-image-card:hover,
+    .gallery-card:hover {
       transform: translateY(-4px);
       border-color: rgba(183,156,114,0.35);
       background: rgba(255,255,255,0.045);
     }
 
     .card p,
-    .photo-card p {
+    .about-copy p,
+    .gallery-card p {
       margin: 0;
       color: var(--muted);
       font-size: 15px;
@@ -289,41 +323,47 @@
       text-transform: uppercase;
     }
 
-    .video-thumb,
-    .photo-thumb {
+    .media-thumb {
       width: 100%;
       aspect-ratio: 16 / 10;
       object-fit: cover;
-      border-radius: 18px;
+      object-position: center;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--line);
       margin-bottom: 16px;
       background: #0d0d0d;
     }
 
-    .photo-grid {
+    .gallery-thumb {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      margin-bottom: 14px;
+      background: #0d0d0d;
+    }
+
+    .about-photo {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      object-fit: cover;
+      object-position: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+    }
+
+    .about-copy {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .photo-card {
-      padding: 14px;
-    }
-
-    .photo-card p {
-      padding: 2px 4px 0;
-      font-size: 14px;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
+      gap: 16px;
     }
 
     .info-list {
       display: grid;
       gap: 14px;
+      margin-top: 8px;
     }
 
     .info-row {
@@ -372,19 +412,30 @@
       flex-wrap: wrap;
     }
 
+    @media (max-width: 1100px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     @media (max-width: 980px) {
       .hero-grid,
       .grid-3,
       .grid-2,
-      .photo-grid,
       .about-grid {
         grid-template-columns: 1fr;
       }
 
       .hero-copy,
       .hero-card,
-      .card {
+      .card,
+      .about-image-card,
+      .gallery-card {
         padding: 22px;
+      }
+
+      .about-photo {
+        min-height: 420px;
       }
     }
 
@@ -394,11 +445,15 @@
       }
 
       h1 {
-        font-size: 3.3rem;
+        font-size: 3.1rem;
       }
 
       .lead {
         font-size: 16px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -407,11 +462,11 @@
   <header class="topbar">
     <div class="container topbar-inner">
       <a href="#" class="brand">Tashi Tash</a>
+
       <nav>
-        <a href="#sets">Sets</a>
-        <a href="#videos">Videos</a>
-        <a href="#photos">Photos</a>
-        <a href="#notes">Notes</a>
+        <a href="#listen">Listen</a>
+        <a href="#movement">Movement</a>
+        <a href="#journal">Journal</a>
         <a href="#about">About</a>
         <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
         <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
@@ -423,35 +478,36 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <span class="eyebrow">Personal blog</span>
-          <h1>Music, movement, and visual notes.</h1>
+          <span class="eyebrow">Personal journal</span>
+          <h1>Sets, movement, and sun-faded notes.</h1>
           <p class="lead">
-            A personal space for DJ sets, rollerblading videos, selected images, and small pieces of writing.
-            More journal than portfolio. More atmosphere than noise.
+            A personal journal of music, skating, travel, and selected moments in between.
+            Less noise. Better frames. A space for sets, visuals, and pieces worth keeping.
           </p>
+
           <div class="hero-actions">
-            <a class="pill primary" href="#sets">Listen to sets</a>
+            <a class="pill primary" href="#journal">View journal</a>
             <a class="pill" href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
             <a class="pill" href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
           </div>
         </div>
 
         <aside class="hero-card">
-          <img class="portrait" src="IMG_4998%25203.JPG" alt="Portrait of Tashi Tash" />
+          <img class="hero-photo" src="IMG_4998%25203.JPG" alt="Tashi Tash on a sailboat" />
           <div class="hero-meta">
             <strong>Tashi Tash</strong>
-            <span>Music · Rollerblading · Visual diary</span>
-            <span>Sets, moving images, pictures, and notes</span>
+            <span>Music · Movement · Travel · Visual notes</span>
+            <span>Selected frames, published sets, and moments worth keeping</span>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="section" id="sets">
+    <section class="section" id="listen">
       <div class="container">
         <div class="section-head">
-          <h2>Latest sets</h2>
-          <p>Link to actual mixes or sets. Do not leave fake embeds or placeholder tracks on a live site.</p>
+          <h2>Listen</h2>
+          <p>Use this section for actual mixes. Keep it lean and real.</p>
         </div>
 
         <div class="grid-2">
@@ -459,116 +515,95 @@
             <span class="kicker">SoundCloud</span>
             <h3>Tashi Tash on SoundCloud</h3>
             <p>
-              Listen to published sets and follow new uploads directly on SoundCloud.
+              Published sets, future mixes, and a cleaner home for audio than a cluttered feed.
             </p>
-            <div class="meta-line">
-              <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">Open profile</a>
+            <div class="button-row">
+              <a class="mini-link" href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">Open profile</a>
+              <a class="mini-link" href="https://soundcloud.com/tashitash/tracks" target="_blank" rel="noopener noreferrer">Tracks</a>
             </div>
           </article>
 
           <article class="card">
-            <span class="kicker">Featured mix</span>
-            <h3>Next featured set</h3>
+            <span class="kicker">Next step</span>
+            <h3>Add one real featured set</h3>
             <p>
-              Replace this card with a real set title, short description, and direct link once you publish one.
+              Replace this card with your first real mix title, a one-line description, and a direct track link.
             </p>
             <div class="meta-line">
-              <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">View all sets</a>
+              Better one strong set than five weak placeholders.
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section" id="videos">
+    <section class="section" id="movement">
       <div class="container">
         <div class="section-head">
-          <h2>Rollerblading videos</h2>
-          <p>Use stills that look cinematic. Bad thumbnails will cheapen the whole site instantly.</p>
+          <h2>Movement</h2>
+          <p>The strongest identity thread on your site is movement, light, travel, and rhythm.</p>
         </div>
 
         <div class="grid-3">
           <article class="card">
-            <span class="kicker">Video</span>
-            <img class="video-thumb" src="tashi_in_miami.JPG" alt="Rollerblading video preview" />
-            <h3>City Lines</h3>
-            <p>A short line through the city, filmed at dusk.</p>
+            <span class="kicker">Motion</span>
+            <img class="media-thumb" src="IMG_6945.JPG" alt="Movement visual 1" />
+            <h3>Late sun</h3>
+            <p>Active, coastal, open. This is the right tone for the site.</p>
             <div class="meta-line">
-              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Watch on Instagram</a>
+              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">See more on Instagram</a>
             </div>
           </article>
 
           <article class="card">
-            <span class="kicker">Video</span>
-            <img class="video-thumb" src="IMG_4998%25203.JPG" alt="Rollerblading video preview" />
-            <h3>Night Ride</h3>
-            <p>Movement, speed, and low light. Keep the text minimal.</p>
+            <span class="kicker">Frame</span>
+            <img class="media-thumb" src="IMG_8869.JPG" alt="Movement visual 2" />
+            <h3>On the move</h3>
+            <p>Use these image cards until you replace them with real reels or skating clips.</p>
             <div class="meta-line">
-              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Watch on Instagram</a>
+              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Visual feed</a>
             </div>
           </article>
 
           <article class="card">
-            <span class="kicker">Video</span>
-            <img class="video-thumb" src="IMG_4998%25203.JPG" alt="Rollerblading video preview" />
-            <h3>Concrete Study</h3>
-            <p>Another short entry with one clean sentence.</p>
+            <span class="kicker">Portrait</span>
+            <img class="media-thumb" src="tash.jpg" alt="Portrait visual" />
+            <h3>Personal, not staged</h3>
+            <p>The site gets stronger when it feels curated, not overproduced.</p>
             <div class="meta-line">
-              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Watch on Instagram</a>
+              Selected moments only.
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section" id="photos">
+    <section class="section" id="journal">
       <div class="container">
         <div class="section-head">
-          <h2>Photo journal</h2>
-          <p>This should feel curated, not like a random camera roll dump.</p>
+          <h2>Journal</h2>
+          <p>Short captions. Clear mood. No filler.</p>
         </div>
 
-        <div class="photo-grid">
-          <article class="photo-card">
-            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Photo journal image 1" />
-            <p>After midnight.</p>
+        <div class="gallery-grid">
+          <article class="gallery-card">
+            <img class="gallery-thumb" src="IMG_4998%25203.JPG" alt="Boat journal photo" />
+            <p>Golden hour, Pacific side.</p>
           </article>
 
-          <article class="photo-card">
-            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Photo journal image 2" />
-            <p>Street light / stillness.</p>
+          <article class="gallery-card">
+            <img class="gallery-thumb" src="tashi_in_miami.JPG" alt="Tashi in Miami" />
+            <p>Miami mirror light.</p>
           </article>
 
-          <article class="photo-card">
-            <img class="photo-thumb" src="IMG_4998%25203.JPG" alt="Photo journal image 3" />
-            <p>On the way back.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="notes">
-      <div class="container">
-        <div class="section-head">
-          <h2>Notes</h2>
-          <p>Write only when there is something worth posting. Empty blog energy looks weak.</p>
-        </div>
-
-        <div class="grid-2">
-          <article class="card">
-            <span class="kicker">Note · March 2026</span>
-            <h3>Why I started posting sets here</h3>
-            <p>
-              One short paragraph. Personal, clear, not overdramatic.
-            </p>
+          <article class="gallery-card">
+            <img class="gallery-thumb" src="IMG_6945.JPG" alt="Journal image 3" />
+            <p>Movement changes how a place feels.</p>
           </article>
 
-          <article class="card">
-            <span class="kicker">Journal · March 2026</span>
-            <h3>Movement changes how a city feels</h3>
-            <p>
-              A small text about skating, rhythm, or filming.
-            </p>
+          <article class="gallery-card">
+            <img class="gallery-thumb" src="IMG_8869.JPG" alt="Journal image 4" />
+            <p>Warm light. Open day.</p>
           </article>
         </div>
       </div>
@@ -576,37 +611,61 @@
 
     <section class="section" id="about">
       <div class="container about-grid">
-        <article class="card">
-          <span class="kicker">About</span>
-          <h2>Personal, but selective.</h2>
-          <p>
-            This site is a home for sets, skating videos, pictures, and occasional writing.
-            The point is not to post everything. The point is to post what is worth keeping.
-          </p>
+        <article class="about-image-card">
+          <img class="about-photo" src="tashi_in_miami.JPG" alt="Tashi in Miami mirror selfie" />
         </article>
 
-        <aside class="card info-list">
-          <div class="info-row">
-            <span class="info-label">SoundCloud</span>
-            <div class="info-value">
-              <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">
-                soundcloud.com/tashitash
-              </a>
+        <article class="card about-copy">
+          <div>
+            <span class="kicker">About</span>
+            <h2>Tashi Tash</h2>
+          </div>
+
+          <p>
+            This site is a home for sets, movement, travel, and selected visual notes.
+            Not everything belongs here. Only the pieces worth keeping.
+          </p>
+
+          <p>
+            The direction is simple: better frames, cleaner mood, stronger identity.
+            Music, skating, coastal light, transit moments, and small fragments from the road.
+          </p>
+
+          <div class="button-row">
+            <a class="mini-link" href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
+            <a class="mini-link" href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          </div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span class="info-label">Alias</span>
+              <div class="info-value">Tashi Tash</div>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">Focus</span>
+              <div class="info-value">Sets, movement, visual notes</div>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">SoundCloud</span>
+              <div class="info-value">
+                <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">
+                  soundcloud.com/tashitash
+                </a>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">Instagram</span>
+              <div class="info-value">
+                <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">
+                  instagram.com/tashitashiii
+                </a>
+              </div>
             </div>
           </div>
-          <div class="info-row">
-            <span class="info-label">Instagram</span>
-            <div class="info-value">
-              <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">
-                instagram.com/tashitashiii
-              </a>
-            </div>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Focus</span>
-            <div class="info-value">Music, movement, visual notes</div>
-          </div>
-        </aside>
+        </article>
       </div>
     </section>
   </main>
@@ -614,6 +673,7 @@
   <footer>
     <div class="container footer-inner">
       <div>© 2026 Tashi Tash</div>
+
       <div class="footer-links">
         <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
         <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
