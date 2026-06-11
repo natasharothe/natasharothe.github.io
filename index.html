@@ -6,7 +6,7 @@
   <title>Tashi Tash — Sets, Movement, Journal</title>
   <meta
     name="description"
-    content="A personal journal of music, movement, travel, and selected visual notes by Tashi Tash."
+    content="Tashi Tash. Sets, movement, and sun-faded notes. A personal journal of music, skating, and travel."
   />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -49,11 +49,7 @@
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
 
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid var(--white);
-      outline-offset: 3px;
-    }
+    a:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
 
     .wrap {
       width: min(var(--max), calc(100% - 2 * var(--pad)));
@@ -68,7 +64,6 @@
       color: var(--grey);
     }
 
-    /* film grain */
     .grain {
       position: fixed;
       inset: 0;
@@ -91,9 +86,7 @@
     .reveal.in { opacity: 1; transform: none; }
 
     .no-observer .reveal,
-    .reduced-motion .reveal {
-      opacity: 1; transform: none; transition: none;
-    }
+    .reduced-motion .reveal { opacity: 1; transform: none; transition: none; }
 
     /* ---------- top bar ---------- */
 
@@ -181,12 +174,7 @@
       border-top: 1px solid var(--line-strong);
     }
 
-    .hero-sub p {
-      margin: 0;
-      max-width: 44ch;
-      color: var(--grey);
-      font-size: 16px;
-    }
+    .hero-sub p { margin: 0; max-width: 44ch; color: var(--grey); font-size: 16px; }
 
     .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
 
@@ -206,11 +194,10 @@
     }
 
     .btn:hover { background: var(--white); color: var(--black); }
-
     .btn.solid { background: var(--white); color: var(--black); }
     .btn.solid:hover { background: var(--grey); border-color: var(--grey); }
 
-    /* photo frames: monochrome until touched */
+    /* ---------- photo frames: monochrome until touched ---------- */
 
     .frame {
       position: relative;
@@ -224,7 +211,7 @@
       object-fit: cover;
       object-position: center;
       filter: grayscale(1) contrast(1.06);
-      transition: filter 0.6s ease, transform 0.6s ease;
+      transition: filter 0.6s ease;
     }
 
     .frame:hover img,
@@ -239,10 +226,14 @@
       border-top: 1px solid var(--line);
     }
 
-    .frame-bar .note {
-      margin: 0;
-      font-size: 13.5px;
-      color: var(--grey);
+    .frame-bar .note { margin: 0; font-size: 13.5px; color: var(--grey); }
+
+    .frame-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line);
     }
 
     .hero-frame img { aspect-ratio: 4 / 5; }
@@ -257,10 +248,7 @@
       white-space: nowrap;
     }
 
-    .marquee-track {
-      display: inline-block;
-      animation: marquee 28s linear infinite;
-    }
+    .marquee-track { display: inline-block; animation: marquee 28s linear infinite; }
 
     .marquee span {
       font-weight: 800;
@@ -271,10 +259,7 @@
       margin-right: 48px;
     }
 
-    .marquee span.dim {
-      color: transparent;
-      -webkit-text-stroke: 1px var(--grey);
-    }
+    .marquee span.dim { color: transparent; -webkit-text-stroke: 1px var(--grey); }
 
     @keyframes marquee {
       from { transform: translateX(0); }
@@ -295,11 +280,7 @@
       margin-bottom: clamp(28px, 4vh, 44px);
     }
 
-    .track-no {
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
-      color: var(--grey);
-    }
+    .track-no { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--grey); }
 
     .section-head h2 {
       margin: 0;
@@ -325,28 +306,31 @@
     .player-shell {
       border: 1px solid var(--line);
       background: var(--panel);
-      padding: 10px;
     }
+
+    .player-shell .frame-head { border-bottom: 1px solid var(--line); }
+
+    .player-shell .embed { padding: 10px; }
 
     .player-shell iframe {
       display: block;
       width: 100%;
-      height: 420px;
+      height: 152px;
       border: 0;
-      filter: grayscale(1) invert(0.92) contrast(0.9);
+      border-radius: 12px;
+      filter: grayscale(1) contrast(0.95);
       transition: filter 0.4s ease;
     }
 
     .player-shell:hover iframe,
     .player-shell:focus-within iframe { filter: none; }
 
-    .player-hint { padding: 10px 12px 4px; }
+    .player-hint { padding: 0 12px 10px; }
 
     .listen-aside { display: grid; gap: 16px; }
-
     .listen-aside p { margin: 0; color: var(--grey); font-size: 15px; }
 
-    .link-list { display: grid; gap: 0; border-top: 1px solid var(--line); }
+    .link-list { display: grid; border-top: 1px solid var(--line); }
 
     .link-list a {
       display: flex;
@@ -360,34 +344,21 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--white);
-      transition: padding 0.2s ease, color 0.2s ease;
+      transition: padding 0.2s ease;
     }
 
     .link-list a:hover { padding-left: 10px; }
     .link-list a .arrow { color: var(--grey); }
 
-    /* ---------- movement ---------- */
+    /* ---------- blue series + journal grids ---------- */
 
-    .movement-grid {
+    .series-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: clamp(18px, 2.5vw, 30px);
     }
 
-    .movement-grid .frame img { aspect-ratio: 4 / 5; }
-
-    .movement-grid h3 {
-      margin: 16px 0 6px;
-      font-weight: 700;
-      font-variation-settings: 'wdth' 112;
-      text-transform: uppercase;
-      font-size: 1.05rem;
-      letter-spacing: 0.04em;
-    }
-
-    .movement-grid .desc { margin: 0; color: var(--grey); font-size: 14.5px; }
-
-    /* ---------- journal: contact sheet ---------- */
+    .series-grid .frame img { aspect-ratio: 4 / 5; }
 
     .journal-grid {
       display: grid;
@@ -397,39 +368,19 @@
 
     .journal-grid .frame img { aspect-ratio: 4 / 5; }
 
-    .frame-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--line);
-    }
-
     /* ---------- about ---------- */
 
     .about-grid {
       display: grid;
-      grid-template-columns: 0.8fr 1.2fr;
+      grid-template-columns: 1.1fr 0.9fr;
       gap: clamp(28px, 4vw, 64px);
-      align-items: center;
-    }
-
-    .about-frame img { aspect-ratio: 4 / 5; }
-
-    .about-copy h2 {
-      margin: 8px 0 20px;
-      font-weight: 800;
-      font-variation-settings: 'wdth' 122;
-      text-transform: uppercase;
-      font-size: clamp(1.9rem, 4vw, 3rem);
-      line-height: 1;
+      align-items: start;
     }
 
     .about-copy p { max-width: 56ch; color: var(--grey); margin: 0 0 16px; }
-
     .about-copy p strong { color: var(--white); font-weight: 600; }
 
-    .spec { margin-top: 28px; border-top: 1px solid var(--line); }
+    .spec { border-top: 1px solid var(--line); }
 
     .spec-row {
       display: grid;
@@ -501,8 +452,8 @@
 
     @media (max-width: 920px) {
       .hero-grid, .listen-grid, .about-grid { grid-template-columns: 1fr; }
-      .movement-grid { grid-template-columns: 1fr; }
-      .hero-frame, .about-frame { max-width: 460px; }
+      .series-grid { grid-template-columns: 1fr; }
+      .hero-frame { max-width: 460px; }
       .section-head { grid-template-columns: auto 1fr; }
       .section-head .mono { display: none; }
     }
@@ -510,7 +461,6 @@
     @media (max-width: 600px) {
       .journal-grid { grid-template-columns: 1fr; }
       .spec-row { grid-template-columns: 1fr; gap: 2px; }
-      .player-shell iframe { height: 380px; }
       .top-meta .clock { display: none; }
     }
 
@@ -533,7 +483,7 @@
         <span class="mono clock" id="clock" aria-hidden="true"></span>
         <nav class="nav" aria-label="Main">
           <a href="#listen"><span>01</span>Listen</a>
-          <a href="#movement"><span>02</span>Movement</a>
+          <a href="#blue-series"><span>02</span>Blue Series</a>
           <a href="#journal"><span>03</span>Journal</a>
           <a href="#about"><span>04</span>About</a>
         </nav>
@@ -565,10 +515,10 @@
         </div>
 
         <figure class="frame hero-frame reveal" style="--d:.16s">
-          <img src="IMG_4998%25203.JPG" alt="Tashi Tash on a sailboat at golden hour" />
+          <img src="tashitashonherway.jpeg" alt="Tashi Tash on her way" />
           <figcaption class="frame-bar">
-            <p class="note">Under sail, late light.</p>
-            <span class="mono">Pacific</span>
+            <p class="note">On her way.</p>
+            <span class="mono">En route</span>
           </figcaption>
         </figure>
       </div>
@@ -586,29 +536,34 @@
         <div class="section-head reveal">
           <span class="track-no">01</span>
           <h2>Listen</h2>
-          <span class="mono">Live on SoundCloud</span>
+          <span class="mono">On repeat</span>
         </div>
 
         <div class="listen-grid">
           <div class="player-shell reveal">
-            <iframe
-              title="Tashi Tash on SoundCloud"
-              loading="lazy"
-              allow="autoplay"
-              src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Ftashitash&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_teaser=false">
-            </iframe>
+            <div class="frame-head">
+              <span class="mono">Featured track</span>
+              <span class="mono">Delicate — Echolocation &amp; Jordan Whitlock</span>
+            </div>
+            <div class="embed">
+              <iframe
+                title="Delicate by Echolocation and Jordan Whitlock on Spotify"
+                loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                src="https://open.spotify.com/embed/track/1JdfqnBhfePNrRCs0xvKNn?theme=0">
+              </iframe>
+            </div>
             <p class="mono player-hint">Hover to wake the player · plays in place</p>
           </div>
 
           <aside class="listen-aside reveal" style="--d:.12s">
-            <span class="mono">About the sets</span>
+            <span class="mono">About the sound</span>
             <p>
-              Mixes recorded between coasts and seasons. Mostly warm, mostly
-              made for moving — on wheels, on water, or through a long afternoon.
+              Smooth, atmospheric, made for moving — on wheels, on water, or
+              through a long afternoon. Own sets are coming to SoundCloud.
             </p>
             <div class="link-list">
               <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud profile <span class="arrow">↗</span></a>
-              <a href="https://soundcloud.com/tashitash/tracks" target="_blank" rel="noopener noreferrer">All tracks <span class="arrow">↗</span></a>
               <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram <span class="arrow">↗</span></a>
             </div>
           </aside>
@@ -616,41 +571,38 @@
       </div>
     </section>
 
-    <section class="section" id="movement">
+    <section class="section" id="blue-series">
       <div class="wrap">
         <div class="section-head reveal">
           <span class="track-no">02</span>
-          <h2>Movement</h2>
-          <span class="mono">Wheels · Water · Transit</span>
+          <h2>Blue Series</h2>
+          <span class="mono">One roll · One mood · Touch a frame for color</span>
         </div>
 
-        <div class="movement-grid">
-          <article class="reveal">
-            <figure class="frame">
-              <img src="IMG_6945.JPG" alt="Coastal scene in late afternoon sun" />
-              <figcaption class="frame-bar"><span class="mono">Late sun</span></figcaption>
-            </figure>
-            <h3>Coastal hours</h3>
-            <p class="desc">End-of-day light, salt air, nowhere to be.</p>
-          </article>
+        <div class="series-grid">
+          <figure class="frame reveal">
+            <div class="frame-head"><span class="mono">BS 01</span><span class="mono">Blue</span></div>
+            <img src="blueseriestashi.jpeg" alt="Tashi, blue series" />
+            <figcaption class="frame-bar">
+              <p class="note">Tashi.</p>
+            </figcaption>
+          </figure>
 
-          <article class="reveal" style="--d:.12s">
-            <figure class="frame">
-              <img src="IMG_8869.JPG" alt="On the move in warm daylight" />
-              <figcaption class="frame-bar"><span class="mono">In transit</span></figcaption>
-            </figure>
-            <h3>On the move</h3>
-            <p class="desc">Wheels, water, whatever keeps the day open.</p>
-          </article>
+          <figure class="frame reveal" style="--d:.12s">
+            <div class="frame-head"><span class="mono">BS 02</span><span class="mono">Blue</span></div>
+            <img src="blueserieshandinhandwithmartin.jpeg" alt="Hand in hand with Martin, blue series" />
+            <figcaption class="frame-bar">
+              <p class="note">Hand in hand.</p>
+            </figcaption>
+          </figure>
 
-          <article class="reveal" style="--d:.24s">
-            <figure class="frame">
-              <img src="tash.jpg" alt="Portrait of Tashi Tash" />
-              <figcaption class="frame-bar"><span class="mono">Off the clock</span></figcaption>
-            </figure>
-            <h3>Personal, not staged</h3>
-            <p class="desc">Curated, never overproduced. Selected moments only.</p>
-          </article>
+          <figure class="frame reveal" style="--d:.24s">
+            <div class="frame-head"><span class="mono">BS 03</span><span class="mono">Blue</span></div>
+            <img src="blueseriesmartinandtashi.jpeg" alt="Martin and Tashi, blue series" />
+            <figcaption class="frame-bar">
+              <p class="note">Martin &amp; Tashi.</p>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -660,39 +612,39 @@
         <div class="section-head reveal">
           <span class="track-no">03</span>
           <h2>Journal</h2>
-          <span class="mono">Contact sheet · Touch a frame for color</span>
+          <span class="mono">Contact sheet</span>
         </div>
 
         <div class="journal-grid">
           <figure class="frame reveal">
-            <div class="frame-head"><span class="mono">FR 01</span><span class="mono">Pacific</span></div>
-            <img src="IMG_4998%25203.JPG" alt="Sailing at golden hour on the Pacific" />
+            <div class="frame-head"><span class="mono">FR 01</span><span class="mono">Zion</span></div>
+            <img src="cyclinginzion.jpeg" alt="Cycling in Zion" />
             <figcaption class="frame-bar">
-              <p class="note">Golden hour, Pacific side.</p>
+              <p class="note">Climbing out of Zion.</p>
             </figcaption>
           </figure>
 
           <figure class="frame reveal" style="--d:.1s">
-            <div class="frame-head"><span class="mono">FR 02</span><span class="mono">Miami</span></div>
-            <img src="tashi_in_miami.JPG" alt="Mirror photo in Miami" />
+            <div class="frame-head"><span class="mono">FR 02</span><span class="mono">Finland</span></div>
+            <img src="freezinginfinland.jpeg" alt="Freezing in Finland" />
             <figcaption class="frame-bar">
-              <p class="note">Miami mirror light.</p>
+              <p class="note">Freezing, worth it.</p>
             </figcaption>
           </figure>
 
           <figure class="frame reveal" style="--d:.2s">
-            <div class="frame-head"><span class="mono">FR 03</span><span class="mono">Coast</span></div>
-            <img src="IMG_6945.JPG" alt="Coastal movement scene" />
+            <div class="frame-head"><span class="mono">FR 03</span><span class="mono">Malibu</span></div>
+            <img src="malibustop.jpeg" alt="Stop in Malibu" />
             <figcaption class="frame-bar">
-              <p class="note">Movement changes how a place feels.</p>
+              <p class="note">Malibu, waiting on the light.</p>
             </figcaption>
           </figure>
 
           <figure class="frame reveal" style="--d:.3s">
-            <div class="frame-head"><span class="mono">FR 04</span><span class="mono">En route</span></div>
-            <img src="IMG_8869.JPG" alt="Warm open day outdoors" />
+            <div class="frame-head"><span class="mono">FR 04</span><span class="mono">Napa</span></div>
+            <img src="napastop.jpeg" alt="Stop in Napa" />
             <figcaption class="frame-bar">
-              <p class="note">Warm light. Open day.</p>
+              <p class="note">Napa, quick stop.</p>
             </figcaption>
           </figure>
         </div>
@@ -708,47 +660,38 @@
         </div>
 
         <div class="about-grid">
-          <figure class="frame about-frame reveal">
-            <img src="tashi_in_miami.JPG" alt="Tashi Tash, mirror photo in Miami" />
-            <figcaption class="frame-bar">
-              <p class="note">Somewhere between sets.</p>
-              <span class="mono">Miami</span>
-            </figcaption>
-          </figure>
-
-          <div class="about-copy reveal" style="--d:.12s">
+          <div class="about-copy reveal">
             <p>
               This site is a home for <strong>sets, movement, travel,</strong> and
               selected visual notes. Not everything belongs here — only the
               pieces worth keeping.
             </p>
-
             <p>
               The direction is simple: better frames, cleaner mood, stronger
               identity. Music, skating, coastal light, transit moments, and
               small fragments from the road.
             </p>
+          </div>
 
-            <div class="spec">
-              <div class="spec-row">
-                <span class="mono">Alias</span>
-                <div class="value">Tashi Tash</div>
+          <div class="spec reveal" style="--d:.12s">
+            <div class="spec-row">
+              <span class="mono">Alias</span>
+              <div class="value">Tashi Tash</div>
+            </div>
+            <div class="spec-row">
+              <span class="mono">Focus</span>
+              <div class="value">Sets, movement, visual notes</div>
+            </div>
+            <div class="spec-row">
+              <span class="mono">SoundCloud</span>
+              <div class="value">
+                <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">soundcloud.com/tashitash</a>
               </div>
-              <div class="spec-row">
-                <span class="mono">Focus</span>
-                <div class="value">Sets, movement, visual notes</div>
-              </div>
-              <div class="spec-row">
-                <span class="mono">SoundCloud</span>
-                <div class="value">
-                  <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">soundcloud.com/tashitash</a>
-                </div>
-              </div>
-              <div class="spec-row">
-                <span class="mono">Instagram</span>
-                <div class="value">
-                  <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">instagram.com/tashitashiii</a>
-                </div>
+            </div>
+            <div class="spec-row">
+              <span class="mono">Instagram</span>
+              <div class="value">
+                <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">instagram.com/tashitashiii</a>
               </div>
             </div>
           </div>
