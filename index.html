@@ -147,6 +147,21 @@
       padding-bottom: clamp(40px, 6vh, 72px);
     }
 
+    .hero-sub {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line-strong);
+    }
+
+    .hero-sub p { margin: 0; max-width: 44ch; color: var(--grey); font-size: 16px; }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+
     .hero-title {
       margin: 0;
       font-weight: 900;
@@ -162,21 +177,6 @@
       color: transparent;
       -webkit-text-stroke: 1.5px var(--white);
     }
-
-    .hero-sub {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin-top: 28px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line-strong);
-    }
-
-    .hero-sub p { margin: 0; max-width: 44ch; color: var(--grey); font-size: 16px; }
-
-    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
 
     .btn {
       display: inline-flex;
@@ -356,7 +356,7 @@
 
     .journal-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: clamp(18px, 2.5vw, 30px);
     }
 
@@ -520,7 +520,7 @@
     @media (max-width: 920px) {
       .hero-grid, .listen-grid, .about-grid { grid-template-columns: 1fr; }
       .series-grid { grid-template-columns: 1fr; }
-      .hero-frame { max-width: 460px; }
+      .hero-frame { max-width: 460px; margin: 0 auto; }
       .section-head { grid-template-columns: auto 1fr; }
       .section-head .mono { display: none; }
     }
@@ -561,7 +561,7 @@
   <main>
     <section class="hero">
       <div class="wrap hero-grid">
-        <div>
+        <div class="hero-copy">
           <h1 class="hero-title reveal">
             <span>Tashi</span>
             <span class="outline">Tash</span>
@@ -703,10 +703,58 @@
           </figure>
 
           <figure class="frame reveal" style="--d:.3s">
-            <div class="frame-head"><span class="mono">FR 04</span><span class="mono">Napa</span></div>
-            <img src="napastop.jpeg" alt="Stop in Napa" />
+            <div class="frame-head"><span class="mono">FR 04</span><span class="mono">Napa Valley</span></div>
+            <img src="napastop.jpeg" alt="Stop in Napa Valley" />
             <figcaption class="frame-bar">
-              <p class="note">Napa, quick stop.</p>
+              <p class="note">Napa Valley, quick stop.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="frame reveal" style="--d:.4s">
+            <div class="frame-head"><span class="mono">FR 05</span><span class="mono">Bahamas</span></div>
+            <img src="sailingbahamas.jpeg" alt="Sailing in the Bahamas" />
+            <figcaption class="frame-bar">
+              <p class="note">Under sail, Bahamas.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="frame reveal">
+            <div class="frame-head"><span class="mono">FR 06</span><span class="mono">Ocean</span></div>
+            <img src="intothedeepblueocean.jpeg" alt="Into the deep blue ocean" />
+            <figcaption class="frame-bar">
+              <p class="note">Into the deep blue.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="frame reveal" style="--d:.08s">
+            <div class="frame-head"><span class="mono">FR 07</span><span class="mono">Miami</span></div>
+            <img src="miami.jpeg" alt="Miami" />
+            <figcaption class="frame-bar">
+              <p class="note">Miami light.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="frame reveal" style="--d:.16s">
+            <div class="frame-head"><span class="mono">FR 08</span><span class="mono">Malibu</span></div>
+            <img src="malibu.jpeg" alt="Malibu" />
+            <figcaption class="frame-bar">
+              <p class="note">Back in Malibu.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="frame reveal" style="--d:.24s">
+            <div class="frame-head"><span class="mono">FR 09</span><span class="mono">Santa Monica</span></div>
+            <img src="santamonica.jpeg" alt="Santa Monica" />
+            <figcaption class="frame-bar">
+              <p class="note">Santa Monica.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="frame reveal" style="--d:.32s">
+            <div class="frame-head"><span class="mono">FR 10</span><span class="mono">Venice</span></div>
+            <img src="tashiinvenice.jpeg" alt="Tashi in Venice" />
+            <figcaption class="frame-bar">
+              <p class="note">Venice.</p>
             </figcaption>
           </figure>
         </div>
