@@ -292,6 +292,8 @@
 
     .reel-frame { max-width: 420px; }
 
+    .reel-media { position: relative; }
+
     .reel-frame video {
       width: 100%;
       display: block;
@@ -300,6 +302,31 @@
       background: #000;
       cursor: pointer;
     }
+
+    .sound-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid rgba(244, 244, 242, 0.4);
+      border-radius: 999px;
+      background: rgba(10, 10, 10, 0.55);
+      backdrop-filter: blur(6px);
+      color: var(--white);
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .sound-btn:hover { background: rgba(10, 10, 10, 0.8); border-color: var(--white); transform: translateY(-1px); }
+    .sound-btn:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+    .sound-btn svg { width: 20px; height: 20px; display: block; }
+    .sound-btn .on { display: none; }
+    .sound-btn.is-on .off { display: none; }
+    .sound-btn.is-on .on { display: block; }
 
     .reel-aside { display: grid; gap: 16px; align-content: start; }
     .reel-aside p { margin: 0; color: var(--grey); font-size: 15px; }
@@ -667,20 +694,30 @@
         <div class="section-head reveal">
           <span class="track-no">02</span>
           <h2>Reel</h2>
-          <span class="mono">Moving frame · Tap for sound</span>
+          <span class="mono">Moving frame · Speaker for sound</span>
         </div>
 
         <div class="reel-grid">
           <figure class="frame reel-frame reveal">
             <div class="frame-head"><span class="mono">RL 01</span><span class="mono">Motion</span></div>
-            <video
-              id="reel-video"
-              src="tashi-clip.mp4"
-              poster="tashi-clip-poster.jpg"
-              muted
-              loop
-              playsinline
-              preload="metadata"></video>
+            <div class="reel-media">
+              <video
+                id="reel-video"
+                src="tashi-clip.mp4"
+                poster="tashi-clip-poster.jpg"
+                muted
+                loop
+                playsinline
+                preload="metadata"></video>
+              <button class="sound-btn" id="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
+                <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+                </svg>
+                <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+                </svg>
+              </button>
+            </div>
             <figcaption class="frame-bar">
               <p class="note">In motion.</p>
               <span class="mono">00:09</span>
@@ -691,7 +728,7 @@
             <span class="mono">About the clip</span>
             <p>
               A short moving frame between the stills. It loops on its own,
-              muted — tap the video to bring the sound in.
+              muted — hit the speaker to bring the sound in.
             </p>
           </aside>
         </div>
@@ -1012,8 +1049,9 @@
         });
       }
 
-      /* ---- reel video: auto-play muted in view, tap to toggle sound ---- */
+      /* ---- reel video: auto-play muted in view, speaker button toggles sound ---- */
       var reel = document.getElementById('reel-video');
+      var soundBtn = document.getElementById('sound-btn');
       if (reel) {
         if ('IntersectionObserver' in window) {
           var vio = new IntersectionObserver(function (entries) {
@@ -1028,10 +1066,23 @@
           vio.observe(reel);
         }
 
-        reel.addEventListener('click', function () {
+        function syncSound() {
+          if (!soundBtn) return;
+          var on = !reel.muted;
+          soundBtn.classList.toggle('is-on', on);
+          soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+          soundBtn.setAttribute('aria-label', on ? 'Ton ausschalten' : 'Ton einschalten');
+        }
+
+        function toggleSound() {
           reel.muted = !reel.muted;
           if (!reel.muted) reel.play().catch(function () {});
-        });
+          syncSound();
+        }
+
+        if (soundBtn) soundBtn.addEventListener('click', toggleSound);
+        reel.addEventListener('click', toggleSound);
+        syncSound();
       }
     })();
   </script>
