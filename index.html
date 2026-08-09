@@ -442,7 +442,8 @@
       transition: width 0.25s linear;
     }
 
-    .reel-seg.done .fill { width: 100%; transition: none; }
+    .reel-seg.done .fill { width: 100%; transition: none; background: rgba(244, 244, 242, 0.4); }
+    .reel-seg.active .fill { background: var(--white); }
     .reel-seg:focus-visible { outline: 2px solid var(--white); outline-offset: 4px; }
 
     .sound-btn {
