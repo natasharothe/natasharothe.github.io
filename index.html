@@ -471,10 +471,30 @@
     .sound-btn.is-on .on { display: block; }
 
     @media (max-width: 700px) {
-      .reel-frame { height: 70%; }
+      .reel-stage {
+        height: auto;
+        overflow: visible;
+        perspective: none;
+      }
+      .reel-frame {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: min(84vw, 360px);
+        height: auto;
+        aspect-ratio: 9 / 16;
+        max-width: 100%;
+        margin: 0 auto;
+        transform: none;
+        opacity: 1;
+        transition: opacity 0.35s ease;
+      }
+      .reel-frame.is-active { transform: none; }
       .reel-frame.is-left,
-      .reel-frame.is-right { opacity: 0; pointer-events: none; }
-      .reel-nav { width: 42px; height: 42px; }
+      .reel-frame.is-right { display: none; }
+      .reel-nav { width: 40px; height: 40px; }
+      .reel-nav.prev { left: 4px; }
+      .reel-nav.next { right: 4px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -736,12 +756,6 @@
       .hero-title { font-size: clamp(3rem, 17vw, 4.4rem); }
       .hero-sub { flex-direction: column; gap: 10px; margin-top: 22px; padding-top: 14px; }
       .section { padding-top: clamp(48px, 8vh, 72px); }
-
-      /* reel: fill the stage so there is no floating empty space */
-      .reel-stage { height: 74vh; max-height: 620px; }
-      .reel-frame { height: 88%; }
-      .reel-nav { top: auto; bottom: 8px; transform: none; }
-      .reel-nav.prev:hover, .reel-nav.next:hover { transform: none; }
     }
 
     @media (max-width: 380px) {
