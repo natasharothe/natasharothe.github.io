@@ -634,7 +634,6 @@
             <span class="mono">Sets · Movement · Journal</span>
             <p>
               Music, skating, travel, and selected moments in between.
-              Less noise, better frames. Only the pieces worth keeping.
             </p>
           </div>
 
@@ -666,7 +665,7 @@
         <div class="section-head reveal">
           <span class="track-no">01</span>
           <h2>Listen</h2>
-          <span class="mono">On repeat</span>
+          <span class="mono"></span>
         </div>
 
         <div class="listen-grid">
@@ -678,13 +677,13 @@
             <div class="embed">
               <div id="spotify-embed"><a class="mono" href="https://open.spotify.com/track/1JdfqnBhfePNrRCs0xvKNn" target="_blank" rel="noopener noreferrer">Open "Delicate" on Spotify ↗</a></div>
             </div>
-            <p class="mono player-hint">Plays in place · full track with Spotify login, preview without</p>
+            <p class="mono player-hint">Full track with Spotify login, preview without</p>
           </div>
 
           <aside class="listen-aside reveal" style="--d:.12s">
             <p>Own sets are coming soon.</p>
             <div class="link-list">
-              <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud profile <span class="arrow">↗</span></a>
+              <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud <span class="arrow">↗</span></a>
               <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram <span class="arrow">↗</span></a>
             </div>
           </aside>
@@ -697,12 +696,12 @@
         <div class="section-head reveal">
           <span class="track-no">02</span>
           <h2>Reel</h2>
-          <span class="mono">Moving frame · Speaker for sound</span>
+          <span class="mono"></span>
         </div>
 
         <div class="reel-grid">
           <figure class="frame reel-frame reveal">
-            <div class="frame-head"><span class="mono">RL 01</span><span class="mono">Motion</span></div>
+            <div class="frame-head"><span class="mono">RL 01</span></div>
             <div class="reel-media">
               <video
                 id="reel-video"
@@ -723,13 +722,12 @@
               </button>
             </div>
             <figcaption class="frame-bar">
-              <p class="note">In motion.</p>
               <span class="mono">00:09</span>
             </figcaption>
           </figure>
 
           <figure class="frame reel-frame reveal" style="--d:.12s">
-            <div class="frame-head"><span class="mono">RL 02</span><span class="mono">Motion</span></div>
+            <div class="frame-head"><span class="mono">RL 02</span></div>
             <div class="reel-media">
               <video
                 id="reel-video-2"
@@ -750,13 +748,12 @@
               </button>
             </div>
             <figcaption class="frame-bar">
-              <p class="note">In motion.</p>
               <span class="mono">00:13</span>
             </figcaption>
           </figure>
 
           <figure class="frame reel-frame reveal" style="--d:.24s">
-            <div class="frame-head"><span class="mono">RL 03</span><span class="mono">Motion</span></div>
+            <div class="frame-head"><span class="mono">RL 03</span></div>
             <div class="reel-media">
               <video
                 id="reel-video-3"
@@ -777,7 +774,6 @@
               </button>
             </div>
             <figcaption class="frame-bar">
-              <p class="note">In motion.</p>
               <span class="mono">00:27</span>
             </figcaption>
           </figure>
@@ -871,10 +867,10 @@
           </figure>
 
           <figure class="frame reveal">
-            <div class="frame-head"><span class="mono">FR 06</span><span class="mono">Ocean</span></div>
-            <img src="intothedeepblueocean.jpeg" alt="Into the deep blue ocean" />
+            <div class="frame-head"><span class="mono">FR 06</span><span class="mono">Greece</span></div>
+            <img src="intothedeepblueocean.jpeg" alt="Deep blue sea in Greece" />
             <figcaption class="frame-bar">
-              <p class="note">Into the deep blue.</p>
+              <p class="note">Greece, deep blue.</p>
             </figcaption>
           </figure>
 
@@ -904,9 +900,9 @@
 
           <figure class="frame reveal" style="--d:.32s">
             <div class="frame-head"><span class="mono">FR 10</span><span class="mono">Venice</span></div>
-            <img src="tashiinvenice.jpeg" alt="Tashi in Venice" />
+            <img src="tashiinvenice.jpeg" alt="Tashi at Venice skatepark" />
             <figcaption class="frame-bar">
-              <p class="note">Venice.</p>
+              <p class="note">Venice skatepark.</p>
             </figcaption>
           </figure>
         </div>
@@ -925,12 +921,10 @@
           <div class="about-copy reveal">
             <p>
               This site is a home for <strong>sets, movement, travel,</strong> and
-              selected visual notes. Not everything belongs here — only the
-              pieces worth keeping.
+              selected visual notes.
             </p>
             <p>
-              The direction is simple: better frames, cleaner mood, stronger
-              identity. Music, skating, coastal light, transit moments, and
+              Music, skating, coastal light, transit moments, and
               small fragments from the road.
             </p>
           </div>
@@ -1099,52 +1093,72 @@
         });
       }
 
-      /* ---- reel videos: auto-play muted in view, speaker button toggles sound ---- */
+      /* ---- reel videos: only the most-visible clip plays; others pause. ---- */
+      /* desktop: one at a time · mobile: autoplays each clip as you scroll to it */
       var reels = Array.prototype.slice.call(document.querySelectorAll('.reel-video'));
-      reels.forEach(function (reel) {
-        var media = reel.closest('.reel-media');
-        var soundBtn = media ? media.querySelector('.sound-btn') : null;
+      if (reels.length) {
+        var activeIdx = -1;
 
-        if ('IntersectionObserver' in window) {
-          var vio = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                reel.play().catch(function () {});
-              } else {
-                reel.pause();
-              }
-            });
-          }, { threshold: 0.5 });
-          vio.observe(reel);
+        function buttonFor(v) {
+          var media = v.closest('.reel-media');
+          return media ? media.querySelector('.sound-btn') : null;
         }
 
-        function syncSound() {
-          if (!soundBtn) return;
-          var on = !reel.muted;
-          soundBtn.classList.toggle('is-on', on);
-          soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-          soundBtn.setAttribute('aria-label', on ? 'Ton ausschalten' : 'Ton einschalten');
-        }
-
-        function toggleSound() {
-          // muting others so only one clip plays sound at a time
-          reels.forEach(function (other) { if (other !== reel) other.muted = true; });
-          document.querySelectorAll('.sound-btn').forEach(function (b) {
-            if (!soundBtn || b !== soundBtn) {
-              b.classList.remove('is-on');
-              b.setAttribute('aria-pressed', 'false');
-              b.setAttribute('aria-label', 'Ton einschalten');
-            }
+        function syncButtons() {
+          reels.forEach(function (v) {
+            var btn = buttonFor(v);
+            if (!btn) return;
+            var on = !v.muted;
+            btn.classList.toggle('is-on', on);
+            btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+            btn.setAttribute('aria-label', on ? 'Ton ausschalten' : 'Ton einschalten');
           });
-          reel.muted = !reel.muted;
-          if (!reel.muted) reel.play().catch(function () {});
-          syncSound();
         }
 
-        if (soundBtn) soundBtn.addEventListener('click', toggleSound);
-        reel.addEventListener('click', toggleSound);
-        syncSound();
-      });
+        function activate(i) {
+          activeIdx = i;
+          reels.forEach(function (v, j) { if (j !== i) v.pause(); });
+          reels[i].play().catch(function () {});
+        }
+
+        /* pick whichever clip is most in view */
+        var ratios = reels.map(function () { return 0; });
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              var idx = reels.indexOf(entry.target);
+              if (idx > -1) ratios[idx] = entry.isIntersecting ? entry.intersectionRatio : 0;
+            });
+            var best = -1, bestR = 0.55;
+            ratios.forEach(function (r, i) { if (r > bestR) { bestR = r; best = i; } });
+            if (best === -1) {
+              reels.forEach(function (v) { v.pause(); });
+              activeIdx = -1;
+            } else if (best !== activeIdx) {
+              activate(best);
+            }
+          }, { threshold: [0, 0.25, 0.5, 0.55, 0.75, 1] });
+          reels.forEach(function (v) { io.observe(v); });
+        } else {
+          activate(0);
+        }
+
+        /* tap a clip or its speaker: make it the one that plays, toggle its sound */
+        reels.forEach(function (v, i) {
+          function onTap() {
+            reels.forEach(function (other) { if (other !== v) { other.muted = true; other.pause(); } });
+            activeIdx = i;
+            v.muted = !v.muted;
+            v.play().catch(function () {});
+            syncButtons();
+          }
+          var btn = buttonFor(v);
+          if (btn) btn.addEventListener('click', onTap);
+          v.addEventListener('click', onTap);
+        });
+
+        syncButtons();
+      }
     })();
   </script>
 
