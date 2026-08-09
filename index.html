@@ -754,13 +754,41 @@
       .hero { padding-top: 28px; }
       .hero-grid { gap: 28px; padding-bottom: 40px; }
       .hero-title { font-size: clamp(3rem, 17vw, 4.4rem); }
-      .hero-sub { flex-direction: column; gap: 10px; margin-top: 22px; padding-top: 14px; }
       .section { padding-top: clamp(48px, 8vh, 72px); }
+
+      /* hero centered on phone */
+      .hero-copy { text-align: center; }
+      .hero-title { display: inline-block; }
+      .hero-sub {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+        margin-top: 22px;
+        padding-top: 14px;
+      }
+      .hero-sub p { margin-left: auto; margin-right: auto; }
+      .hero-actions { justify-content: center; margin-top: 20px; }
+
+      /* nav on a single line */
+      .top-meta { width: 100%; }
+      .nav {
+        width: 100%;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .nav::-webkit-scrollbar { display: none; }
+      .nav a { font-size: 11px; letter-spacing: 0.06em; white-space: nowrap; flex: 0 0 auto; }
+      .nav a span { margin-right: 3px; }
+      .nav a .sm-hide { display: none; }
     }
 
     @media (max-width: 380px) {
-      .nav { gap: 14px; }
-      .nav a { font-size: 11px; }
+      .nav a { font-size: 10px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -783,7 +811,7 @@
         <nav class="nav" aria-label="Main">
           <a href="#listen"><span>01</span>Listen</a>
           <a href="#reel"><span>02</span>Reel</a>
-          <a href="#blue-series"><span>03</span>Blue Series</a>
+          <a href="#blue-series"><span>03</span>Blue<span class="sm-hide">&nbsp;Series</span></a>
           <a href="#journal"><span>04</span>Journal</a>
           <a href="#about"><span>05</span>About</a>
         </nav>
