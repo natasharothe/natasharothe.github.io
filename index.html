@@ -281,6 +281,34 @@
 
     .track-no { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--grey); }
 
+    /* ---------- reel (vertical video) ---------- */
+
+    .reel-grid {
+      display: grid;
+      grid-template-columns: 0.62fr 0.38fr;
+      gap: clamp(24px, 3vw, 44px);
+      align-items: start;
+    }
+
+    .reel-frame { max-width: 420px; }
+
+    .reel-frame video {
+      width: 100%;
+      display: block;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      background: #000;
+      cursor: pointer;
+    }
+
+    .reel-aside { display: grid; gap: 16px; align-content: start; }
+    .reel-aside p { margin: 0; color: var(--grey); font-size: 15px; }
+
+    @media (max-width: 920px) {
+      .reel-grid { grid-template-columns: 1fr; }
+      .reel-frame { max-width: 340px; margin: 0 auto; }
+    }
+
     .section-head h2 {
       margin: 0;
       font-weight: 800;
@@ -550,9 +578,10 @@
         <span class="mono clock" id="clock" aria-hidden="true"></span>
         <nav class="nav" aria-label="Main">
           <a href="#listen"><span>01</span>Listen</a>
-          <a href="#blue-series"><span>02</span>Blue Series</a>
-          <a href="#journal"><span>03</span>Journal</a>
-          <a href="#about"><span>04</span>About</a>
+          <a href="#reel"><span>02</span>Reel</a>
+          <a href="#blue-series"><span>03</span>Blue Series</a>
+          <a href="#journal"><span>04</span>Journal</a>
+          <a href="#about"><span>05</span>About</a>
         </nav>
       </div>
     </div>
@@ -633,10 +662,46 @@
       </div>
     </section>
 
-    <section class="section" id="blue-series">
+    <section class="section" id="reel">
       <div class="wrap">
         <div class="section-head reveal">
           <span class="track-no">02</span>
+          <h2>Reel</h2>
+          <span class="mono">Moving frame · Tap for sound</span>
+        </div>
+
+        <div class="reel-grid">
+          <figure class="frame reel-frame reveal">
+            <div class="frame-head"><span class="mono">RL 01</span><span class="mono">Motion</span></div>
+            <video
+              id="reel-video"
+              src="tashi-clip.mp4"
+              poster="tashi-clip-poster.jpg"
+              muted
+              loop
+              playsinline
+              preload="metadata"></video>
+            <figcaption class="frame-bar">
+              <p class="note">In motion.</p>
+              <span class="mono">00:09</span>
+            </figcaption>
+          </figure>
+
+          <aside class="reel-aside reveal" style="--d:.12s">
+            <span class="mono">About the clip</span>
+            <p>
+              A short moving frame between the stills. It loops on its own,
+              muted — tap the video to bring the sound in.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="blue-series">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="track-no">03</span>
           <h2>Blue Series</h2>
           <span class="mono">One roll · One mood</span>
         </div>
@@ -672,7 +737,7 @@
     <section class="section" id="journal">
       <div class="wrap">
         <div class="section-head reveal">
-          <span class="track-no">03</span>
+          <span class="track-no">04</span>
           <h2>Journal</h2>
           <span class="mono">Contact sheet</span>
         </div>
@@ -764,7 +829,7 @@
     <section class="section" id="about">
       <div class="wrap">
         <div class="section-head reveal">
-          <span class="track-no">04</span>
+          <span class="track-no">05</span>
           <h2>About</h2>
           <span class="mono">Alias · Tashi Tash</span>
         </div>
@@ -878,7 +943,8 @@
       var lbMeta = document.getElementById('lb-meta');
 
       if (lb && lbImg) {
-        var frames = Array.prototype.slice.call(document.querySelectorAll('.frame'));
+        var frames = Array.prototype.slice.call(document.querySelectorAll('.frame'))
+          .filter(function (frame) { return frame.querySelector('img'); });
         var gallery = frames.map(function (frame) {
           var img = frame.querySelector('img');
           var note = frame.querySelector('.frame-bar .note');
@@ -943,6 +1009,28 @@
           if (e.key === 'Escape') closeLb();
           if (e.key === 'ArrowLeft') step(-1);
           if (e.key === 'ArrowRight') step(1);
+        });
+      }
+
+      /* ---- reel video: auto-play muted in view, tap to toggle sound ---- */
+      var reel = document.getElementById('reel-video');
+      if (reel) {
+        if ('IntersectionObserver' in window) {
+          var vio = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                reel.play().catch(function () {});
+              } else {
+                reel.pause();
+              }
+            });
+          }, { threshold: 0.5 });
+          vio.observe(reel);
+        }
+
+        reel.addEventListener('click', function () {
+          reel.muted = !reel.muted;
+          if (!reel.muted) reel.play().catch(function () {});
         });
       }
     })();
