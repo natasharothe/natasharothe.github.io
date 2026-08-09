@@ -285,12 +285,12 @@
 
     .reel-grid {
       display: grid;
-      grid-template-columns: 0.62fr 0.38fr;
-      gap: clamp(24px, 3vw, 44px);
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(18px, 2.5vw, 30px);
       align-items: start;
     }
 
-    .reel-frame { max-width: 420px; }
+    .reel-frame { max-width: 100%; }
 
     .reel-media { position: relative; }
 
@@ -328,8 +328,15 @@
     .sound-btn.is-on .off { display: none; }
     .sound-btn.is-on .on { display: block; }
 
-    .reel-aside { display: grid; gap: 16px; align-content: start; }
-    .reel-aside p { margin: 0; color: var(--grey); font-size: 15px; }
+    .reel-soon {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 9 / 16;
+      background: var(--panel);
+      color: var(--grey);
+      text-align: center;
+      padding: 20px;
+    }
 
     @media (max-width: 920px) {
       .reel-grid { grid-template-columns: 1fr; }
@@ -675,11 +682,7 @@
           </div>
 
           <aside class="listen-aside reveal" style="--d:.12s">
-            <span class="mono">About the sound</span>
-            <p>
-              Smooth, atmospheric, made for moving — on wheels, on water, or
-              through a long afternoon. Own sets are coming to SoundCloud.
-            </p>
+            <p>Own sets are coming soon.</p>
             <div class="link-list">
               <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud profile <span class="arrow">↗</span></a>
               <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram <span class="arrow">↗</span></a>
@@ -703,6 +706,7 @@
             <div class="reel-media">
               <video
                 id="reel-video"
+                class="reel-video"
                 src="tashi-clip.mp4"
                 poster="tashi-clip-poster.jpg"
                 muted
@@ -724,13 +728,59 @@
             </figcaption>
           </figure>
 
-          <aside class="reel-aside reveal" style="--d:.12s">
-            <span class="mono">About the clip</span>
-            <p>
-              A short moving frame between the stills. It loops on its own,
-              muted — hit the speaker to bring the sound in.
-            </p>
-          </aside>
+          <figure class="frame reel-frame reveal" style="--d:.12s">
+            <div class="frame-head"><span class="mono">RL 02</span><span class="mono">Motion</span></div>
+            <div class="reel-media">
+              <video
+                id="reel-video-2"
+                class="reel-video"
+                src="tashi-clip-2.mp4"
+                poster="tashi-clip-2-poster.jpg"
+                muted
+                loop
+                playsinline
+                preload="metadata"></video>
+              <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
+                <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+                </svg>
+                <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+                </svg>
+              </button>
+            </div>
+            <figcaption class="frame-bar">
+              <p class="note">In motion.</p>
+              <span class="mono">00:13</span>
+            </figcaption>
+          </figure>
+
+          <figure class="frame reel-frame reveal" style="--d:.24s">
+            <div class="frame-head"><span class="mono">RL 03</span><span class="mono">Motion</span></div>
+            <div class="reel-media">
+              <video
+                id="reel-video-3"
+                class="reel-video"
+                src="tashi-clip-3.mp4"
+                poster="tashi-clip-3-poster.jpg"
+                muted
+                loop
+                playsinline
+                preload="metadata"></video>
+              <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
+                <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+                </svg>
+                <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+                </svg>
+              </button>
+            </div>
+            <figcaption class="frame-bar">
+              <p class="note">In motion.</p>
+              <span class="mono">00:27</span>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -915,7 +965,7 @@
   <footer>
     <div class="wrap">
       <div class="footer-grid">
-        <span class="mono">© 2026 Tashi Tash · Shot on the way somewhere</span>
+        <span class="mono">© 2026 Tashi Tash · Self-built in Munich · Shot on the way somewhere</span>
         <div class="footer-links">
           <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud</a>
           <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram</a>
@@ -1049,10 +1099,12 @@
         });
       }
 
-      /* ---- reel video: auto-play muted in view, speaker button toggles sound ---- */
-      var reel = document.getElementById('reel-video');
-      var soundBtn = document.getElementById('sound-btn');
-      if (reel) {
+      /* ---- reel videos: auto-play muted in view, speaker button toggles sound ---- */
+      var reels = Array.prototype.slice.call(document.querySelectorAll('.reel-video'));
+      reels.forEach(function (reel) {
+        var media = reel.closest('.reel-media');
+        var soundBtn = media ? media.querySelector('.sound-btn') : null;
+
         if ('IntersectionObserver' in window) {
           var vio = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
@@ -1075,6 +1127,15 @@
         }
 
         function toggleSound() {
+          // muting others so only one clip plays sound at a time
+          reels.forEach(function (other) { if (other !== reel) other.muted = true; });
+          document.querySelectorAll('.sound-btn').forEach(function (b) {
+            if (!soundBtn || b !== soundBtn) {
+              b.classList.remove('is-on');
+              b.setAttribute('aria-pressed', 'false');
+              b.setAttribute('aria-label', 'Ton einschalten');
+            }
+          });
           reel.muted = !reel.muted;
           if (!reel.muted) reel.play().catch(function () {});
           syncSound();
@@ -1083,7 +1144,7 @@
         if (soundBtn) soundBtn.addEventListener('click', toggleSound);
         reel.addEventListener('click', toggleSound);
         syncSound();
-      }
+      });
     })();
   </script>
 
