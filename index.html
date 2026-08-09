@@ -1335,13 +1335,24 @@
           reels[0].play().catch(function () {});
         }
 
+        /* one audio source at a time: reel sound pauses the Spotify track, and vice versa */
+        function muteReels() {
+          soundOn = false;
+          reels.forEach(function (x) { x.muted = true; });
+          syncButtons();
+        }
+        window.ttMuteReels = muteReels;
+
         /* click a side clip to centre it; click/​speaker on the centre toggles sound (remembered) */
         reels.forEach(function (v, i) {
           function onTap() {
             if (i !== activeIdx) { activate(i); return; }
             soundOn = !soundOn;
             v.muted = !soundOn;
-            if (soundOn) v.play().catch(function () {});
+            if (soundOn) {
+              if (window.ttPauseSpotify) window.ttPauseSpotify();  // stop the Listen track
+              v.play().catch(function () {});
+            }
             syncButtons();
           }
           var btn = buttonFor(v);
@@ -1388,6 +1399,16 @@
         width: '100%',
         height: 152
       }, function (controller) {
+        /* let the reel logic pause this track when a clip's sound is turned on */
+        window.ttPauseSpotify = function () { try { controller.pause(); } catch (e) {} };
+
+        /* when this track starts, silence the reels so only one audio source plays */
+        controller.addListener('playback_update', function (e) {
+          if (e && e.data && e.data.isPaused === false) {
+            if (window.ttMuteReels) window.ttMuteReels();
+          }
+        });
+
         document.querySelectorAll('[data-play]').forEach(function (btn) {
           btn.addEventListener('click', function () {
             controller.play();
