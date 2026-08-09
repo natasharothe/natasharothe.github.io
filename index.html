@@ -287,6 +287,7 @@
       position: relative;
       height: clamp(380px, 64vh, 580px);
       overflow: hidden;
+      perspective: 1600px;
     }
 
     .reel-frame {
@@ -295,20 +296,21 @@
       left: 50%;
       width: clamp(210px, 24vw, 300px);
       margin: 0;
-      transform: translate(-50%, -50%) scale(0.82);
+      transform-style: preserve-3d;
+      transform: translate(-50%, -50%) scale(0.8);
       opacity: 0.5;
       z-index: 1;
       transition:
-        transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
-        opacity 0.6s ease;
+        transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+        opacity 0.7s ease;
       will-change: transform, opacity;
     }
 
-    .reel-frame.is-left  { transform: translate(calc(-50% - 118%), -50%) scale(0.82); z-index: 2; }
-    .reel-frame.is-right { transform: translate(calc(-50% + 118%), -50%) scale(0.82); z-index: 2; }
+    .reel-frame.is-left  { transform: translate(calc(-50% - 116%), -50%) scale(0.8) rotateY(24deg); z-index: 2; }
+    .reel-frame.is-right { transform: translate(calc(-50% + 116%), -50%) scale(0.8) rotateY(-24deg); z-index: 2; }
 
     .reel-frame.is-active {
-      transform: translate(-50%, -50%) scale(1.06);
+      transform: translate(-50%, -50%) scale(1.06) rotateY(0deg);
       opacity: 1;
       z-index: 3;
     }
@@ -317,12 +319,12 @@
       position: relative;
       border-radius: 16px;
       overflow: hidden;
-      transition: box-shadow 0.6s ease, filter 0.6s ease;
+      transition: box-shadow 0.7s ease, filter 0.7s ease;
     }
 
     /* side clips: soft blur + dim; active: crisp with an ambient glow */
     .reel-frame:not(.is-active) .reel-media {
-      filter: blur(5px) grayscale(0.25) brightness(0.62);
+      filter: blur(5px) grayscale(0.25) brightness(0.6);
       box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
     }
 
@@ -358,6 +360,34 @@
 
     .reel-frame:not(.is-active) .sound-btn { display: none; }
 
+    /* futuristic nav arrows */
+    .reel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 6;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid rgba(244, 244, 242, 0.25);
+      border-radius: 999px;
+      background: rgba(10, 10, 10, 0.5);
+      backdrop-filter: blur(8px);
+      color: var(--white);
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .reel-nav:hover { background: rgba(10, 10, 10, 0.85); border-color: var(--white); }
+    .reel-nav.prev { left: clamp(4px, 3vw, 40px); }
+    .reel-nav.next { right: clamp(4px, 3vw, 40px); }
+    .reel-nav.prev:hover { transform: translateY(-50%) translateX(-2px); }
+    .reel-nav.next:hover { transform: translateY(-50%) translateX(2px); }
+    .reel-nav:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+    .reel-nav svg { width: 20px; height: 20px; }
+
     /* story-style progress bar */
     .reel-progress {
       display: flex;
@@ -376,6 +406,12 @@
       position: relative;
       overflow: hidden;
       cursor: pointer;
+      transition: height 0.25s ease, background 0.25s ease;
+    }
+
+    .reel-seg.active {
+      height: 5px;
+      background: rgba(244, 244, 242, 0.32);
     }
 
     .reel-seg .fill {
@@ -420,6 +456,7 @@
       .reel-frame { width: clamp(220px, 74vw, 300px); }
       .reel-frame.is-left,
       .reel-frame.is-right { opacity: 0; pointer-events: none; }
+      .reel-nav { width: 42px; height: 42px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -789,6 +826,12 @@
         </div>
 
         <div class="reel-stage">
+          <button class="reel-nav prev" type="button" aria-label="Vorheriger Clip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="reel-nav next" type="button" aria-label="Nächster Clip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
           <figure class="reel-frame reveal">
             <div class="reel-media">
               <video
@@ -1182,6 +1225,8 @@
         var activeIdx = 0;
         var inView = false;
 
+        var soundOn = false;   // remembered across clips once the user turns it on
+
         function buttonFor(v) {
           var media = v.closest('.reel-media');
           return media ? media.querySelector('.sound-btn') : null;
@@ -1205,6 +1250,7 @@
         function resetProgress() {
           segs.forEach(function (s, j) {
             s.classList.toggle('done', j < activeIdx);
+            s.classList.toggle('active', j === activeIdx);
             var f = s.querySelector('.fill');
             if (f && j >= activeIdx) f.style.width = '0%';
           });
@@ -1222,7 +1268,7 @@
         function activate(i) {
           activeIdx = ((i % n) + n) % n;
           reels.forEach(function (v, j) {
-            v.muted = true;               // never surprise with sound on advance
+            v.muted = (j === activeIdx) ? !soundOn : true;  // carry the sound choice to the new clip
             if (j !== activeIdx) v.pause();
           });
           layout();
@@ -1263,12 +1309,13 @@
           reels[0].play().catch(function () {});
         }
 
-        /* click a side clip to centre it; click/​speaker on the centre toggles sound */
+        /* click a side clip to centre it; click/​speaker on the centre toggles sound (remembered) */
         reels.forEach(function (v, i) {
           function onTap() {
             if (i !== activeIdx) { activate(i); return; }
-            v.muted = !v.muted;
-            if (!v.muted) v.play().catch(function () {});
+            soundOn = !soundOn;
+            v.muted = !soundOn;
+            if (soundOn) v.play().catch(function () {});
             syncButtons();
           }
           var btn = buttonFor(v);
@@ -1281,12 +1328,21 @@
           s.addEventListener('click', function () { activate(i); });
         });
 
-        /* desktop: hovering a side clip brings it to the centre */
-        if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
-          frames.forEach(function (f, i) {
-            f.addEventListener('mouseenter', function () { if (i !== activeIdx) activate(i); });
-          });
+        /* deliberate navigation: arrows + keyboard (no jumpy hover) */
+        function go(dir) { activate(activeIdx + dir); }
+        if (reelSection) {
+          var prevBtn = reelSection.querySelector('.reel-nav.prev');
+          var nextBtn = reelSection.querySelector('.reel-nav.next');
+          if (prevBtn) prevBtn.addEventListener('click', function () { go(-1); });
+          if (nextBtn) nextBtn.addEventListener('click', function () { go(1); });
         }
+
+        document.addEventListener('keydown', function (e) {
+          if (!inView) return;
+          if (lb && lb.classList.contains('open')) return; // don't clash with the photo lightbox
+          if (e.key === 'ArrowLeft') { go(-1); }
+          if (e.key === 'ArrowRight') { go(1); }
+        });
 
         layout();
         resetProgress();
