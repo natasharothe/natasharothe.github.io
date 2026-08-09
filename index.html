@@ -283,16 +283,56 @@
 
     /* ---------- reel (vertical video) ---------- */
 
-    .reel-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: clamp(18px, 2.5vw, 30px);
-      align-items: start;
+    .reel-stage {
+      position: relative;
+      height: clamp(380px, 64vh, 580px);
+      overflow: hidden;
     }
 
-    .reel-frame { max-width: 100%; }
+    .reel-frame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: clamp(210px, 24vw, 300px);
+      margin: 0;
+      transform: translate(-50%, -50%) scale(0.82);
+      opacity: 0.5;
+      z-index: 1;
+      transition:
+        transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+        opacity 0.6s ease;
+      will-change: transform, opacity;
+    }
 
-    .reel-media { position: relative; }
+    .reel-frame.is-left  { transform: translate(calc(-50% - 118%), -50%) scale(0.82); z-index: 2; }
+    .reel-frame.is-right { transform: translate(calc(-50% + 118%), -50%) scale(0.82); z-index: 2; }
+
+    .reel-frame.is-active {
+      transform: translate(-50%, -50%) scale(1.06);
+      opacity: 1;
+      z-index: 3;
+    }
+
+    .reel-media {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: box-shadow 0.6s ease, filter 0.6s ease;
+    }
+
+    /* side clips: soft blur + dim; active: crisp with an ambient glow */
+    .reel-frame:not(.is-active) .reel-media {
+      filter: blur(5px) grayscale(0.25) brightness(0.62);
+      box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+    }
+
+    .reel-frame.is-active .reel-media {
+      filter: none;
+      box-shadow:
+        0 0 0 1px rgba(244, 244, 242, 0.16),
+        0 40px 90px -30px rgba(0, 0, 0, 0.85),
+        0 0 90px -10px rgba(244, 244, 242, 0.14);
+    }
 
     .reel-frame video {
       width: 100%;
@@ -302,6 +342,54 @@
       background: #000;
       cursor: pointer;
     }
+
+    .reel-badge {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      color: var(--white);
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .reel-frame.is-active .reel-badge { opacity: 0.85; }
+
+    .reel-frame:not(.is-active) .sound-btn { display: none; }
+
+    /* story-style progress bar */
+    .reel-progress {
+      display: flex;
+      gap: 6px;
+      width: clamp(180px, 30vw, 300px);
+      margin: 0 auto clamp(22px, 3vh, 34px);
+    }
+
+    .reel-seg {
+      flex: 1;
+      height: 3px;
+      padding: 0;
+      border: 0;
+      border-radius: 2px;
+      background: rgba(244, 244, 242, 0.16);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .reel-seg .fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0%;
+      background: var(--white);
+      transition: width 0.25s linear;
+    }
+
+    .reel-seg.done .fill { width: 100%; transition: none; }
+    .reel-seg:focus-visible { outline: 2px solid var(--white); outline-offset: 4px; }
 
     .sound-btn {
       position: absolute;
@@ -328,19 +416,14 @@
     .sound-btn.is-on .off { display: none; }
     .sound-btn.is-on .on { display: block; }
 
-    .reel-soon {
-      display: grid;
-      place-items: center;
-      aspect-ratio: 9 / 16;
-      background: var(--panel);
-      color: var(--grey);
-      text-align: center;
-      padding: 20px;
+    @media (max-width: 700px) {
+      .reel-frame { width: clamp(220px, 74vw, 300px); }
+      .reel-frame.is-left,
+      .reel-frame.is-right { opacity: 0; pointer-events: none; }
     }
 
-    @media (max-width: 920px) {
-      .reel-grid { grid-template-columns: 1fr; }
-      .reel-frame { max-width: 340px; margin: 0 auto; }
+    @media (prefers-reduced-motion: reduce) {
+      .reel-frame, .reel-media, .reel-seg .fill { transition: none; }
     }
 
     .section-head h2 {
@@ -699,9 +782,14 @@
           <span class="mono"></span>
         </div>
 
-        <div class="reel-grid">
-          <figure class="frame reel-frame reveal">
-            <div class="frame-head"><span class="mono">RL 01</span></div>
+        <div class="reel-progress reveal" role="tablist" aria-label="Reel clips">
+          <button class="reel-seg" type="button" aria-label="Clip 1"><span class="fill"></span></button>
+          <button class="reel-seg" type="button" aria-label="Clip 2"><span class="fill"></span></button>
+          <button class="reel-seg" type="button" aria-label="Clip 3"><span class="fill"></span></button>
+        </div>
+
+        <div class="reel-stage">
+          <figure class="reel-frame reveal">
             <div class="reel-media">
               <video
                 id="reel-video"
@@ -709,10 +797,10 @@
                 src="tashi-clip.mp4"
                 poster="tashi-clip-poster.jpg"
                 muted
-                loop
                 playsinline
                 preload="metadata"></video>
-              <button class="sound-btn" id="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
+              <span class="reel-badge mono">01</span>
+              <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
                 <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
                 </svg>
@@ -721,13 +809,9 @@
                 </svg>
               </button>
             </div>
-            <figcaption class="frame-bar">
-              <span class="mono">00:09</span>
-            </figcaption>
           </figure>
 
-          <figure class="frame reel-frame reveal" style="--d:.12s">
-            <div class="frame-head"><span class="mono">RL 02</span></div>
+          <figure class="reel-frame reveal">
             <div class="reel-media">
               <video
                 id="reel-video-2"
@@ -735,9 +819,9 @@
                 src="tashi-clip-2.mp4"
                 poster="tashi-clip-2-poster.jpg"
                 muted
-                loop
                 playsinline
                 preload="metadata"></video>
+              <span class="reel-badge mono">02</span>
               <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
                 <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
@@ -747,13 +831,9 @@
                 </svg>
               </button>
             </div>
-            <figcaption class="frame-bar">
-              <span class="mono">00:13</span>
-            </figcaption>
           </figure>
 
-          <figure class="frame reel-frame reveal" style="--d:.24s">
-            <div class="frame-head"><span class="mono">RL 03</span></div>
+          <figure class="reel-frame reveal">
             <div class="reel-media">
               <video
                 id="reel-video-3"
@@ -761,9 +841,9 @@
                 src="tashi-clip-3.mp4"
                 poster="tashi-clip-3-poster.jpg"
                 muted
-                loop
                 playsinline
                 preload="metadata"></video>
+              <span class="reel-badge mono">03</span>
               <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
                 <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
@@ -773,9 +853,6 @@
                 </svg>
               </button>
             </div>
-            <figcaption class="frame-bar">
-              <span class="mono">00:27</span>
-            </figcaption>
           </figure>
         </div>
       </div>
@@ -870,7 +947,7 @@
             <div class="frame-head"><span class="mono">FR 06</span><span class="mono">Greece</span></div>
             <img src="intothedeepblueocean.jpeg" alt="Deep blue sea in Greece" />
             <figcaption class="frame-bar">
-              <p class="note">Greece, deep blue.</p>
+              <p class="note">Into the deep blue.</p>
             </figcaption>
           </figure>
 
@@ -924,8 +1001,7 @@
               selected visual notes.
             </p>
             <p>
-              Music, skating, coastal light, transit moments, and
-              small fragments from the road.
+              Music, skating, coastal light, transit moments from the road.
             </p>
           </div>
 
@@ -1093,11 +1169,13 @@
         });
       }
 
-      /* ---- reel videos: only the most-visible clip plays; others pause. ---- */
-      /* desktop: one at a time · mobile: autoplays each clip as you scroll to it */
+      /* ---- reel spotlight: active clip centered & playing, others shrunk + blurred ---- */
       var reels = Array.prototype.slice.call(document.querySelectorAll('.reel-video'));
       if (reels.length) {
-        var activeIdx = -1;
+        var frames = reels.map(function (v) { return v.closest('.reel-frame'); });
+        var n = reels.length;
+        var activeIdx = 0;
+        var inView = false;
 
         function buttonFor(v) {
           var media = v.closest('.reel-media');
@@ -1115,48 +1193,70 @@
           });
         }
 
+        function layout() {
+          frames.forEach(function (f, j) {
+            f.classList.remove('is-active', 'is-left', 'is-right');
+            if (j === activeIdx) f.classList.add('is-active');
+            else if (j === (activeIdx - 1 + n) % n) f.classList.add('is-left');
+            else f.classList.add('is-right');
+          });
+        }
+
         function activate(i) {
-          activeIdx = i;
-          reels.forEach(function (v, j) { if (j !== i) v.pause(); });
-          reels[i].play().catch(function () {});
+          activeIdx = ((i % n) + n) % n;
+          reels.forEach(function (v, j) {
+            v.muted = true;               // never surprise with sound on advance
+            if (j !== activeIdx) v.pause();
+          });
+          layout();
+          syncButtons();
+          var v = reels[activeIdx];
+          try { v.currentTime = 0; } catch (e) {}
+          if (inView) v.play().catch(function () {});
         }
 
-        /* pick whichever clip is most in view */
-        var ratios = reels.map(function () { return 0; });
-        if ('IntersectionObserver' in window) {
-          var io = new IntersectionObserver(function (entries) {
+        /* advance to the next clip when the centered one finishes */
+        reels.forEach(function (v) {
+          v.addEventListener('ended', function () { activate(activeIdx + 1); });
+        });
+
+        /* only run while the reel section is on screen */
+        var reelSection = document.getElementById('reel');
+        if ('IntersectionObserver' in window && reelSection) {
+          var sio = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
-              var idx = reels.indexOf(entry.target);
-              if (idx > -1) ratios[idx] = entry.isIntersecting ? entry.intersectionRatio : 0;
+              inView = entry.isIntersecting;
+              if (inView) reels[activeIdx].play().catch(function () {});
+              else reels.forEach(function (v) { v.pause(); });
             });
-            var best = -1, bestR = 0.55;
-            ratios.forEach(function (r, i) { if (r > bestR) { bestR = r; best = i; } });
-            if (best === -1) {
-              reels.forEach(function (v) { v.pause(); });
-              activeIdx = -1;
-            } else if (best !== activeIdx) {
-              activate(best);
-            }
-          }, { threshold: [0, 0.25, 0.5, 0.55, 0.75, 1] });
-          reels.forEach(function (v) { io.observe(v); });
+          }, { threshold: 0.3 });
+          sio.observe(reelSection);
         } else {
-          activate(0);
+          inView = true;
+          reels[0].play().catch(function () {});
         }
 
-        /* tap a clip or its speaker: make it the one that plays, toggle its sound */
+        /* click a side clip to bring it to center; click/​speaker on the centre toggles sound */
         reels.forEach(function (v, i) {
           function onTap() {
-            reels.forEach(function (other) { if (other !== v) { other.muted = true; other.pause(); } });
-            activeIdx = i;
+            if (i !== activeIdx) { activate(i); return; }
             v.muted = !v.muted;
-            v.play().catch(function () {});
+            if (!v.muted) v.play().catch(function () {});
             syncButtons();
           }
           var btn = buttonFor(v);
-          if (btn) btn.addEventListener('click', onTap);
+          if (btn) btn.addEventListener('click', function (e) { e.stopPropagation(); onTap(); });
           v.addEventListener('click', onTap);
         });
 
+        /* desktop: hovering a side clip brings it to the centre */
+        if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+          frames.forEach(function (f, i) {
+            f.addEventListener('mouseenter', function () { if (i !== activeIdx) activate(i); });
+          });
+        }
+
+        layout();
         syncButtons();
       }
     })();
