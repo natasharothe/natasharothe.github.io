@@ -1003,6 +1003,10 @@
             <p>
               Music, skating, coastal light, transit moments from the road.
             </p>
+            <p>
+              Off the frames: passionate about <strong>technology, innovation,
+              and AI</strong> — especially AI agents.
+            </p>
           </div>
 
           <div class="spec reveal" style="--d:.12s">
@@ -1173,6 +1177,7 @@
       var reels = Array.prototype.slice.call(document.querySelectorAll('.reel-video'));
       if (reels.length) {
         var frames = reels.map(function (v) { return v.closest('.reel-frame'); });
+        var segs = Array.prototype.slice.call(document.querySelectorAll('.reel-seg'));
         var n = reels.length;
         var activeIdx = 0;
         var inView = false;
@@ -1193,6 +1198,18 @@
           });
         }
 
+        function fillOf(i) {
+          return segs[i] ? segs[i].querySelector('.fill') : null;
+        }
+
+        function resetProgress() {
+          segs.forEach(function (s, j) {
+            s.classList.toggle('done', j < activeIdx);
+            var f = s.querySelector('.fill');
+            if (f && j >= activeIdx) f.style.width = '0%';
+          });
+        }
+
         function layout() {
           frames.forEach(function (f, j) {
             f.classList.remove('is-active', 'is-left', 'is-right');
@@ -1209,15 +1226,25 @@
             if (j !== activeIdx) v.pause();
           });
           layout();
+          resetProgress();
           syncButtons();
           var v = reels[activeIdx];
           try { v.currentTime = 0; } catch (e) {}
           if (inView) v.play().catch(function () {});
         }
 
-        /* advance to the next clip when the centered one finishes */
-        reels.forEach(function (v) {
-          v.addEventListener('ended', function () { activate(activeIdx + 1); });
+        /* live-fill the active segment as the clip plays */
+        reels.forEach(function (v, i) {
+          v.addEventListener('timeupdate', function () {
+            if (i !== activeIdx) return;
+            var f = fillOf(i);
+            if (f && v.duration) f.style.width = Math.min(100, (v.currentTime / v.duration) * 100) + '%';
+          });
+          v.addEventListener('ended', function () {
+            var f = fillOf(i);
+            if (f) f.style.width = '100%';
+            activate(activeIdx + 1);
+          });
         });
 
         /* only run while the reel section is on screen */
@@ -1236,7 +1263,7 @@
           reels[0].play().catch(function () {});
         }
 
-        /* click a side clip to bring it to center; click/​speaker on the centre toggles sound */
+        /* click a side clip to centre it; click/​speaker on the centre toggles sound */
         reels.forEach(function (v, i) {
           function onTap() {
             if (i !== activeIdx) { activate(i); return; }
@@ -1249,6 +1276,11 @@
           v.addEventListener('click', onTap);
         });
 
+        /* progress segments jump straight to a clip */
+        segs.forEach(function (s, i) {
+          s.addEventListener('click', function () { activate(i); });
+        });
+
         /* desktop: hovering a side clip brings it to the centre */
         if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
           frames.forEach(function (f, i) {
@@ -1257,6 +1289,7 @@
         }
 
         layout();
+        resetProgress();
         syncButtons();
       }
     })();
