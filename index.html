@@ -249,7 +249,12 @@
       white-space: nowrap;
     }
 
-    .marquee-track { display: inline-block; animation: marquee 28s linear infinite; }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee linear infinite;
+      animation-duration: var(--mq-dur, 30s);
+    }
 
     .marquee span {
       font-weight: 800;
@@ -257,7 +262,7 @@
       text-transform: uppercase;
       font-size: 15px;
       letter-spacing: 0.14em;
-      margin-right: 48px;
+      padding-right: 48px;
     }
 
     .marquee span.dim { color: transparent; -webkit-text-stroke: 1px var(--grey); }
@@ -318,6 +323,13 @@
       transform: translate(-50%, -50%) scale(1.02) rotateY(0deg);
       opacity: 1;
       z-index: 3;
+    }
+
+    .reel-frame.is-hidden {
+      transform: translate(-50%, -50%) scale(0.6) rotateY(0deg);
+      opacity: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .reel-media {
@@ -717,6 +729,24 @@
       .journal-grid { grid-template-columns: 1fr; }
       .spec-row { grid-template-columns: 1fr; gap: 2px; }
       .top-meta .clock { display: none; }
+
+      /* tighter, cleaner phone layout */
+      .hero { padding-top: 28px; }
+      .hero-grid { gap: 28px; padding-bottom: 40px; }
+      .hero-title { font-size: clamp(3rem, 17vw, 4.4rem); }
+      .hero-sub { flex-direction: column; gap: 10px; margin-top: 22px; padding-top: 14px; }
+      .section { padding-top: clamp(48px, 8vh, 72px); }
+
+      /* reel: fill the stage so there is no floating empty space */
+      .reel-stage { height: 74vh; max-height: 620px; }
+      .reel-frame { height: 88%; }
+      .reel-nav { top: auto; bottom: 8px; transform: none; }
+      .reel-nav.prev:hover, .reel-nav.next:hover { transform: none; }
+    }
+
+    @media (max-width: 380px) {
+      .nav { gap: 14px; }
+      .nav a { font-size: 11px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -779,9 +809,8 @@
       </div>
 
       <div class="marquee" aria-hidden="true">
-        <div class="marquee-track">
-          <span>Sets</span><span class="dim">Movement</span><span>Journal</span><span class="dim">Travel</span><span>Sets</span><span class="dim">Movement</span><span>Journal</span><span class="dim">Travel</span>
-          <span>Sets</span><span class="dim">Movement</span><span>Journal</span><span class="dim">Travel</span><span>Sets</span><span class="dim">Movement</span><span>Journal</span><span class="dim">Travel</span>
+        <div class="marquee-track" id="marqueeTrack">
+          <span>Sets</span><span class="dim">Movement</span><span>Journal</span><span class="dim">Travel</span>
         </div>
       </div>
     </section>
@@ -829,6 +858,7 @@
           <button class="reel-seg" type="button" aria-label="Clip 1"><span class="fill"></span></button>
           <button class="reel-seg" type="button" aria-label="Clip 2"><span class="fill"></span></button>
           <button class="reel-seg" type="button" aria-label="Clip 3"><span class="fill"></span></button>
+          <button class="reel-seg" type="button" aria-label="Clip 4"><span class="fill"></span></button>
         </div>
 
         <div class="reel-stage">
@@ -893,6 +923,28 @@
                 playsinline
                 preload="metadata"></video>
               <span class="reel-badge mono">03</span>
+              <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
+                <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+                </svg>
+                <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+                </svg>
+              </button>
+            </div>
+          </figure>
+
+          <figure class="reel-frame reveal">
+            <div class="reel-media">
+              <video
+                id="reel-video-4"
+                class="reel-video"
+                src="tashi-clip-4.mp4"
+                poster="tashi-clip-4-poster.jpg"
+                muted
+                playsinline
+                preload="metadata"></video>
+              <span class="reel-badge mono">04</span>
               <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
                 <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
@@ -1046,14 +1098,13 @@
         <div class="about-grid">
           <div class="about-copy reveal">
             <p>
-              This site is a home for <strong>sets, movement, travel,</strong> and
-              selected visual notes.
+              A personal archive of sound, movement, travel, and visual notes.
             </p>
             <p>
-              Music, skating, coastal light, transit moments from the road.
+              Sets, skating, coastal light, and moments collected along the way.
             </p>
             <p>
-              Off the frames: passionate about technology and AI agents.
+              Beyond the frame, I&rsquo;m passionate about technology and AI.
             </p>
           </div>
 
@@ -1145,6 +1196,31 @@
         setInterval(tick, 30000);
       }
 
+      /* ---- self-sizing marquee: clone words to fill any screen width, seamless loop ---- */
+      var mqTrack = document.getElementById('marqueeTrack');
+      if (mqTrack) {
+        var mqBase = mqTrack.innerHTML;
+        var mqWrap = mqTrack.parentElement;
+        var mqTimer;
+
+        function buildMarquee() {
+          mqTrack.innerHTML = mqBase;
+          var guard = 0;
+          while (mqTrack.scrollWidth < mqWrap.offsetWidth * 1.2 && guard < 80) {
+            mqTrack.innerHTML += mqBase;
+            guard++;
+          }
+          mqTrack.innerHTML += mqTrack.innerHTML;          // duplicate for a seamless -50% loop
+          var half = mqTrack.scrollWidth / 2;
+          mqTrack.style.setProperty('--mq-dur', Math.max(18, half / 60) + 's'); // ~constant 60px/s
+        }
+
+        buildMarquee();
+        window.addEventListener('resize', function () {
+          clearTimeout(mqTimer);
+          mqTimer = setTimeout(buildMarquee, 200);
+        });
+      }
       /* ---- scroll spy: highlight the nav item for the section in view ---- */
       var navLinks = {};
       document.querySelectorAll('.nav a[href^="#"]').forEach(function (a) {
@@ -1284,10 +1360,11 @@
 
         function layout() {
           frames.forEach(function (f, j) {
-            f.classList.remove('is-active', 'is-left', 'is-right');
+            f.classList.remove('is-active', 'is-left', 'is-right', 'is-hidden');
             if (j === activeIdx) f.classList.add('is-active');
             else if (j === (activeIdx - 1 + n) % n) f.classList.add('is-left');
-            else f.classList.add('is-right');
+            else if (j === (activeIdx + 1) % n) f.classList.add('is-right');
+            else f.classList.add('is-hidden');
           });
         }
 
