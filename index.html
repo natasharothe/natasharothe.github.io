@@ -1433,7 +1433,11 @@
             if (activeIdx < n - 1) {
               activate(activeIdx + 1);   // advance 1 -> 2 -> 3
             } else {
-              sequenceDone = true;       // clip 3 finished: stop, no loop
+              sequenceDone = true;       // clip 3 finished
+              if (inView) {              // glide on to the next section
+                var next = document.getElementById('blue-series');
+                if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
             }
           });
         });
