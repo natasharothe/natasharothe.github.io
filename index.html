@@ -91,6 +91,65 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
+    /* ---------- intro ---------- */
+
+    html.intro-lock, html.intro-lock body { overflow: hidden; height: 100%; }
+
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: var(--black);
+      display: grid;
+      place-items: center;
+      transition: transform 0.75s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.5s ease 0.25s;
+      animation: introSafety 0.01s linear 3.2s forwards; /* fallback if JS never runs */
+    }
+
+    #intro.done { transform: translateY(-100%); opacity: 0; }
+
+    .intro-mark {
+      text-align: center;
+      font-weight: 900;
+      font-variation-settings: 'wdth' 122;
+      text-transform: uppercase;
+      line-height: 0.86;
+      letter-spacing: -0.01em;
+    }
+
+    .intro-mark .il {
+      display: block;
+      font-size: clamp(3rem, 13vw, 6.4rem);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: introUp 0.75s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+
+    .intro-mark .i2 {
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--white);
+      animation-delay: 0.13s;
+    }
+
+    .intro-mark .iline {
+      display: block;
+      height: 1px;
+      margin: 22px auto 0;
+      width: min(240px, 52vw);
+      background: rgba(244, 244, 242, 0.85);
+      transform: scaleX(0);
+      transform-origin: center;
+      animation: introLine 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+    }
+
+    @keyframes introUp { to { opacity: 1; transform: none; } }
+    @keyframes introLine { to { transform: scaleX(1); } }
+    @keyframes introSafety { to { opacity: 0; visibility: hidden; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      #intro { display: none; }
+    }
+
     /* ---------- scroll reveal ---------- */
 
     .reveal {
@@ -818,6 +877,41 @@
   </style>
 </head>
 <body>
+  <div id="intro" aria-hidden="true">
+    <div class="intro-mark">
+      <span class="il i1">Tashi</span>
+      <span class="il i2">Tash</span>
+      <span class="iline"></span>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var intro = document.getElementById('intro');
+      if (!intro) return;
+      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var seen = false;
+      try { seen = sessionStorage.getItem('tt-intro') === '1'; } catch (e) {}
+      if (reduced || seen) { intro.parentNode && intro.parentNode.removeChild(intro); return; }
+
+      document.documentElement.classList.add('intro-lock');
+      var start = Date.now(), ran = false;
+
+      function finish() {
+        if (ran) return; ran = true;
+        var wait = Math.max(0, 1150 - (Date.now() - start)); // let the animation breathe
+        setTimeout(function () {
+          intro.classList.add('done');
+          document.documentElement.classList.remove('intro-lock');
+          try { sessionStorage.setItem('tt-intro', '1'); } catch (e) {}
+          setTimeout(function () { intro.parentNode && intro.parentNode.removeChild(intro); }, 850);
+        }, wait);
+      }
+
+      if (document.readyState === 'complete') finish();
+      else window.addEventListener('load', finish);
+      setTimeout(finish, 2600); // safety cap so it never hangs
+    })();
+  </script>
   <div class="grain" aria-hidden="true"></div>
 
   <header class="topbar">
