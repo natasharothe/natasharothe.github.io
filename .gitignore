@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor and IDE metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Dependency directories if tooling is introduced later
+node_modules/
+
+# Build output if tooling is introduced later
+dist/
+build/
