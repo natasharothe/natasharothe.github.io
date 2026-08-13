@@ -433,6 +433,14 @@
     .reel-frame.is-left  { transform: translate(calc(-50% - 116%), -50%) scale(0.8) rotateY(24deg); z-index: 2; }
     .reel-frame.is-right { transform: translate(calc(-50% + 116%), -50%) scale(0.8) rotateY(-24deg); z-index: 2; }
 
+    /* clips beyond the visible three stay tucked behind the centre */
+    .reel-frame.is-hidden {
+      transform: translate(-50%, -50%) scale(0.7);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
     .reel-frame.is-active {
       transform: translate(-50%, -50%) scale(1.02) rotateY(0deg);
       opacity: 1;
@@ -604,9 +612,8 @@
         opacity: 1;
         transition: opacity 0.35s ease;
       }
-      .reel-frame.is-active { transform: none; }
-      .reel-frame.is-left,
-      .reel-frame.is-right { display: none; }
+      .reel-frame { display: none; }
+      .reel-frame.is-active { display: block; transform: none; }
       .reel-nav { width: 40px; height: 40px; }
       .reel-nav.prev { left: 4px; }
       .reel-nav.next { right: 4px; }
