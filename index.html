@@ -9,14 +9,6 @@
     content="Tashi Tash. Sets, movement, and sun-faded notes. A personal journal of music, skating, and travel."
   />
 
-  <!-- favicons -->
-  <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
   <!-- link preview (Open Graph + Twitter) -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Tashi Tash" />
@@ -33,6 +25,44 @@
   <meta name="twitter:title" content="Tashi Tash — Sets, Movement, Journal" />
   <meta name="twitter:description" content="A personal archive of sound, movement, travel, and visual notes." />
   <meta name="twitter:image" content="https://tashitash.com/og-image.jpg" />
+
+  <!-- favicon & bookmark / homescreen icons -->
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="apple-mobile-web-app-title" content="Tashi Tash" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- structured data: helps Google associate a logo with the site -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Tashi Tash",
+    "url": "https://tashitash.com/",
+    "description": "A personal archive of sound, movement, travel, and visual notes.",
+    "publisher": {
+      "@type": "Person",
+      "name": "Tashi Tash",
+      "url": "https://tashitash.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://tashitash.com/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "sameAs": [
+        "https://soundcloud.com/tashitash",
+        "https://www.instagram.com/tashitashiii/"
+      ]
+    }
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1020,6 +1050,7 @@
           <button class="reel-seg" type="button" aria-label="Clip 1"><span class="fill"></span></button>
           <button class="reel-seg" type="button" aria-label="Clip 2"><span class="fill"></span></button>
           <button class="reel-seg" type="button" aria-label="Clip 3"><span class="fill"></span></button>
+          <button class="reel-seg" type="button" aria-label="Clip 4"><span class="fill"></span></button>
         </div>
 
         <div class="reel-stage">
@@ -1084,6 +1115,28 @@
                 playsinline
                 preload="none"></video>
               <span class="reel-badge mono">03</span>
+              <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
+                <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+                </svg>
+                <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+                </svg>
+              </button>
+            </div>
+          </figure>
+
+          <figure class="reel-frame reveal">
+            <div class="reel-media">
+              <video
+                id="reel-video-4"
+                class="reel-video"
+                src="tashi-clip-4.mp4"
+                poster="tashi-clip-4-poster.jpg"
+                muted
+                playsinline
+                preload="none"></video>
+              <span class="reel-badge mono">04</span>
               <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
                 <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
