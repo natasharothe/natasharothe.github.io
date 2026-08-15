@@ -27,11 +27,11 @@
   <meta name="twitter:image" content="https://tashitash.com/og-image.jpg" />
 
   <!-- favicon & bookmark / homescreen icons -->
-  <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=3" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#0a0a0a" />
   <meta name="apple-mobile-web-app-title" content="Tashi Tash" />
@@ -546,7 +546,7 @@
       backdrop-filter: blur(6px);
       color: var(--white);
       cursor: pointer;
-      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, opacity 0.22s ease;
     }
 
     .zoom-btn:hover { background: rgba(10, 10, 10, 0.8); border-color: var(--white); transform: translateY(-1px); }
@@ -554,11 +554,14 @@
     .zoom-btn svg { width: 19px; height: 19px; display: block; }
     .reel-frame:not(.is-active) .zoom-btn { display: none; }
 
-    /* pointer devices: the plus stays put, the speaker appears on hover */
+    /* pointer devices: both controls stay out of the way until you hover the clip */
     @media (hover: hover) {
-      .reel-frame.is-active .sound-btn { opacity: 0; }
+      .reel-frame.is-active .sound-btn,
+      .reel-frame.is-active .zoom-btn { opacity: 0; }
       .reel-frame.is-active .reel-media:hover .sound-btn,
-      .reel-frame.is-active .sound-btn:focus-visible { opacity: 1; }
+      .reel-frame.is-active .reel-media:hover .zoom-btn,
+      .reel-frame.is-active .sound-btn:focus-visible,
+      .reel-frame.is-active .zoom-btn:focus-visible { opacity: 1; }
     }
 
     /* phones: no overlay controls at all, tap the clip itself to toggle sound */
@@ -1439,13 +1442,7 @@
               Sets. Skating. Coastal light. Moments collected along the way.
             </p>
             <p>
-              Off the frame: inline skating, cycling, hiking, swimming, innovating.
-            </p>
-            <p>
-              Half Dome. Angels Landing. Zugspitze. Half Ironman 70.3 Florida.
-            </p>
-            <p>
-              Nineteen years. Married.
+              Off the frame: inline skating, cycling, hiking, swimming. Basically every kind of sport.
             </p>
           </div>
 
