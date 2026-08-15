@@ -385,31 +385,6 @@
     .hero-frame img { aspect-ratio: 4 / 5; }
 
     /* laptops: the banner fills exactly one screen, marquee flush at the bottom */
-    @media (min-width: 921px) {
-      .hero {
-        min-height: calc(100svh - var(--bar, 61px));
-        display: flex;
-        flex-direction: column;
-        padding-top: clamp(24px, 5vh, 84px);
-      }
-      .hero-grid {
-        flex: 1;
-        align-content: center;
-        padding-bottom: clamp(20px, 4vh, 64px);
-      }
-      .hero-title { font-size: clamp(3rem, min(10.5vw, 15vh), 9.5rem); }
-      /* photo keeps its 4:5 crop and grows into the available height */
-      .hero-frame {
-        max-width: calc(min(68vh, 900px) * 0.8);
-        margin-left: auto;
-      }
-    }
-
-    /* wide screens: give the photo a larger share of the row */
-    @media (min-width: 1400px) {
-      .hero-grid { grid-template-columns: 1.1fr 0.9fr; }
-    }
-
     /* ---------- marquee ---------- */
 
     .marquee {
@@ -463,7 +438,7 @@
 
     .reel-stage {
       position: relative;
-      height: clamp(420px, 72vh, 700px);
+      height: clamp(380px, 64vh, 580px);
       overflow: hidden;
       perspective: 1600px;
     }
@@ -1695,17 +1670,6 @@
           mqTimer = setTimeout(buildMarquee, 200);
         });
       }
-      /* ---- expose the sticky bar's real height so the hero can fill one screen ---- */
-      var bar = document.querySelector('.topbar');
-      if (bar) {
-        var setBar = function () {
-          document.documentElement.style.setProperty('--bar', Math.round(bar.getBoundingClientRect().height) + 'px');
-        };
-        setBar();
-        window.addEventListener('resize', setBar);
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(setBar);
-      }
-
       /* ---- scroll spy: highlight the nav item for the section in view ---- */
       var navLinks = {};
       document.querySelectorAll('.nav a[href^="#"]').forEach(function (a) {
