@@ -195,6 +195,98 @@
       .hero-title span > i { transform: none; animation: none; }
     }
 
+    /* ---------- intro curtain ---------- */
+    /* Full-bleed wordmark, then one decisive wipe upward.
+       Everything animates transform/opacity only, and the grain blend is
+       switched off during the wipe, so the compositor carries it at full rate. */
+
+    html.intro-active,
+    html.intro-active body { overflow: hidden; height: 100%; }
+
+    /* the page composes itself as the curtain clears, not before */
+    html.intro-active .topbar,
+    html.intro-active .hero-title span > i,
+    html.intro-active .hero-sub,
+    html.intro-active .hero-actions,
+    html.intro-active .hero-frame,
+    html.intro-active .hero-frame img,
+    html.intro-active .marquee { animation-play-state: paused; }
+
+    .grain { transition: opacity 0.8s ease 0.2s; }
+    html.intro-active .grain { opacity: 0; transition: none; }
+
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: var(--black);
+      display: grid;
+      place-items: center;
+      transform: translateY(0);
+      will-change: transform;
+      backface-visibility: hidden;
+      animation: introFailsafe 0.01s linear 4s forwards; /* if JS never runs */
+    }
+
+    #intro.lift {
+      transform: translateY(-100%);
+      transition: transform 0.92s cubic-bezier(0.85, 0, 0.15, 1);
+    }
+
+    /* the mark drifts up slightly faster than the curtain: depth, not decoration */
+    #intro.lift .intro-inner {
+      transform: translateY(-22%);
+      opacity: 0.25;
+      transition: transform 0.92s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.55s ease;
+    }
+
+    .intro-inner { text-align: center; padding: 0 22px; will-change: transform; }
+
+    .intro-line {
+      display: block;
+      font-weight: 900;
+      font-variation-settings: 'wdth' 122;
+      text-transform: uppercase;
+      font-size: clamp(2.8rem, 11.5vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.015em;
+      white-space: nowrap;
+    }
+
+    .intro-line .ltr { display: inline-block; clip-path: inset(-30% -12% 0 -12%); }
+
+    .intro-line .ltr > i {
+      display: inline-block;
+      font-style: normal;
+      transform: translateY(105%);
+      animation: lineRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: calc(var(--i) * 0.045s);
+    }
+
+    .intro-line.l2 .ltr > i {
+      color: transparent;
+      -webkit-text-stroke: 1.4px var(--white);
+      animation-delay: calc(0.09s + var(--i) * 0.045s);
+    }
+
+    .intro-rule {
+      display: block;
+      height: 1px;
+      width: min(320px, 62vw);
+      margin: clamp(18px, 2.6vh, 30px) auto 0;
+      background: var(--white);
+      transform: scaleX(0);
+      transform-origin: left center;
+      animation: introRule 0.8s cubic-bezier(0.76, 0, 0.24, 1) 0.34s both;
+    }
+
+    @keyframes introRule { to { transform: scaleX(1); } }
+    @keyframes introFailsafe { to { transform: translateY(-100%); visibility: hidden; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      #intro { display: none; }
+    }
+
     /* ---------- top bar ---------- */
 
     .topbar {
@@ -976,6 +1068,53 @@
   </style>
 </head>
 <body>
+  <div id="intro" aria-hidden="true">
+    <div class="intro-inner">
+      <span class="intro-line l1"><span class="ltr" style="--i:0"><i>T</i></span><span class="ltr" style="--i:1"><i>A</i></span><span class="ltr" style="--i:2"><i>S</i></span><span class="ltr" style="--i:3"><i>H</i></span><span class="ltr" style="--i:4"><i>I</i></span></span>
+      <span class="intro-line l2"><span class="ltr" style="--i:0"><i>T</i></span><span class="ltr" style="--i:1"><i>A</i></span><span class="ltr" style="--i:2"><i>S</i></span><span class="ltr" style="--i:3"><i>H</i></span></span>
+      <span class="intro-rule"></span>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var intro = document.getElementById('intro');
+      if (!intro) return;
+      var root = document.documentElement;
+      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var seen = false;
+      try { seen = sessionStorage.getItem('tt-intro') === '1'; } catch (e) {}
+
+      if (reduced || seen) {
+        if (intro.parentNode) intro.parentNode.removeChild(intro);
+        return;
+      }
+
+      root.classList.add('intro-active');
+      var start = Date.now(), fired = false;
+
+      function lift() {
+        if (fired) return;
+        fired = true;
+        var wait = Math.max(0, 1150 - (Date.now() - start)); // let the mark land first
+        setTimeout(function () {
+          /* one frame to settle, then wipe and let the page compose behind it */
+          requestAnimationFrame(function () {
+            root.classList.remove('intro-active');
+            intro.classList.add('lift');
+            try { sessionStorage.setItem('tt-intro', '1'); } catch (e) {}
+            setTimeout(function () {
+              if (intro.parentNode) intro.parentNode.removeChild(intro);
+            }, 1000);
+          });
+        }, wait);
+      }
+
+      if (document.readyState === 'complete') lift();
+      else window.addEventListener('load', lift);
+      setTimeout(lift, 2600); // never hang
+    })();
+  </script>
+
   <div class="grain" aria-hidden="true"></div>
 
   <header class="topbar">
