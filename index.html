@@ -85,7 +85,11 @@
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      /* keep headings clear of the sticky top bar (61-72px tall) when jumping to a section */
+      scroll-padding-top: 88px;
+    }
 
     body {
       margin: 0;
@@ -433,7 +437,7 @@
 
     .reel-stage {
       position: relative;
-      height: clamp(420px, 72vh, 620px);
+      height: clamp(420px, 72vh, 700px);
       overflow: hidden;
       perspective: 1600px;
     }
@@ -1429,19 +1433,19 @@
         <div class="about-grid">
           <div class="about-copy reveal">
             <p>
-              A personal archive of sound, movement, travel, and visual notes.
+              Sound, movement, travel, visual notes &mdash; A personal archive.
             </p>
             <p>
-              Sets, skating, coastal light, and moments collected along the way.
+              Sets. Skating. Coastal light. Moments collected along the way.
             </p>
             <p>
-              Off the frame: rollerblading, cycling, hiking, swimming, and innovating.
+              Off the frame: inline skating, cycling, hiking, swimming, innovating.
             </p>
             <p>
-              Adventurous by nature. Half Dome, Angels Landing, and the Zugspitze so far.
+              Half Dome. Angels Landing. Zugspitze. Half Ironman 70.3 Florida.
             </p>
             <p>
-              Married for over nineteen years, still the best adventure of all.
+              Nineteen years. Married.
             </p>
           </div>
 
