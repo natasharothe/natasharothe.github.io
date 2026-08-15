@@ -133,91 +133,6 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    /* ---------- intro ---------- */
-
-    html.intro-lock, html.intro-lock body { overflow: hidden; height: 100%; }
-
-    #intro {
-      position: fixed;
-      inset: 0;
-      z-index: 300;
-      background: var(--black);
-      display: grid;
-      place-items: center;
-      will-change: transform;
-      animation: introSafety 0.01s linear 4s forwards; /* fallback if JS never runs */
-    }
-
-    /* exit: the mark lifts away first, then the panel wipes upward */
-    #intro.done {
-      transform: translateY(-100%);
-      transition: transform 0.95s cubic-bezier(0.76, 0, 0.24, 1) 0.14s;
-    }
-
-    #intro.done .intro-inner {
-      opacity: 0;
-      transform: translateY(-16px);
-      transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
-    }
-
-    .intro-inner { text-align: center; padding: 0 22px; }
-
-    .intro-eyebrow {
-      display: block;
-      margin-bottom: clamp(16px, 2.4vh, 26px);
-      opacity: 0;
-      animation: introFade 0.7s ease 0.18s forwards;
-    }
-
-    .intro-line {
-      display: block;
-      font-weight: 900;
-      font-variation-settings: 'wdth' 122;
-      text-transform: uppercase;
-      font-size: clamp(2.9rem, 12.5vw, 6.2rem);
-      line-height: 0.92;
-      letter-spacing: -0.015em;
-      white-space: nowrap;
-    }
-
-    /* each letter rises out of its own mask */
-    .intro-line .ltr {
-      display: inline-block;
-      clip-path: inset(-30% -14% 0 -14%);
-    }
-
-    .intro-line .ltr > span {
-      display: inline-block;
-      transform: translateY(105%);
-      animation: introRise 0.82s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      animation-delay: calc(var(--i) * 0.045s);
-    }
-
-    .intro-line.l2 .ltr > span {
-      color: transparent;
-      -webkit-text-stroke: 1.4px var(--white);
-      animation-delay: calc(0.1s + var(--i) * 0.045s);
-    }
-
-    .intro-rule {
-      display: block;
-      height: 1px;
-      width: min(300px, 62vw);
-      margin: clamp(18px, 2.6vh, 28px) auto 0;
-      background: var(--white);
-      transform: scaleX(0);
-      transform-origin: left center;
-      animation: introRule 0.85s cubic-bezier(0.76, 0, 0.24, 1) 0.42s forwards;
-    }
-
-    @keyframes introRise { to { transform: translateY(0); } }
-    @keyframes introFade { to { opacity: 1; } }
-    @keyframes introRule { to { transform: scaleX(1); } }
-    @keyframes introSafety { to { opacity: 0; visibility: hidden; } }
-
-    @media (prefers-reduced-motion: reduce) {
-      #intro { display: none; }
-    }
 
     /* ---------- scroll reveal ---------- */
 
@@ -232,6 +147,53 @@
 
     .no-observer .reveal,
     .reduced-motion .reveal { opacity: 1; transform: none; transition: none; }
+
+    /* ---------- page entrance ---------- */
+    /* the banner composes itself: rules draw, lines rise out of their own mask,
+       the photo wipes open. No overlay, no waiting. */
+
+    .topbar {
+      animation: fadeIn 0.5s ease both;
+    }
+
+    .hero-title span {
+      display: block;
+      clip-path: inset(-30% -12% 0 -12%);
+    }
+
+    .hero-title span > i {
+      display: block;
+      font-style: inherit;
+      transform: translateY(104%);
+      animation: lineRise 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .hero-title span:nth-child(1) > i { animation-delay: 0.06s; }
+    .hero-title span:nth-child(2) > i { animation-delay: 0.14s; }
+
+    .hero-sub { animation: riseIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.30s both; }
+    .hero-actions { animation: riseIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.38s both; }
+
+    /* photo rises into its frame, mirroring the wordmark.
+       transform only, so the compositor handles it and nothing stutters.
+       fill-mode 'backwards' keeps the hover zoom working afterwards. */
+    .hero-frame { animation: fadeIn 0.4s ease 0.08s both; }
+
+    .hero-frame img {
+      animation: photoRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.12s backwards;
+    }
+
+    .marquee { animation: fadeIn 0.5s ease 0.48s both; }
+
+    @keyframes lineRise { to { transform: translateY(0); } }
+    @keyframes riseIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+    @keyframes photoRise { from { transform: translateY(101%); } to { transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .topbar, .hero-sub, .hero-actions, .hero-frame, .hero-frame img, .marquee { animation: none; }
+      .hero-title span > i { transform: none; animation: none; }
+    }
 
     /* ---------- top bar ---------- */
 
@@ -277,10 +239,10 @@
       transition: color 0.18s ease;
     }
 
-    .nav a span { color: var(--grey-dark); margin-right: 5px; }
+    .nav a span:not(.sm-hide) { color: var(--grey-dark); margin-right: 5px; }
     .nav a:hover { color: var(--white); }
     .nav a.current { color: var(--white); }
-    .nav a.current span { color: var(--white); }
+    .nav a.current span:not(.sm-hide) { color: var(--white); }
 
     /* ---------- hero ---------- */
 
@@ -997,7 +959,7 @@
       }
       .nav::-webkit-scrollbar { display: none; }
       .nav a { font-size: 11px; letter-spacing: 0.06em; white-space: nowrap; flex: 0 0 auto; }
-      .nav a span { margin-right: 3px; }
+      .nav a span:not(.sm-hide) { margin-right: 3px; }
       .nav a .sm-hide { display: none; }
     }
 
@@ -1014,42 +976,6 @@
   </style>
 </head>
 <body>
-  <div id="intro" aria-hidden="true">
-    <div class="intro-inner">
-      <span class="intro-eyebrow mono">Sets &middot; Movement &middot; Journal</span>
-      <span class="intro-line l1"><span class="ltr" style="--i:0"><span>T</span></span><span class="ltr" style="--i:1"><span>A</span></span><span class="ltr" style="--i:2"><span>S</span></span><span class="ltr" style="--i:3"><span>H</span></span><span class="ltr" style="--i:4"><span>I</span></span></span>
-      <span class="intro-line l2"><span class="ltr" style="--i:0"><span>T</span></span><span class="ltr" style="--i:1"><span>A</span></span><span class="ltr" style="--i:2"><span>S</span></span><span class="ltr" style="--i:3"><span>H</span></span></span>
-      <span class="intro-rule"></span>
-    </div>
-  </div>
-  <script>
-    (function () {
-      var intro = document.getElementById('intro');
-      if (!intro) return;
-      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var seen = false;
-      try { seen = sessionStorage.getItem('tt-intro') === '1'; } catch (e) {}
-      if (reduced || seen) { intro.parentNode && intro.parentNode.removeChild(intro); return; }
-
-      document.documentElement.classList.add('intro-lock');
-      var start = Date.now(), ran = false;
-
-      function finish() {
-        if (ran) return; ran = true;
-        var wait = Math.max(0, 1400 - (Date.now() - start)); // let the reveal finish
-        setTimeout(function () {
-          intro.classList.add('done');
-          document.documentElement.classList.remove('intro-lock');
-          try { sessionStorage.setItem('tt-intro', '1'); } catch (e) {}
-          setTimeout(function () { intro.parentNode && intro.parentNode.removeChild(intro); }, 1200);
-        }, wait);
-      }
-
-      if (document.readyState === 'complete') finish();
-      else window.addEventListener('load', finish);
-      setTimeout(finish, 3000); // safety cap so it never hangs
-    })();
-  </script>
   <div class="grain" aria-hidden="true"></div>
 
   <header class="topbar">
@@ -1073,25 +999,25 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <h1 class="hero-title reveal">
-            <span>Tashi</span>
-            <span class="outline">Tash</span>
+          <h1 class="hero-title">
+            <span><i>Tashi</i></span>
+            <span class="outline"><i>Tash</i></span>
           </h1>
 
-          <div class="hero-sub reveal" style="--d:.1s">
+          <div class="hero-sub">
             <span class="mono">Sets · Movement · Journal</span>
             <p>
               Music, skating, travel, and selected moments in between.
             </p>
           </div>
 
-          <div class="hero-actions reveal" style="--d:.18s">
+          <div class="hero-actions">
             <a class="btn solid" href="#listen" data-play>Press play</a>
             <a class="btn" href="#journal">View journal</a>
           </div>
         </div>
 
-        <figure class="frame hero-frame reveal" style="--d:.16s">
+        <figure class="frame hero-frame">
           <img src="tashitashonherway.jpeg" alt="Tashi Tash on her way" decoding="async" fetchpriority="high" />
           <figcaption class="frame-bar">
             <p class="note">On her way.</p>
