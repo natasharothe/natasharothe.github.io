@@ -88,7 +88,7 @@
     html {
       scroll-behavior: smooth;
       /* keep headings clear of the sticky top bar (61-72px tall) when jumping to a section */
-      scroll-padding-top: 88px;
+      scroll-padding-top: 24px;
     }
 
     body {
@@ -952,6 +952,11 @@
       .hero-frame { max-width: 460px; margin: 0 auto; }
       .section-head { grid-template-columns: auto 1fr; }
       .section-head .mono { display: none; }
+    }
+
+    /* phones have a taller sticky bar, so they need a bit more jump clearance */
+    @media (max-width: 700px) {
+      html { scroll-padding-top: 56px; }
     }
 
     @media (max-width: 600px) {
