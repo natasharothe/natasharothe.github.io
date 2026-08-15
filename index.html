@@ -384,16 +384,30 @@
 
     .hero-frame img { aspect-ratio: 4 / 5; }
 
-    /* laptops: keep the whole banner within the screen height, whatever the device */
+    /* laptops: the banner fills exactly one screen, marquee flush at the bottom */
     @media (min-width: 921px) {
-      .hero { padding-top: clamp(24px, 6.5vh, 110px); }
-      .hero-grid { padding-bottom: clamp(20px, 4.5vh, 72px); }
-      .hero-title { font-size: clamp(3rem, min(10.5vw, 13.5vh), 9rem); }
-      /* photo keeps its 4:5 crop and scales with the viewport height */
+      .hero {
+        min-height: calc(100svh - var(--bar, 61px));
+        display: flex;
+        flex-direction: column;
+        padding-top: clamp(24px, 5vh, 84px);
+      }
+      .hero-grid {
+        flex: 1;
+        align-content: center;
+        padding-bottom: clamp(20px, 4vh, 64px);
+      }
+      .hero-title { font-size: clamp(3rem, min(10.5vw, 15vh), 9.5rem); }
+      /* photo keeps its 4:5 crop and grows into the available height */
       .hero-frame {
-        max-width: calc(min(56vh, 760px) * 0.8);
+        max-width: calc(min(68vh, 900px) * 0.8);
         margin-left: auto;
       }
+    }
+
+    /* wide screens: give the photo a larger share of the row */
+    @media (min-width: 1400px) {
+      .hero-grid { grid-template-columns: 1.1fr 0.9fr; }
     }
 
     /* ---------- marquee ---------- */
@@ -1472,19 +1486,13 @@
         <div class="about-grid">
           <div class="about-copy reveal">
             <p>
-              Sound, movement, travel, visual notes &mdash; A personal archive.
+              A personal archive of sound, movement, travel, and visual notes.
             </p>
             <p>
-              Sets. Skating. Coastal light. Moments collected along the way.
+              Sets, skating, coastal light, and moments collected along the way.
             </p>
             <p>
-              Off the frame: inline skating, cycling, hiking, swimming, innovating.
-            </p>
-            <p>
-              Half Dome. Angels Landing. Zugspitze. Half Ironman 70.3 Florida.
-            </p>
-            <p>
-              Nineteen years. Married.
+              Beyond the frame, I&rsquo;m passionate about technology and AI.
             </p>
           </div>
 
@@ -1687,6 +1695,17 @@
           mqTimer = setTimeout(buildMarquee, 200);
         });
       }
+      /* ---- expose the sticky bar's real height so the hero can fill one screen ---- */
+      var bar = document.querySelector('.topbar');
+      if (bar) {
+        var setBar = function () {
+          document.documentElement.style.setProperty('--bar', Math.round(bar.getBoundingClientRect().height) + 'px');
+        };
+        setBar();
+        window.addEventListener('resize', setBar);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(setBar);
+      }
+
       /* ---- scroll spy: highlight the nav item for the section in view ---- */
       var navLinks = {};
       document.querySelectorAll('.nav a[href^="#"]').forEach(function (a) {
