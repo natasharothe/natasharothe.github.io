@@ -384,6 +384,18 @@
 
     .hero-frame img { aspect-ratio: 4 / 5; }
 
+    /* laptops: keep the whole banner within the screen height, whatever the device */
+    @media (min-width: 921px) {
+      .hero { padding-top: clamp(24px, 6.5vh, 110px); }
+      .hero-grid { padding-bottom: clamp(20px, 4.5vh, 72px); }
+      .hero-title { font-size: clamp(3rem, min(10.5vw, 13.5vh), 9rem); }
+      /* photo keeps its 4:5 crop and scales with the viewport height */
+      .hero-frame {
+        max-width: calc(min(56vh, 760px) * 0.8);
+        margin-left: auto;
+      }
+    }
+
     /* ---------- marquee ---------- */
 
     .marquee {
