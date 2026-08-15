@@ -564,11 +564,7 @@
       .reel-frame.is-active .zoom-btn:focus-visible { opacity: 1; }
     }
 
-    /* phones: no overlay controls at all, tap the clip itself to toggle sound */
-    @media (hover: none) {
-      .reel-media .zoom-btn,
-      .reel-media .sound-btn { display: none; }
-    }
+    /* phones have no hover, so both controls stay visible there */
 
     /* futuristic nav arrows */
     .reel-nav {
@@ -1150,6 +1146,7 @@
           <button class="reel-seg" type="button" aria-label="Clip 3"><span class="fill"></span></button>
           <button class="reel-seg" type="button" aria-label="Clip 4"><span class="fill"></span></button>
           <button class="reel-seg" type="button" aria-label="Clip 5"><span class="fill"></span></button>
+          <button class="reel-seg" type="button" aria-label="Clip 6"><span class="fill"></span></button>
         </div>
 
         <div class="reel-stage">
@@ -1278,6 +1275,33 @@
                 playsinline
                 preload="none"></video>
               <span class="reel-badge mono">05</span>
+              <button class="zoom-btn" type="button" aria-label="Clip vergroessern">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+              <button class="sound-btn" type="button" aria-label="Ton einschalten" aria-pressed="false">
+                <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+                </svg>
+                <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+                </svg>
+              </button>
+            </div>
+          </figure>
+
+          <figure class="reel-frame reveal">
+            <div class="reel-media">
+              <video
+                id="reel-video-6"
+                class="reel-video"
+                src="tashi-clip-6.mp4"
+                poster="tashi-clip-6-poster.jpg"
+                muted
+                playsinline
+                preload="none"></video>
+              <span class="reel-badge mono">06</span>
               <button class="zoom-btn" type="button" aria-label="Clip vergroessern">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                   <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -1441,6 +1465,14 @@
             <p>
               Sets. Skating. Coastal light. Moments collected along the way.
             </p>
+            <p>
+              Off the frame: inline skating, cycling, hiking, swimming, innovating.
+            </p>
+            <p>
+              Half Dome. Angels Landing. Zugspitze. Half Ironman 70.3 Florida.
+            </p>
+            <p>
+              Nineteen years. Married.
             </p>
           </div>
 
