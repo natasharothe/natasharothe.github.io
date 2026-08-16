@@ -1265,7 +1265,7 @@
               <div class="player-body">
                 <div class="player-meta">
                   <p class="player-title">low signal</p>
-                  <span class="mono">tashiiitash</span>
+                  <span class="mono">Tashi Tash</span>
                 </div>
                 <div class="player-controls">
                   <button class="play-btn" id="trackPlay" type="button" aria-label="Play low signal" aria-pressed="false">
@@ -2167,8 +2167,19 @@
         if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
       });
 
+      /* give the file a head start the moment a finger lands on a play control,
+         so the click itself has something to play right away */
+      function headStart() {
+        if (audio.preload !== 'auto' && audio.paused && !audio.currentTime) {
+          audio.preload = 'auto';
+          audio.load();
+        }
+      }
+      btn.addEventListener('pointerdown', headStart, { passive: true });
+
       /* the hero button starts the track (a real user gesture, so phones allow it) */
       document.querySelectorAll('[data-play]').forEach(function (b) {
+        b.addEventListener('pointerdown', headStart, { passive: true });
         b.addEventListener('click', function () { audio.play().catch(function () {}); });
       });
 
