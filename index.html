@@ -784,16 +784,89 @@
 
     .player-hint { padding: 0 12px 10px; }
 
-    /* shown only when a mobile browser refuses playback started from outside the player */
-    #spotify-embed.needs-tap {
-      outline: 1px solid rgba(244, 244, 242, 0.5);
-      outline-offset: 6px;
-      animation: tapPulse 1.5s ease-in-out 3;
+    /* ---------- track player ---------- */
+
+    .player {
+      display: flex;
+      gap: clamp(14px, 2vw, 22px);
+      align-items: center;
+      padding: clamp(14px, 2vw, 20px);
     }
 
-    @keyframes tapPulse {
-      0%, 100% { outline-color: rgba(244, 244, 242, 0.14); }
-      50%      { outline-color: rgba(244, 244, 242, 0.7); }
+    .player-art {
+      width: clamp(84px, 12vw, 116px);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      flex: 0 0 auto;
+      background: var(--panel);
+    }
+
+    .player-body { flex: 1; min-width: 0; }
+
+    .player-meta { margin-bottom: 14px; }
+
+    .player-title {
+      margin: 0 0 4px;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      letter-spacing: -0.01em;
+      color: var(--white);
+    }
+
+    .player-controls { display: flex; align-items: center; gap: 14px; }
+
+    .play-btn {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid var(--white);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--white);
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .play-btn:hover { background: var(--white); color: var(--black); }
+    .play-btn:active { transform: scale(0.96); }
+    .play-btn:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+    .play-btn svg { width: 18px; height: 18px; display: block; }
+    .play-btn .ico-pause { display: none; }
+    .play-btn.is-playing .ico-play { display: none; }
+    .play-btn.is-playing .ico-pause { display: block; }
+
+    .track-bar {
+      flex: 1;
+      height: 3px;
+      min-width: 60px;
+      background: rgba(244, 244, 242, 0.18);
+      border-radius: 2px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .track-bar:focus-visible { outline: 2px solid var(--white); outline-offset: 6px; }
+
+    .track-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0%;
+      background: var(--white);
+      border-radius: 2px;
+    }
+
+    .track-time { flex: 0 0 auto; color: var(--grey); font-variant-numeric: tabular-nums; }
+
+    @media (max-width: 600px) {
+      .player { gap: 14px; }
+      .player-art { width: 76px; }
+      .track-time { display: none; }
     }
 
     .listen-aside { display: grid; gap: 16px; }
@@ -1183,17 +1256,37 @@
         <div class="listen-grid">
           <div class="player-shell reveal">
             <div class="frame-head">
-              <span class="mono">Featured track</span>
-              <span class="mono">Delicate — Echolocation &amp; Jordan Whitlock</span>
+              <span class="mono">First track &mdash; out now</span>
+              <span class="mono">low signal</span>
             </div>
-            <div class="embed">
-              <div id="spotify-embed"><a class="mono" href="https://open.spotify.com/track/1JdfqnBhfePNrRCs0xvKNn" target="_blank" rel="noopener noreferrer">Open "Delicate" on Spotify ↗</a></div>
+
+            <div class="player">
+              <img class="player-art" src="low-signal-cover.jpg" alt="low signal artwork" decoding="async" />
+              <div class="player-body">
+                <div class="player-meta">
+                  <p class="player-title">low signal</p>
+                  <span class="mono">tashiiitash</span>
+                </div>
+                <div class="player-controls">
+                  <button class="play-btn" id="trackPlay" type="button" aria-label="Play low signal" aria-pressed="false">
+                    <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+                    <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
+                  </button>
+                  <div class="track-bar" id="trackBar" role="slider" tabindex="0"
+                       aria-label="Seek within low signal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span class="track-fill" id="trackFill"></span>
+                  </div>
+                  <span class="mono track-time" id="trackTime">0:00</span>
+                </div>
+              </div>
             </div>
-            <p class="mono player-hint">Full track with Spotify login, preview without</p>
+
+            <audio id="trackAudio" src="low-signal.mp3" preload="metadata"></audio>
+            <p class="mono player-hint">My first track, out now</p>
           </div>
 
           <aside class="listen-aside reveal" style="--d:.12s">
-            <p>Own sets are coming soon.</p>
+            <p>More sets are coming soon.</p>
             <div class="link-list">
               <a href="https://soundcloud.com/tashitash" target="_blank" rel="noopener noreferrer">SoundCloud <span class="arrow">↗</span></a>
               <a href="https://www.instagram.com/tashitashiii/" target="_blank" rel="noopener noreferrer">Instagram <span class="arrow">↗</span></a>
@@ -1672,7 +1765,7 @@
           rlbIdx = i;
           rlbLastFocus = document.activeElement;
           if (window.ttPauseReels) window.ttPauseReels();      // stop the carousel behind
-          if (window.ttPauseSpotify) window.ttPauseSpotify();   // one audio source at a time
+          if (window.ttPauseTrack) window.ttPauseTrack();       // one audio source at a time
           rlb.classList.add('open');
           document.body.classList.add('lb-lock');
           rlbRender();
@@ -1940,7 +2033,7 @@
           reels[0].play().catch(function () {});
         }
 
-        /* one audio source at a time: reel sound pauses the Spotify track, and vice versa */
+        /* one audio source at a time: reel sound pauses the Listen track, and vice versa */
         function muteReels() {
           soundOn = false;
           reels.forEach(function (x) { x.muted = true; });
@@ -1960,7 +2053,7 @@
             soundOn = !soundOn;
             v.muted = !soundOn;
             if (soundOn) {
-              if (window.ttPauseSpotify) window.ttPauseSpotify();  // stop the Listen track
+              if (window.ttPauseTrack) window.ttPauseTrack();      // stop the Listen track
               v.play().catch(function () {});
             }
             syncButtons();
@@ -2000,58 +2093,87 @@
     })();
   </script>
 
-  <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
   <script>
-    window.onSpotifyIframeApiReady = function (IFrameAPI) {
-      var mount = document.getElementById('spotify-embed');
-      if (!mount) return;
+    /* ---- track player: one audio source at a time, works the same on phones ---- */
+    (function () {
+      var audio = document.getElementById('trackAudio');
+      var btn   = document.getElementById('trackPlay');
+      var bar   = document.getElementById('trackBar');
+      var fill  = document.getElementById('trackFill');
+      var timeEl = document.getElementById('trackTime');
+      if (!audio || !btn || !bar) return;
 
-      IFrameAPI.createController(mount, {
-        uri: 'spotify:track:1JdfqnBhfePNrRCs0xvKNn',
-        width: '100%',
-        height: 152
-      }, function (controller) {
-        var isPlaying = false;
+      function fmt(s) {
+        if (!isFinite(s)) return '0:00';
+        var m = Math.floor(s / 60), r = Math.floor(s % 60);
+        return m + ':' + (r < 10 ? '0' : '') + r;
+      }
 
-        /* let the reel logic pause this track when a clip's sound is turned on */
-        window.ttPauseSpotify = function () { try { controller.pause(); } catch (e) {} };
+      function paint() {
+        var d = audio.duration, t = audio.currentTime;
+        var pct = d ? (t / d) * 100 : 0;
+        fill.style.width = pct + '%';
+        bar.setAttribute('aria-valuenow', Math.round(pct));
+        if (timeEl) timeEl.textContent = fmt(t) + (d ? ' / ' + fmt(d) : '');
+      }
 
-        /* when this track starts, silence the reels so only one audio source plays */
-        controller.addListener('playback_update', function (e) {
-          if (e && e.data && typeof e.data.isPaused === 'boolean') {
-            isPlaying = !e.data.isPaused;
-            if (isPlaying) {
-              mount.classList.remove('needs-tap');
-              if (window.ttMuteReels) window.ttMuteReels();
-              if (window.ttPauseReels) window.ttPauseReels();
-            }
-          }
-        });
+      /* the reels pause this track when a clip's sound comes on */
+      window.ttPauseTrack = function () { audio.pause(); };
 
-        var hint = document.querySelector('.player-hint');
-        var hintText = hint ? hint.textContent : '';
-
-        document.querySelectorAll('[data-play]').forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            try { controller.play(); } catch (e) {}
-            /* mobile browsers block playback started from outside the player.
-               if nothing is running shortly after, point the visitor at it. */
-            setTimeout(function () {
-              if (!isPlaying) {
-                mount.classList.add('needs-tap');
-                if (hint) hint.textContent = 'Tap play in the player above';
-              }
-            }, 1300);
-          });
-        });
-
-        /* clear the nudge once the visitor interacts with the player area */
-        mount.addEventListener('pointerdown', function () {
-          mount.classList.remove('needs-tap');
-          if (hint && hintText) hint.textContent = hintText;
-        });
+      audio.addEventListener('play', function () {
+        btn.classList.add('is-playing');
+        btn.setAttribute('aria-pressed', 'true');
+        btn.setAttribute('aria-label', 'Pause low signal');
+        if (window.ttMuteReels) window.ttMuteReels();   // silence the reels
+        if (window.ttPauseReels) window.ttPauseReels();
       });
-    };
+
+      audio.addEventListener('pause', function () {
+        btn.classList.remove('is-playing');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.setAttribute('aria-label', 'Play low signal');
+      });
+
+      audio.addEventListener('timeupdate', paint);
+      audio.addEventListener('loadedmetadata', paint);
+      audio.addEventListener('ended', function () { audio.currentTime = 0; paint(); });
+
+      function toggle() {
+        if (audio.paused) audio.play().catch(function () {});
+        else audio.pause();
+      }
+      btn.addEventListener('click', toggle);
+
+      /* seek by clicking or dragging the bar */
+      function seekTo(clientX) {
+        var r = bar.getBoundingClientRect();
+        var pct = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
+        if (audio.duration) { audio.currentTime = pct * audio.duration; paint(); }
+      }
+      bar.addEventListener('pointerdown', function (e) {
+        seekTo(e.clientX);
+        var move = function (ev) { seekTo(ev.clientX); };
+        var up = function () {
+          document.removeEventListener('pointermove', move);
+          document.removeEventListener('pointerup', up);
+        };
+        document.addEventListener('pointermove', move);
+        document.addEventListener('pointerup', up);
+      });
+      bar.addEventListener('keydown', function (e) {
+        if (!audio.duration) return;
+        if (e.key === 'ArrowRight') { audio.currentTime = Math.min(audio.duration, audio.currentTime + 5); paint(); }
+        if (e.key === 'ArrowLeft')  { audio.currentTime = Math.max(0, audio.currentTime - 5); paint(); }
+        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+      });
+
+      /* the hero button starts the track (a real user gesture, so phones allow it) */
+      document.querySelectorAll('[data-play]').forEach(function (b) {
+        b.addEventListener('click', function () { audio.play().catch(function () {}); });
+      });
+
+      paint();
+    })();
   </script>
 
   <script data-goatcounter="https://tashitash.goatcounter.com/count"
