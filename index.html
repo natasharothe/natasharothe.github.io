@@ -198,142 +198,80 @@
       .hero-title span > i { transform: none; animation: none; }
     }
 
-    /* ---------- intro: editorial preloader ---------- */
-    /* counter + rolling words + wordmark, then one decisive wipe.
-       transform / opacity only, so it never stutters. */
+    /* ---------- intro: the wordmark is the transition ---------- */
+    /* The mark appears large and centred, then flies onto its exact place in
+       the hero while the black backdrop dissolves. No curtain, no wipe.
+       transform + opacity only, so the compositor carries it at full rate. */
 
-    html.intro-active, html.intro-active body { overflow: hidden; height: 100%; }
-    .grain { transition: opacity 0.8s ease 0.2s; }
-    html.intro-active .grain { opacity: 0; transition: none; }
+    html.intro-hold, html.intro-hold body { overflow: hidden; height: 100%; }
+    html.intro-hold .hero-title { opacity: 0; }        /* hidden until the mark lands on it */
+
+    /* the rest of the hero waits, then composes as the mark arrives */
+    html.intro-wait .topbar,
+    html.intro-wait .hero-sub,
+    html.intro-wait .hero-actions,
+    html.intro-wait .hero-frame,
+    html.intro-wait .hero-frame img,
+    html.intro-wait .marquee { animation-play-state: paused; }
+
+    .grain { transition: opacity 0.6s ease 0.2s; }
+    html.intro-hold .grain { opacity: 0; transition: none; }
 
     #intro {
       position: fixed;
       inset: 0;
       z-index: 300;
-      background: var(--black);
-      color: var(--white);
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      padding: clamp(18px, 3vh, 28px) clamp(18px, 4vw, 44px);
-      transform: translateY(0);
-      will-change: transform;
-      backface-visibility: hidden;
-      animation: introFailsafe 0.01s linear 4.5s forwards;
+      pointer-events: none;
+      animation: introFailsafe 0.01s linear 4s forwards;
     }
 
-    #intro.lift {
-      transform: translateY(-100%);
-      transition: transform 0.95s cubic-bezier(0.85, 0, 0.15, 1);
-    }
-
-    #intro.lift .intro-stage {
-      transform: translateY(-14%);
-      opacity: 0.3;
-      transition: transform 0.95s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.5s ease;
-    }
-
-    .intro-top, .intro-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 16px;
-    }
-
-    .intro-top .mono, .intro-bottom .mono { color: var(--grey); }
-
-    /* the counter: big, tabular, quietly ticking */
-    .intro-count {
-      font-family: 'Space Mono', monospace;
-      font-size: clamp(2rem, 6vw, 4.4rem);
-      line-height: 1;
-      letter-spacing: -0.02em;
-      font-variant-numeric: tabular-nums;
-      color: var(--white);
-    }
-
-    .intro-stage {
-      position: relative;
-      display: grid;
-      place-items: center;
-      will-change: transform;
-    }
-
-    /* rolling words: a strip that steps upward one line at a time */
-    .intro-roll {
+    .intro-bg {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      height: 1.25em;
-      overflow: hidden;
-      font-family: 'Space Mono', monospace;
-      font-size: clamp(12px, 1.5vw, 16px);
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: var(--grey);
-      text-align: center;
-      animation: introRollOut 0.35s ease 1.0s forwards;
+      inset: 0;
+      background: var(--black);
+      will-change: opacity;
     }
 
-    .intro-roll-track {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.25em;
-      animation: introRoll 0.9s steps(3, end) 0.15s both;
-    }
-
-    .intro-roll-track span { display: block; height: 1.25em; }
-
-    /* the wordmark, letter by letter out of a mask */
-    .intro-mark {
-      text-align: center;
+    #intro.lift .intro-bg {
       opacity: 0;
-      animation: introFade 0.01s linear 1.05s forwards;
+      transition: opacity 0.55s ease 0.22s;
     }
 
-    .intro-line {
-      display: block;
+    /* same construction as .hero-title so the geometry matches to the pixel */
+    .intro-mark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
       font-weight: 900;
       font-variation-settings: 'wdth' 122;
       text-transform: uppercase;
-      font-size: clamp(3rem, 12.5vw, 8.5rem);
       line-height: 0.88;
-      letter-spacing: -0.015em;
-      white-space: nowrap;
-    }
-
-    .intro-line .ltr { display: inline-block; clip-path: inset(-30% -12% 0 -12%); }
-
-    .intro-line .ltr > i {
-      display: inline-block;
-      font-style: normal;
-      transform: translateY(105%);
-      animation: introRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-      animation-delay: calc(1.05s + var(--i) * 0.04s);
-    }
-
-    .intro-line.l2 .ltr > i {
-      color: transparent;
-      -webkit-text-stroke: 1.4px var(--white);
-      animation-delay: calc(1.14s + var(--i) * 0.04s);
-    }
-
-    /* progress rule along the bottom, driven with the counter */
-    .intro-rule {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      height: 2px;
-      background: var(--white);
-      transform: scaleX(0);
-      transform-origin: left center;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      transform-origin: top left;
       will-change: transform;
+      opacity: 0;                     /* shown once measured and placed */
     }
 
-    @keyframes introRoll { to { transform: translateY(-75%); } }
-    @keyframes introRollOut { to { opacity: 0; } }
-    @keyframes introFade { to { opacity: 1; } }
-    @keyframes introRise { to { transform: translateY(0); } }
-    @keyframes introFailsafe { to { transform: translateY(-100%); visibility: hidden; } }
+    .intro-mark.ready { opacity: 1; }
+
+    .intro-mark span { display: block; clip-path: inset(-30% -12% 0 -12%); }
+    .intro-mark span > i {
+      display: block;
+      font-style: normal;
+      transform: translateY(104%);
+    }
+    .intro-mark.ready span > i { animation: lineRise 0.68s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    .intro-mark.ready span:nth-child(1) > i { animation-delay: 0.04s; }
+    .intro-mark.ready span:nth-child(2) > i { animation-delay: 0.12s; }
+    .intro-mark .outline { color: transparent; -webkit-text-stroke: 1.5px var(--white); }
+
+    #intro.lift .intro-mark {
+      transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+
+    @keyframes introFailsafe { to { opacity: 0; visibility: hidden; } }
 
     @media (prefers-reduced-motion: reduce) { #intro { display: none; } }
 
@@ -1192,73 +1130,79 @@
 </head>
 <body>
   <div id="intro" aria-hidden="true">
-    <div class="intro-top">
-      <span class="mono">Tashi Tash</span>
-      <span class="mono">Sets &middot; Movement &middot; Journal</span>
+    <div class="intro-bg"></div>
+    <div class="intro-mark" id="introMark">
+      <span><i>Tashi</i></span>
+      <span class="outline"><i>Tash</i></span>
     </div>
-
-    <div class="intro-stage">
-      <div class="intro-roll" aria-hidden="true">
-        <div class="intro-roll-track">
-          <span>Sets</span><span>Movement</span><span>Travel</span><span>Journal</span>
-        </div>
-      </div>
-      <div class="intro-mark">
-        <span class="intro-line l1"><span class="ltr" style="--i:0"><i>T</i></span><span class="ltr" style="--i:1"><i>A</i></span><span class="ltr" style="--i:2"><i>S</i></span><span class="ltr" style="--i:3"><i>H</i></span><span class="ltr" style="--i:4"><i>I</i></span></span>
-        <span class="intro-line l2"><span class="ltr" style="--i:0"><i>T</i></span><span class="ltr" style="--i:1"><i>A</i></span><span class="ltr" style="--i:2"><i>S</i></span><span class="ltr" style="--i:3"><i>H</i></span></span>
-      </div>
-    </div>
-
-    <div class="intro-bottom">
-      <span class="mono">Munich</span>
-      <span class="intro-count" id="introCount">000</span>
-    </div>
-    <span class="intro-rule" id="introRule"></span>
   </div>
   <script>
     (function () {
       var intro = document.getElementById('intro');
-      if (!intro) return;
+      var mark  = document.getElementById('introMark');
+      if (!intro || !mark) return;
       var root = document.documentElement;
       var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var seen = false;
       try { seen = sessionStorage.getItem('tt-intro') === '1'; } catch (e) {}
       if (reduced || seen) { intro.parentNode && intro.parentNode.removeChild(intro); return; }
 
-      root.classList.add('intro-active');
+      root.classList.add('intro-hold');   // lock scroll, hide the real title
+      root.classList.add('intro-wait');   // pause the rest of the hero
 
-      /* counter 000 -> 100, eased so it races then settles; the rule follows it */
-      var countEl = document.getElementById('introCount');
-      var rule = document.getElementById('introRule');
-      var DUR = 1500, t0 = null;
-      function ease(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; } // ease-in-out
-      function tick(now) {
-        if (t0 === null) t0 = now;
-        var p = Math.min(1, (now - t0) / DUR);
-        var v = Math.round(ease(p) * 100);
-        if (countEl) countEl.textContent = (v < 10 ? '00' : v < 100 ? '0' : '') + v;
-        if (rule) rule.style.transform = 'scaleX(' + ease(p).toFixed(4) + ')';
-        if (p < 1) requestAnimationFrame(tick);
+      var done = false;
+      function finish() {
+        if (done) return;
+        done = true;
+        root.classList.remove('intro-hold', 'intro-wait');
+        try { sessionStorage.setItem('tt-intro', '1'); } catch (e) {}
+        if (intro.parentNode) intro.parentNode.removeChild(intro);
       }
-      requestAnimationFrame(tick);
 
-      var start = Date.now(), fired = false;
-      function lift() {
-        if (fired) return;
-        fired = true;
-        var wait = Math.max(0, 2050 - (Date.now() - start)); // counter done, mark landed
+      function place() {
+        var hero = document.querySelector('.hero-title');
+        if (!hero) { finish(); return; }
+        var r  = hero.getBoundingClientRect();
+        var cs = getComputedStyle(hero);
+        /* clone the real title's metrics so the landing is pixel-exact */
+        mark.style.fontSize  = cs.fontSize;
+        mark.style.width     = 'max-content';        /* text-tight box: we align glyphs, not boxes */
+        mark.style.transform = 'none';
+        var mw = mark.getBoundingClientRect().width;
+
+        /* where the hero's glyphs actually start inside its (possibly centred) box */
+        var align = cs.textAlign;
+        var left = align === 'center' ? r.left + (r.width - mw) / 2
+                 : (align === 'right' || align === 'end') ? r.right - mw
+                 : r.left;
+        mark.style.left = left.toFixed(2) + 'px';
+        mark.style.top  = r.top.toFixed(2) + 'px';
+
+        /* start state: centred on screen, scaled up to fill ~88% of the width */
+        var vw = window.innerWidth, vh = window.innerHeight;
+        var k  = Math.min(1.9, (vw * 0.88) / mw);
+        var tx = (vw - mw * k) / 2 - left;
+        var ty = (vh - r.height * k) / 2 - r.top;
+        mark.style.transform = 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(' + k.toFixed(4) + ')';
+        mark.classList.add('ready');
+
+        /* fly onto the hero once the letters have landed */
         setTimeout(function () {
           requestAnimationFrame(function () {
-            root.classList.remove('intro-active');
+            root.classList.remove('intro-wait');   // hero composes as the mark arrives
             intro.classList.add('lift');
-            try { sessionStorage.setItem('tt-intro', '1'); } catch (e) {}
-            setTimeout(function () { intro.parentNode && intro.parentNode.removeChild(intro); }, 1050);
+            mark.style.transform = 'none';
           });
-        }, wait);
+          setTimeout(finish, 900);                  // hand off after the flight
+        }, 780);
       }
-      if (document.readyState === 'complete') lift();
-      else window.addEventListener('load', lift);
-      setTimeout(lift, 3200); // never hang
+
+      /* measure only once the real fonts are in, else the target box is wrong */
+      var started = false;
+      function start() { if (started) return; started = true; requestAnimationFrame(place); }
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(start);
+      setTimeout(start, 900);     // don't wait forever for fonts
+      setTimeout(finish, 3600);   // never hang
     })();
   </script>
 
