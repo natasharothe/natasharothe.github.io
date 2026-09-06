@@ -198,23 +198,11 @@
       .hero-title span > i { transform: none; animation: none; }
     }
 
-    /* ---------- intro curtain ---------- */
-    /* Full-bleed wordmark, then one decisive wipe upward.
-       Everything animates transform/opacity only, and the grain blend is
-       switched off during the wipe, so the compositor carries it at full rate. */
+    /* ---------- intro: editorial preloader ---------- */
+    /* counter + rolling words + wordmark, then one decisive wipe.
+       transform / opacity only, so it never stutters. */
 
-    html.intro-active,
-    html.intro-active body { overflow: hidden; height: 100%; }
-
-    /* the page composes itself as the curtain clears, not before */
-    html.intro-active .topbar,
-    html.intro-active .hero-title span > i,
-    html.intro-active .hero-sub,
-    html.intro-active .hero-actions,
-    html.intro-active .hero-frame,
-    html.intro-active .hero-frame img,
-    html.intro-active .marquee { animation-play-state: paused; }
-
+    html.intro-active, html.intro-active body { overflow: hidden; height: 100%; }
     .grain { transition: opacity 0.8s ease 0.2s; }
     html.intro-active .grain { opacity: 0; transition: none; }
 
@@ -223,35 +211,93 @@
       inset: 0;
       z-index: 300;
       background: var(--black);
+      color: var(--white);
       display: grid;
-      place-items: center;
+      grid-template-rows: auto 1fr auto;
+      padding: clamp(18px, 3vh, 28px) clamp(18px, 4vw, 44px);
       transform: translateY(0);
       will-change: transform;
       backface-visibility: hidden;
-      animation: introFailsafe 0.01s linear 4s forwards; /* if JS never runs */
+      animation: introFailsafe 0.01s linear 4.5s forwards;
     }
 
     #intro.lift {
       transform: translateY(-100%);
-      transition: transform 0.92s cubic-bezier(0.85, 0, 0.15, 1);
+      transition: transform 0.95s cubic-bezier(0.85, 0, 0.15, 1);
     }
 
-    /* the mark drifts up slightly faster than the curtain: depth, not decoration */
-    #intro.lift .intro-inner {
-      transform: translateY(-22%);
-      opacity: 0.25;
-      transition: transform 0.92s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.55s ease;
+    #intro.lift .intro-stage {
+      transform: translateY(-14%);
+      opacity: 0.3;
+      transition: transform 0.95s cubic-bezier(0.85, 0, 0.15, 1), opacity 0.5s ease;
     }
 
-    .intro-inner { text-align: center; padding: 0 22px; will-change: transform; }
+    .intro-top, .intro-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    .intro-top .mono, .intro-bottom .mono { color: var(--grey); }
+
+    /* the counter: big, tabular, quietly ticking */
+    .intro-count {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2rem, 6vw, 4.4rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      color: var(--white);
+    }
+
+    .intro-stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+      will-change: transform;
+    }
+
+    /* rolling words: a strip that steps upward one line at a time */
+    .intro-roll {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 1.25em;
+      overflow: hidden;
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(12px, 1.5vw, 16px);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-align: center;
+      animation: introRollOut 0.35s ease 1.0s forwards;
+    }
+
+    .intro-roll-track {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.25em;
+      animation: introRoll 0.9s steps(3, end) 0.15s both;
+    }
+
+    .intro-roll-track span { display: block; height: 1.25em; }
+
+    /* the wordmark, letter by letter out of a mask */
+    .intro-mark {
+      text-align: center;
+      opacity: 0;
+      animation: introFade 0.01s linear 1.05s forwards;
+    }
 
     .intro-line {
       display: block;
       font-weight: 900;
       font-variation-settings: 'wdth' 122;
       text-transform: uppercase;
-      font-size: clamp(2.8rem, 11.5vw, 7rem);
-      line-height: 0.9;
+      font-size: clamp(3rem, 12.5vw, 8.5rem);
+      line-height: 0.88;
       letter-spacing: -0.015em;
       white-space: nowrap;
     }
@@ -262,33 +308,34 @@
       display: inline-block;
       font-style: normal;
       transform: translateY(105%);
-      animation: lineRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-      animation-delay: calc(var(--i) * 0.045s);
+      animation: introRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: calc(1.05s + var(--i) * 0.04s);
     }
 
     .intro-line.l2 .ltr > i {
       color: transparent;
       -webkit-text-stroke: 1.4px var(--white);
-      animation-delay: calc(0.09s + var(--i) * 0.045s);
+      animation-delay: calc(1.14s + var(--i) * 0.04s);
     }
 
+    /* progress rule along the bottom, driven with the counter */
     .intro-rule {
-      display: block;
-      height: 1px;
-      width: min(320px, 62vw);
-      margin: clamp(18px, 2.6vh, 30px) auto 0;
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 2px;
       background: var(--white);
       transform: scaleX(0);
       transform-origin: left center;
-      animation: introRule 0.8s cubic-bezier(0.76, 0, 0.24, 1) 0.34s both;
+      will-change: transform;
     }
 
-    @keyframes introRule { to { transform: scaleX(1); } }
+    @keyframes introRoll { to { transform: translateY(-75%); } }
+    @keyframes introRollOut { to { opacity: 0; } }
+    @keyframes introFade { to { opacity: 1; } }
+    @keyframes introRise { to { transform: translateY(0); } }
     @keyframes introFailsafe { to { transform: translateY(-100%); visibility: hidden; } }
 
-    @media (prefers-reduced-motion: reduce) {
-      #intro { display: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { #intro { display: none; } }
 
     /* ---------- top bar ---------- */
 
@@ -798,227 +845,22 @@
 
     .player-body { flex: 1; min-width: 0; }
 
-    /* ---- vinyl: the cover becomes the label on a spinning record ---- */
-
-    .vinyl {
-      width: clamp(96px, 13vw, 132px);
+    .player-art {
+      width: clamp(84px, 12vw, 116px);
       aspect-ratio: 1 / 1;
-      flex: 0 0 auto;
-    }
-
-    .vinyl-disc {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      overflow: hidden;
-      background: #0c0c0c;
-      box-shadow:
-        inset 0 0 0 1px rgba(244, 244, 242, 0.12),
-        0 10px 28px -10px rgba(0, 0, 0, 0.9);
-      animation: vinylSpin 2.4s linear infinite;
-      animation-play-state: paused;
-      will-change: transform;
-    }
-
-    /* grooves over the artwork */
-    .vinyl-disc::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: repeating-radial-gradient(circle at 50% 50%,
-        rgba(0, 0, 0, 0.42) 0px, rgba(0, 0, 0, 0.42) 1px,
-        transparent 1px, transparent 3.5px);
-      pointer-events: none;
-    }
-
-    .player-shell.is-playing .vinyl-disc { animation-play-state: running; }
-
-    /* a soft highlight arc that reads as light on a record surface */
-    .vinyl-disc::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: conic-gradient(from 210deg, rgba(244,244,242,0.09) 0deg, transparent 70deg, transparent 180deg, rgba(244,244,242,0.05) 250deg, transparent 320deg);
-      pointer-events: none;
-    }
-
-    .vinyl .player-art {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
       object-fit: cover;
       display: block;
-    }
-
-    /* white spindle hole with a dark collar */
-    .vinyl-hole {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 9%;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      background: var(--white);
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 0 4px #0c0c0c, 0 0 0 5px rgba(244, 244, 242, 0.25);
-      z-index: 2;
-    }
-
-    @keyframes vinylSpin { to { transform: rotate(360deg); } }
-
-    /* ---- progress ring around the play button ---- */
-
-    .play-wrap {
-      position: relative;
-      width: 56px;
-      height: 56px;
       flex: 0 0 auto;
-      display: grid;
-      place-items: center;
-    }
-
-    .play-ring {
-      position: absolute;
-      inset: 0;
-      width: 56px;
-      height: 56px;
-      transform: rotate(-90deg);   /* start at 12 o'clock */
-      pointer-events: none;
-    }
-
-    .ring-dot-wrap {
-      position: absolute;
-      inset: 0;
-      transform: rotate(0deg);
-      pointer-events: none;
-      will-change: transform;
-    }
-
-    .ring-dot {
-      position: absolute;
-      top: 2px;                 /* sits on the ring radius (r=26 of 56) */
-      left: 50%;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--white);
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 0 2px var(--black);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .player-shell.is-playing .ring-dot,
-    .player-shell.has-progress .ring-dot { opacity: 1; }
-
-    .play-ring circle { fill: none; stroke-width: 1.5; }
-    .ring-track { stroke: rgba(244, 244, 242, 0.16); }
-    .ring-fill {
-      stroke: var(--white);
-      stroke-linecap: round;
-      stroke-dasharray: 163.36;  /* 2 * pi * 26 */
-      stroke-dashoffset: 163.36;
-      transition: stroke-dashoffset 0.25s linear;
-    }
-
-    /* ---- floating now-playing pill ---- */
-
-    .now-playing {
-      position: fixed;
-      left: 50%;
-      bottom: max(18px, env(safe-area-inset-bottom));
-      z-index: 45;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 6px 6px 8px;
-      border: 1px solid rgba(244, 244, 242, 0.22);
-      border-radius: 999px;
-      background: rgba(10, 10, 10, 0.78);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      color: var(--white);
-      box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9);
-      transform: translate(-50%, 24px);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
-    }
-
-    .now-playing.is-visible {
-      transform: translate(-50%, 0);
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .np-jump {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 6px 0 0;
-      border: 0;
-      background: transparent;
-      color: inherit;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .np-jump:focus-visible, .np-pause:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
-
-    .np-disc {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      overflow: hidden;
-      flex: 0 0 auto;
-      background: #0c0c0c;
-      box-shadow: inset 0 0 0 1px rgba(244, 244, 242, 0.12);
-      animation: vinylSpin 2.4s linear infinite;
-      will-change: transform;
-    }
-
-    .np-disc img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    .np-text { display: flex; flex-direction: column; line-height: 1.15; }
-    .np-label { font-size: 9.5px; color: var(--grey); }
-    .np-title { font-weight: 700; font-size: 13.5px; letter-spacing: -0.01em; }
-
-    .np-pause {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      padding: 0;
-      border: 1px solid rgba(244, 244, 242, 0.35);
-      border-radius: 999px;
-      background: transparent;
-      color: var(--white);
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-
-    .np-pause:hover { background: var(--white); color: var(--black); }
-    .np-pause svg { width: 15px; height: 15px; display: block; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .vinyl-disc, .np-disc { animation: none; }
-      .now-playing { transition: none; }
+      background: var(--panel);
     }
 
     .player-meta { margin-bottom: 14px; }
 
     .player-title {
       margin: 0 0 4px;
-      font-weight: 900;
-      font-variation-settings: 'wdth' 118;
-      text-transform: uppercase;
-      font-size: clamp(1.15rem, 2.4vw, 1.7rem);
-      letter-spacing: 0.01em;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      letter-spacing: -0.01em;
       color: var(--white);
     }
 
@@ -1073,7 +915,7 @@
 
     @media (max-width: 600px) {
       .player { gap: 14px; }
-      .vinyl { width: 84px; }
+      .player-art { width: 76px; }
       .track-time { display: none; }
     }
 
@@ -1350,11 +1192,28 @@
 </head>
 <body>
   <div id="intro" aria-hidden="true">
-    <div class="intro-inner">
-      <span class="intro-line l1"><span class="ltr" style="--i:0"><i>T</i></span><span class="ltr" style="--i:1"><i>A</i></span><span class="ltr" style="--i:2"><i>S</i></span><span class="ltr" style="--i:3"><i>H</i></span><span class="ltr" style="--i:4"><i>I</i></span></span>
-      <span class="intro-line l2"><span class="ltr" style="--i:0"><i>T</i></span><span class="ltr" style="--i:1"><i>A</i></span><span class="ltr" style="--i:2"><i>S</i></span><span class="ltr" style="--i:3"><i>H</i></span></span>
-      <span class="intro-rule"></span>
+    <div class="intro-top">
+      <span class="mono">Tashi Tash</span>
+      <span class="mono">Sets &middot; Movement &middot; Journal</span>
     </div>
+
+    <div class="intro-stage">
+      <div class="intro-roll" aria-hidden="true">
+        <div class="intro-roll-track">
+          <span>Sets</span><span>Movement</span><span>Travel</span><span>Journal</span>
+        </div>
+      </div>
+      <div class="intro-mark">
+        <span class="intro-line l1"><span class="ltr" style="--i:0"><i>T</i></span><span class="ltr" style="--i:1"><i>A</i></span><span class="ltr" style="--i:2"><i>S</i></span><span class="ltr" style="--i:3"><i>H</i></span><span class="ltr" style="--i:4"><i>I</i></span></span>
+        <span class="intro-line l2"><span class="ltr" style="--i:0"><i>T</i></span><span class="ltr" style="--i:1"><i>A</i></span><span class="ltr" style="--i:2"><i>S</i></span><span class="ltr" style="--i:3"><i>H</i></span></span>
+      </div>
+    </div>
+
+    <div class="intro-bottom">
+      <span class="mono">Munich</span>
+      <span class="intro-count" id="introCount">000</span>
+    </div>
+    <span class="intro-rule" id="introRule"></span>
   </div>
   <script>
     (function () {
@@ -1364,35 +1223,42 @@
       var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var seen = false;
       try { seen = sessionStorage.getItem('tt-intro') === '1'; } catch (e) {}
-
-      if (reduced || seen) {
-        if (intro.parentNode) intro.parentNode.removeChild(intro);
-        return;
-      }
+      if (reduced || seen) { intro.parentNode && intro.parentNode.removeChild(intro); return; }
 
       root.classList.add('intro-active');
-      var start = Date.now(), fired = false;
 
+      /* counter 000 -> 100, eased so it races then settles; the rule follows it */
+      var countEl = document.getElementById('introCount');
+      var rule = document.getElementById('introRule');
+      var DUR = 1500, t0 = null;
+      function ease(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; } // ease-in-out
+      function tick(now) {
+        if (t0 === null) t0 = now;
+        var p = Math.min(1, (now - t0) / DUR);
+        var v = Math.round(ease(p) * 100);
+        if (countEl) countEl.textContent = (v < 10 ? '00' : v < 100 ? '0' : '') + v;
+        if (rule) rule.style.transform = 'scaleX(' + ease(p).toFixed(4) + ')';
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+
+      var start = Date.now(), fired = false;
       function lift() {
         if (fired) return;
         fired = true;
-        var wait = Math.max(0, 1150 - (Date.now() - start)); // let the mark land first
+        var wait = Math.max(0, 2050 - (Date.now() - start)); // counter done, mark landed
         setTimeout(function () {
-          /* one frame to settle, then wipe and let the page compose behind it */
           requestAnimationFrame(function () {
             root.classList.remove('intro-active');
             intro.classList.add('lift');
             try { sessionStorage.setItem('tt-intro', '1'); } catch (e) {}
-            setTimeout(function () {
-              if (intro.parentNode) intro.parentNode.removeChild(intro);
-            }, 1000);
+            setTimeout(function () { intro.parentNode && intro.parentNode.removeChild(intro); }, 1050);
           });
         }, wait);
       }
-
       if (document.readyState === 'complete') lift();
       else window.addEventListener('load', lift);
-      setTimeout(lift, 2600); // never hang
+      setTimeout(lift, 3200); // never hang
     })();
   </script>
 
@@ -1464,34 +1330,22 @@
         <div class="listen-grid">
           <div class="player-shell reveal">
             <div class="frame-head">
-              <span class="mono">Now available</span>
+              <span class="mono">First track &mdash; out now</span>
               <span class="mono">low signal</span>
             </div>
 
             <div class="player">
-              <div class="vinyl" aria-hidden="true">
-                <div class="vinyl-disc">
-                  <img class="player-art" src="low-signal-cover.jpg" alt="" decoding="async" />
-                  <span class="vinyl-hole"></span>
-                </div>
-              </div>
+              <img class="player-art" src="low-signal-cover.jpg" alt="low signal artwork" decoding="async" />
               <div class="player-body">
                 <div class="player-meta">
                   <p class="player-title">low signal</p>
                   <span class="mono">Tashi Tash</span>
                 </div>
                 <div class="player-controls">
-                  <span class="play-wrap">
-                    <svg class="play-ring" viewBox="0 0 56 56" aria-hidden="true">
-                      <circle class="ring-track" cx="28" cy="28" r="26" />
-                      <circle class="ring-fill" id="ringFill" cx="28" cy="28" r="26" />
-                    </svg>
-                    <span class="ring-dot-wrap" id="ringDot" aria-hidden="true"><span class="ring-dot"></span></span>
-                    <button class="play-btn" id="trackPlay" type="button" aria-label="Play low signal" aria-pressed="false">
-                      <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
-                      <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
-                    </button>
-                  </span>
+                  <button class="play-btn" id="trackPlay" type="button" aria-label="Play low signal" aria-pressed="false">
+                    <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+                    <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
+                  </button>
                   <div class="track-bar" id="trackBar" role="slider" tabindex="0"
                        aria-label="Seek within low signal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                     <span class="track-fill" id="trackFill"></span>
@@ -1894,19 +1748,6 @@
       <div class="footer-mark" aria-hidden="true">Tashi Tash</div>
     </div>
   </footer>
-
-  <div class="now-playing" id="nowPlaying" aria-live="polite" aria-hidden="true">
-    <button class="np-jump" id="npJump" type="button" aria-label="Zum Player springen">
-      <span class="np-disc" aria-hidden="true"><img src="low-signal-cover.jpg" alt="" decoding="async" /></span>
-      <span class="np-text">
-        <span class="mono np-label">Now playing</span>
-        <span class="np-title">low signal</span>
-      </span>
-    </button>
-    <button class="np-pause" id="npPause" type="button" aria-label="Pause">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
-    </button>
-  </div>
 
   <div class="lightbox" id="reel-lightbox" role="dialog" aria-modal="true" aria-label="Clip viewer">
     <button class="lb-close" type="button" aria-label="Close">&times;</button>
@@ -2334,13 +2175,6 @@
       var bar   = document.getElementById('trackBar');
       var fill  = document.getElementById('trackFill');
       var timeEl = document.getElementById('trackTime');
-      var ring   = document.getElementById('ringFill');
-      var ringDot = document.getElementById('ringDot');
-      var shell  = btn ? btn.closest('.player-shell') : null;
-      var pill   = document.getElementById('nowPlaying');
-      var pillPause = document.getElementById('npPause');
-      var pillJump  = document.getElementById('npJump');
-      var RING = 163.36; // circumference of the ring
       if (!audio || !btn || !bar) return;
 
       function fmt(s) {
@@ -2353,9 +2187,6 @@
         var d = audio.duration, t = audio.currentTime;
         var pct = d ? (t / d) * 100 : 0;
         fill.style.width = pct + '%';
-        if (ring) ring.style.strokeDashoffset = (RING * (1 - pct / 100)).toFixed(2);
-        if (ringDot) ringDot.style.transform = 'rotate(' + (pct * 3.6).toFixed(2) + 'deg)';
-        if (shell) shell.classList.toggle('has-progress', t > 0);
         bar.setAttribute('aria-valuenow', Math.round(pct));
         if (timeEl) timeEl.textContent = fmt(t) + (d ? ' / ' + fmt(d) : '');
       }
@@ -2363,29 +2194,7 @@
       /* the reels pause this track when a clip's sound comes on */
       window.ttPauseTrack = function () { audio.pause(); };
 
-      /* the floating pill shows only while playing AND the player is off screen */
-      var playerOnScreen = true;
-      function syncPill() {
-        if (!pill) return;
-        var show = !audio.paused && !playerOnScreen;
-        pill.classList.toggle('is-visible', show);
-        pill.setAttribute('aria-hidden', show ? 'false' : 'true');
-      }
-      if (shell && 'IntersectionObserver' in window) {
-        new IntersectionObserver(function (entries) {
-          playerOnScreen = entries[0].isIntersecting;
-          syncPill();
-        }, { threshold: 0.2 }).observe(shell);
-      }
-      if (pillPause) pillPause.addEventListener('click', function () { audio.pause(); });
-      if (pillJump) pillJump.addEventListener('click', function () {
-        var listen = document.getElementById('listen');
-        if (listen) listen.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-
       audio.addEventListener('play', function () {
-        if (shell) shell.classList.add('is-playing');
-        syncPill();
         btn.classList.add('is-playing');
         btn.setAttribute('aria-pressed', 'true');
         btn.setAttribute('aria-label', 'Pause low signal');
@@ -2394,8 +2203,6 @@
       });
 
       audio.addEventListener('pause', function () {
-        if (shell) shell.classList.remove('is-playing');
-        syncPill();
         btn.classList.remove('is-playing');
         btn.setAttribute('aria-pressed', 'false');
         btn.setAttribute('aria-label', 'Play low signal');
