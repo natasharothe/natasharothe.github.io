@@ -709,6 +709,14 @@
       padding: clamp(14px, 2vw, 20px);
     }
 
+    .player-art { cursor: zoom-in; transition: transform 0.25s ease; }
+    .player-art:hover { transform: scale(1.03); }
+    .player-art:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+
+    .lightbox.single .lb-prev,
+    .lightbox.single .lb-next { display: none; }
+    .lightbox.single img { max-width: min(720px, 92vw); max-height: 82vh; }
+
     .player-body { flex: 1; min-width: 0; }
 
     .player-art {
@@ -1130,7 +1138,7 @@
             </div>
 
             <div class="player">
-              <img class="player-art" src="before-we-know-cover.jpg" alt="before we know artwork" decoding="async" />
+              <img class="player-art" src="before-we-know-cover.jpg" alt="before we know artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
               <div class="player-body">
                 <div class="player-meta">
                   <p class="player-title">before we know</p>
@@ -1756,8 +1764,12 @@
           lbMeta.textContent = item.meta;
         }
 
+        var single = false;   // true while showing a standalone image (the cover)
+
         function openLb(i) {
           current = i;
+          single = false;
+          lb.classList.remove('single');
           lastFocus = document.activeElement;
           render();
           lb.classList.add('open');
@@ -1765,15 +1777,42 @@
           lb.querySelector('.lb-close').focus();
         }
 
+        /* one image on its own, no gallery navigation */
+        function openSingle(src, alt, note, meta) {
+          single = true;
+          lastFocus = document.activeElement;
+          lbImg.src = src;
+          lbImg.alt = alt;
+          lbNote.textContent = note;
+          lbMeta.textContent = meta;
+          lb.classList.add('single', 'open');
+          document.body.classList.add('lb-lock');
+          lb.querySelector('.lb-close').focus();
+        }
+
         function closeLb() {
-          lb.classList.remove('open');
+          lb.classList.remove('open', 'single');
+          single = false;
           document.body.classList.remove('lb-lock');
           if (lastFocus && lastFocus.focus) lastFocus.focus();
         }
 
         function step(dir) {
+          if (single) return;
           current = (current + dir + gallery.length) % gallery.length;
           render();
+        }
+
+        /* the track cover opens large on click or Enter/Space */
+        var art = document.querySelector('.player-art');
+        if (art) {
+          var openArt = function () {
+            openSingle(art.getAttribute('src'), art.getAttribute('alt') || '', 'before we know', 'Tashi Tash');
+          };
+          art.addEventListener('click', openArt);
+          art.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openArt(); }
+          });
         }
 
         frames.forEach(function (frame, i) {
