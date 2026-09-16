@@ -717,6 +717,8 @@
     .lightbox.single .lb-next { display: none; }
     .lightbox.single img { max-width: min(720px, 92vw); max-height: 82vh; }
 
+    .player + .player { border-top: 1px solid var(--line); }
+
     .player-body { flex: 1; min-width: 0; }
 
     .player-art {
@@ -1133,11 +1135,32 @@
         <div class="listen-grid">
           <div class="player-shell reveal">
             <div class="frame-head">
-              <span class="mono">First track &mdash; out now</span>
-              <span class="mono">before we know</span>
+              <span class="mono">New tracks &mdash; out now</span>
+              <span class="mono">02 tracks</span>
             </div>
 
-            <div class="player">
+            <div class="player" data-title="I&rsquo;m halfway gone">
+              <img class="player-art" src="halfway-gone-cover.jpg" alt="I'm halfway gone artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
+              <div class="player-body">
+                <div class="player-meta">
+                  <p class="player-title">I&rsquo;m halfway gone</p>
+                  <span class="mono">Tashi Tash</span>
+                </div>
+                <div class="player-controls">
+                  <button class="play-btn" type="button" aria-label="Play I'm halfway gone" aria-pressed="false">
+                    <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+                    <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
+                  </button>
+                  <div class="track-bar" role="slider" tabindex="0" aria-label="Seek within I'm halfway gone" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span class="track-fill"></span>
+                  </div>
+                  <span class="mono track-time">0:00</span>
+                </div>
+              </div>
+              <audio src="halfway-gone.mp3" preload="metadata"></audio>
+            </div>
+
+            <div class="player" data-title="before we know">
               <img class="player-art" src="before-we-know-cover.jpg" alt="before we know artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
               <div class="player-body">
                 <div class="player-meta">
@@ -1145,21 +1168,20 @@
                   <span class="mono">Tashi Tash</span>
                 </div>
                 <div class="player-controls">
-                  <button class="play-btn" id="trackPlay" type="button" aria-label="Play before we know" aria-pressed="false">
+                  <button class="play-btn" type="button" aria-label="Play before we know" aria-pressed="false">
                     <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
                     <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
                   </button>
-                  <div class="track-bar" id="trackBar" role="slider" tabindex="0"
-                       aria-label="Seek within before we know" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                    <span class="track-fill" id="trackFill"></span>
+                  <div class="track-bar" role="slider" tabindex="0" aria-label="Seek within before we know" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span class="track-fill"></span>
                   </div>
-                  <span class="mono track-time" id="trackTime">0:00</span>
+                  <span class="mono track-time">0:00</span>
                 </div>
               </div>
+              <audio src="before-we-know.mp3" preload="metadata"></audio>
             </div>
 
-            <audio id="trackAudio" src="before-we-know.mp3" preload="metadata"></audio>
-            <p class="mono player-hint">My first track, out now</p>
+            <p class="mono player-hint">Two tracks, out now</p>
           </div>
 
           <aside class="listen-aside reveal" style="--d:.12s">
@@ -1803,17 +1825,16 @@
           render();
         }
 
-        /* the track cover opens large on click or Enter/Space */
-        var art = document.querySelector('.player-art');
-        if (art) {
-          var openArt = function () {
-            openSingle(art.getAttribute('src'), art.getAttribute('alt') || '', 'before we know', 'Tashi Tash');
-          };
+        /* each track cover opens large on click or Enter/Space */
+        Array.prototype.forEach.call(document.querySelectorAll('.player-art'), function (art) {
+          var row = art.closest('.player');
+          var t = row ? (row.getAttribute('data-title') || '').replace(/&rsquo;/g, '\u2019') : '';
+          var openArt = function () { openSingle(art.getAttribute('src'), art.getAttribute('alt') || '', t, 'Tashi Tash'); };
           art.addEventListener('click', openArt);
           art.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openArt(); }
           });
-        }
+        });
 
         frames.forEach(function (frame, i) {
           var img = frame.querySelector('img');
@@ -2002,14 +2023,12 @@
   </script>
 
   <script>
-    /* ---- track player: one audio source at a time, works the same on phones ---- */
+    /* ---- track players: several tracks, one audio source at a time, same on phones ---- */
     (function () {
-      var audio = document.getElementById('trackAudio');
-      var btn   = document.getElementById('trackPlay');
-      var bar   = document.getElementById('trackBar');
-      var fill  = document.getElementById('trackFill');
-      var timeEl = document.getElementById('trackTime');
-      if (!audio || !btn || !bar) return;
+      var players = Array.prototype.slice.call(document.querySelectorAll('.player'));
+      if (!players.length) return;
+
+      var audios = [];
 
       function fmt(s) {
         if (!isFinite(s)) return '0:00';
@@ -2017,81 +2036,92 @@
         return m + ':' + (r < 10 ? '0' : '') + r;
       }
 
-      function paint() {
-        var d = audio.duration, t = audio.currentTime;
-        var pct = d ? (t / d) * 100 : 0;
-        fill.style.width = pct + '%';
-        bar.setAttribute('aria-valuenow', Math.round(pct));
-        if (timeEl) timeEl.textContent = fmt(t) + (d ? ' / ' + fmt(d) : '');
+      /* pause every track except the one given */
+      function soloOnly(keep) {
+        audios.forEach(function (a) { if (a !== keep && !a.paused) a.pause(); });
       }
 
-      /* the reels pause this track when a clip's sound comes on */
-      window.ttPauseTrack = function () { audio.pause(); };
+      players.forEach(function (root) {
+        var audio  = root.querySelector('audio');
+        var btn    = root.querySelector('.play-btn');
+        var bar    = root.querySelector('.track-bar');
+        var fill   = root.querySelector('.track-fill');
+        var timeEl = root.querySelector('.track-time');
+        var title  = (root.getAttribute('data-title') || '').replace(/&rsquo;/g, '\u2019');
+        if (!audio || !btn || !bar) return;
+        audios.push(audio);
 
-      audio.addEventListener('play', function () {
-        btn.classList.add('is-playing');
-        btn.setAttribute('aria-pressed', 'true');
-        btn.setAttribute('aria-label', 'Pause before we know');
-        if (window.ttMuteReels) window.ttMuteReels();   // silence the reels
-        if (window.ttPauseReels) window.ttPauseReels();
-      });
-
-      audio.addEventListener('pause', function () {
-        btn.classList.remove('is-playing');
-        btn.setAttribute('aria-pressed', 'false');
-        btn.setAttribute('aria-label', 'Play before we know');
-      });
-
-      audio.addEventListener('timeupdate', paint);
-      audio.addEventListener('loadedmetadata', paint);
-      audio.addEventListener('ended', function () { audio.currentTime = 0; paint(); });
-
-      function toggle() {
-        if (audio.paused) audio.play().catch(function () {});
-        else audio.pause();
-      }
-      btn.addEventListener('click', toggle);
-
-      /* seek by clicking or dragging the bar */
-      function seekTo(clientX) {
-        var r = bar.getBoundingClientRect();
-        var pct = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
-        if (audio.duration) { audio.currentTime = pct * audio.duration; paint(); }
-      }
-      bar.addEventListener('pointerdown', function (e) {
-        seekTo(e.clientX);
-        var move = function (ev) { seekTo(ev.clientX); };
-        var up = function () {
-          document.removeEventListener('pointermove', move);
-          document.removeEventListener('pointerup', up);
-        };
-        document.addEventListener('pointermove', move);
-        document.addEventListener('pointerup', up);
-      });
-      bar.addEventListener('keydown', function (e) {
-        if (!audio.duration) return;
-        if (e.key === 'ArrowRight') { audio.currentTime = Math.min(audio.duration, audio.currentTime + 5); paint(); }
-        if (e.key === 'ArrowLeft')  { audio.currentTime = Math.max(0, audio.currentTime - 5); paint(); }
-        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
-      });
-
-      /* give the file a head start the moment a finger lands on a play control,
-         so the click itself has something to play right away */
-      function headStart() {
-        if (audio.preload !== 'auto' && audio.paused && !audio.currentTime) {
-          audio.preload = 'auto';
-          audio.load();
+        function paint() {
+          var d = audio.duration, t = audio.currentTime;
+          var pct = d ? (t / d) * 100 : 0;
+          fill.style.width = pct + '%';
+          bar.setAttribute('aria-valuenow', Math.round(pct));
+          if (timeEl) timeEl.textContent = fmt(t) + (d ? ' / ' + fmt(d) : '');
         }
-      }
-      btn.addEventListener('pointerdown', headStart, { passive: true });
 
-      /* the hero button starts the track (a real user gesture, so phones allow it) */
-      document.querySelectorAll('[data-play]').forEach(function (b) {
-        b.addEventListener('pointerdown', headStart, { passive: true });
-        b.addEventListener('click', function () { audio.play().catch(function () {}); });
+        audio.addEventListener('play', function () {
+          soloOnly(audio);
+          btn.classList.add('is-playing');
+          btn.setAttribute('aria-pressed', 'true');
+          btn.setAttribute('aria-label', 'Pause ' + title);
+          if (window.ttMuteReels) window.ttMuteReels();
+          if (window.ttPauseReels) window.ttPauseReels();
+        });
+        audio.addEventListener('pause', function () {
+          btn.classList.remove('is-playing');
+          btn.setAttribute('aria-pressed', 'false');
+          btn.setAttribute('aria-label', 'Play ' + title);
+        });
+        audio.addEventListener('timeupdate', paint);
+        audio.addEventListener('loadedmetadata', paint);
+        audio.addEventListener('ended', function () { audio.currentTime = 0; paint(); });
+
+        function toggle() { if (audio.paused) audio.play().catch(function () {}); else audio.pause(); }
+        btn.addEventListener('click', toggle);
+
+        function seekTo(clientX) {
+          var r = bar.getBoundingClientRect();
+          var pct = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
+          if (audio.duration) { audio.currentTime = pct * audio.duration; paint(); }
+        }
+        bar.addEventListener('pointerdown', function (e) {
+          seekTo(e.clientX);
+          var move = function (ev) { seekTo(ev.clientX); };
+          var up = function () {
+            document.removeEventListener('pointermove', move);
+            document.removeEventListener('pointerup', up);
+          };
+          document.addEventListener('pointermove', move);
+          document.addEventListener('pointerup', up);
+        });
+        bar.addEventListener('keydown', function (e) {
+          if (!audio.duration) return;
+          if (e.key === 'ArrowRight') { audio.currentTime = Math.min(audio.duration, audio.currentTime + 5); paint(); }
+          if (e.key === 'ArrowLeft')  { audio.currentTime = Math.max(0, audio.currentTime - 5); paint(); }
+          if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+        });
+
+        /* start buffering the moment a finger lands on the play control */
+        btn.addEventListener('pointerdown', function () {
+          if (audio.preload !== 'auto' && audio.paused && !audio.currentTime) { audio.preload = 'auto'; audio.load(); }
+        }, { passive: true });
+
+        paint();
       });
 
-      paint();
+      /* the reels pause whatever track is running */
+      window.ttPauseTrack = function () { audios.forEach(function (a) { a.pause(); }); };
+
+      /* the hero button starts the first (newest) track */
+      var first = audios[0];
+      if (first) {
+        document.querySelectorAll('[data-play]').forEach(function (b) {
+          b.addEventListener('pointerdown', function () {
+            if (first.preload !== 'auto' && first.paused && !first.currentTime) { first.preload = 'auto'; first.load(); }
+          }, { passive: true });
+          b.addEventListener('click', function () { first.play().catch(function () {}); });
+        });
+      }
     })();
   </script>
 
