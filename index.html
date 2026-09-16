@@ -703,49 +703,48 @@
     /* ---------- track player ---------- */
 
     .player {
-      display: flex;
-      gap: clamp(14px, 2vw, 22px);
+      display: grid;
+      grid-template-columns: 28px 56px minmax(0, 1fr) auto minmax(80px, 220px) auto;
       align-items: center;
-      padding: clamp(14px, 2vw, 20px);
+      gap: 16px;
+      padding: 12px 18px;
     }
-
-    .player-art { cursor: zoom-in; transition: transform 0.25s ease; }
-    .player-art:hover { transform: scale(1.03); }
-    .player-art:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
-
-    .lightbox.single .lb-prev,
-    .lightbox.single .lb-next { display: none; }
-    .lightbox.single img { max-width: min(720px, 92vw); max-height: 82vh; }
 
     .player + .player { border-top: 1px solid var(--line); }
 
-    .player-body { flex: 1; min-width: 0; }
+    .player .track-no { color: var(--grey-dark); }
 
     .player-art {
-      width: clamp(84px, 12vw, 116px);
-      aspect-ratio: 1 / 1;
+      width: 56px;
+      height: 56px;
       object-fit: cover;
       display: block;
-      flex: 0 0 auto;
       background: var(--panel);
+      cursor: zoom-in;
+      transition: transform 0.25s ease;
     }
+    .player-art:hover { transform: scale(1.04); }
+    .player-art:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
 
-    .player-meta { margin-bottom: 14px; }
+    .player-body { display: contents; }      /* lets the meta and controls sit on the grid */
 
+    .player-meta { min-width: 0; }
     .player-title {
-      margin: 0 0 4px;
+      margin: 0 0 2px;
       font-weight: 700;
-      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      font-size: 1rem;
       letter-spacing: -0.01em;
       color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .player-controls { display: flex; align-items: center; gap: 14px; }
+    .player-controls { display: contents; }
 
     .play-btn {
-      width: 46px;
-      height: 46px;
-      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
       display: grid;
       place-items: center;
       padding: 0;
@@ -756,42 +755,60 @@
       cursor: pointer;
       transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
     }
-
     .play-btn:hover { background: var(--white); color: var(--black); }
     .play-btn:active { transform: scale(0.96); }
     .play-btn:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
-    .play-btn svg { width: 18px; height: 18px; display: block; }
+    .play-btn svg { width: 15px; height: 15px; display: block; }
     .play-btn .ico-pause { display: none; }
     .play-btn.is-playing .ico-play { display: none; }
     .play-btn.is-playing .ico-pause { display: block; }
 
     .track-bar {
-      flex: 1;
-      height: 3px;
-      min-width: 60px;
+      height: 2px;
       background: rgba(244, 244, 242, 0.18);
       border-radius: 2px;
       position: relative;
       cursor: pointer;
     }
-
     .track-bar:focus-visible { outline: 2px solid var(--white); outline-offset: 6px; }
-
     .track-fill {
       position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
+      left: 0; top: 0; bottom: 0;
       width: 0%;
       background: var(--white);
       border-radius: 2px;
     }
 
-    .track-time { flex: 0 0 auto; color: var(--grey); font-variant-numeric: tabular-nums; }
+    .track-time {
+      color: var(--grey);
+      font-variant-numeric: tabular-nums;
+      min-width: 92px;
+      text-align: right;
+    }
+
+    /* single-image mode of the lightbox (cover zoom) */
+    .lightbox.single .lb-prev,
+    .lightbox.single .lb-next { display: none; }
+    .lightbox.single img { max-width: min(720px, 92vw); max-height: 82vh; }
+
+    @media (max-width: 700px) {
+      .player {
+        grid-template-columns: 48px minmax(0, 1fr) auto;
+        grid-template-areas:
+          "art meta play"
+          "bar bar  bar";
+        gap: 10px 14px;
+        padding: 12px 14px;
+      }
+      .player .track-no, .track-time { display: none; }
+      .player-art { grid-area: art; width: 48px; height: 48px; }
+      .player-meta { grid-area: meta; }
+      .play-btn { grid-area: play; }
+      .track-bar { grid-area: bar; }
+    }
 
     @media (max-width: 600px) {
       .player { gap: 14px; }
-      .player-art { width: 76px; }
       .track-time { display: none; }
     }
 
@@ -1135,23 +1152,24 @@
         <div class="listen-grid">
           <div class="player-shell reveal">
             <div class="frame-head">
-              <span class="mono">New tracks &mdash; out now</span>
-              <span class="mono">02 tracks</span>
+              <span class="mono">Tracks</span>
+              <span class="mono">Out now</span>
             </div>
 
-            <div class="player" data-title="I&rsquo;m halfway gone">
-              <img class="player-art" src="halfway-gone-cover.jpg" alt="I'm halfway gone artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
+            <div class="player" data-title="halfway gone">
+              <span class="mono track-no">01</span>
+              <img class="player-art" src="halfway-gone-cover.jpg" alt="halfway gone artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
               <div class="player-body">
                 <div class="player-meta">
-                  <p class="player-title">I&rsquo;m halfway gone</p>
+                  <p class="player-title">halfway gone</p>
                   <span class="mono">Tashi Tash</span>
                 </div>
                 <div class="player-controls">
-                  <button class="play-btn" type="button" aria-label="Play I'm halfway gone" aria-pressed="false">
+                  <button class="play-btn" type="button" aria-label="Play halfway gone" aria-pressed="false">
                     <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
                     <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
                   </button>
-                  <div class="track-bar" role="slider" tabindex="0" aria-label="Seek within I'm halfway gone" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                  <div class="track-bar" role="slider" tabindex="0" aria-label="Seek within halfway gone" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                     <span class="track-fill"></span>
                   </div>
                   <span class="mono track-time">0:00</span>
@@ -1161,6 +1179,7 @@
             </div>
 
             <div class="player" data-title="before we know">
+              <span class="mono track-no">02</span>
               <img class="player-art" src="before-we-know-cover.jpg" alt="before we know artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
               <div class="player-body">
                 <div class="player-meta">
@@ -1181,7 +1200,6 @@
               <audio src="before-we-know.mp3" preload="metadata"></audio>
             </div>
 
-            <p class="mono player-hint">Two tracks, out now</p>
           </div>
 
           <aside class="listen-aside reveal" style="--d:.12s">
