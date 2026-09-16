@@ -681,52 +681,33 @@
       align-items: start;
     }
 
-    .player-shell {
-      border: 1px solid var(--line);
-      background: var(--panel);
-    }
+    /* ---------- tracklist with waveform ---------- */
 
+    .player-shell { border: 1px solid var(--line); background: var(--panel); }
     .player-shell .frame-head { border-bottom: 1px solid var(--line); }
-
-    .player-shell .embed { padding: 10px; }
-
-    .player-shell iframe {
-      display: block;
-      width: 100%;
-      height: 152px;
-      border: 0;
-      border-radius: 12px;
-    }
-
-    .player-hint { padding: 0 12px 10px; }
-
-    /* ---------- track player ---------- */
 
     .player {
       display: grid;
-      grid-template-columns: 28px 56px minmax(0, 1fr) auto minmax(80px, 220px) auto;
+      grid-template-columns: 28px 56px minmax(0, 1fr) auto minmax(160px, 2fr) auto;
       align-items: center;
       gap: 16px;
       padding: 12px 18px;
     }
-
     .player + .player { border-top: 1px solid var(--line); }
-
     .player .track-no { color: var(--grey-dark); }
+    .player.is-playing .track-no { color: var(--white); }
 
     .player-art {
       width: 56px;
       height: 56px;
       object-fit: cover;
       display: block;
-      background: var(--panel);
+      background: var(--black);
       cursor: zoom-in;
       transition: transform 0.25s ease;
     }
     .player-art:hover { transform: scale(1.04); }
     .player-art:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
-
-    .player-body { display: contents; }      /* lets the meta and controls sit on the grid */
 
     .player-meta { min-width: 0; }
     .player-title {
@@ -739,8 +720,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    .player-controls { display: contents; }
 
     .play-btn {
       width: 38px;
@@ -763,21 +742,31 @@
     .play-btn.is-playing .ico-play { display: none; }
     .play-btn.is-playing .ico-pause { display: block; }
 
-    .track-bar {
-      height: 2px;
-      background: rgba(244, 244, 242, 0.18);
-      border-radius: 2px;
+    /* waveform: grey bars underneath, white bars revealed up to the playhead */
+    .wave {
       position: relative;
+      height: 34px;
       cursor: pointer;
+      touch-action: none;
     }
-    .track-bar:focus-visible { outline: 2px solid var(--white); outline-offset: 6px; }
-    .track-fill {
+    .wave:focus-visible { outline: 2px solid var(--white); outline-offset: 4px; }
+    .wave-bars {
       position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 0%;
-      background: var(--white);
-      border-radius: 2px;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      gap: 2px;
     }
+    .wave-bars i {
+      flex: 1 1 0;
+      min-width: 1px;
+      height: calc(var(--h) * 100%);
+      border-radius: 1px;
+      background: rgba(244, 244, 242, 0.28);
+    }
+    .wave-played { clip-path: inset(0 100% 0 0); }
+    .wave-played i { background: var(--white); }
+    .player:hover .wave-base i { background: rgba(244, 244, 242, 0.4); }
 
     .track-time {
       color: var(--grey);
@@ -795,8 +784,8 @@
       .player {
         grid-template-columns: 48px minmax(0, 1fr) auto;
         grid-template-areas:
-          "art meta play"
-          "bar bar  bar";
+          "art  meta play"
+          "wave wave wave";
         gap: 10px 14px;
         padding: 12px 14px;
       }
@@ -804,12 +793,7 @@
       .player-art { grid-area: art; width: 48px; height: 48px; }
       .player-meta { grid-area: meta; }
       .play-btn { grid-area: play; }
-      .track-bar { grid-area: bar; }
-    }
-
-    @media (max-width: 600px) {
-      .player { gap: 14px; }
-      .track-time { display: none; }
+      .wave { grid-area: wave; height: 30px; }
     }
 
     .listen-aside { display: grid; gap: 16px; }
@@ -1155,51 +1139,43 @@
               <span class="mono">Tracks</span>
               <span class="mono">Out now</span>
             </div>
-
-            <div class="player" data-title="halfway gone">
-              <span class="mono track-no">01</span>
-              <img class="player-art" src="halfway-gone-cover.jpg" alt="halfway gone artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
-              <div class="player-body">
-                <div class="player-meta">
-                  <p class="player-title">halfway gone</p>
-                  <span class="mono">Tashi Tash</span>
-                </div>
-                <div class="player-controls">
-                  <button class="play-btn" type="button" aria-label="Play halfway gone" aria-pressed="false">
-                    <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
-                    <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
-                  </button>
-                  <div class="track-bar" role="slider" tabindex="0" aria-label="Seek within halfway gone" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                    <span class="track-fill"></span>
-                  </div>
-                  <span class="mono track-time">0:00</span>
-                </div>
-              </div>
-              <audio src="halfway-gone.mp3" preload="metadata"></audio>
+          <div class="player" data-title="halfway gone" data-peaks='[0.12, 0.32, 0.42, 0.35, 0.33, 0.37, 0.4, 0.37, 0.49, 0.5, 0.42, 0.54, 0.43, 0.51, 0.44, 0.69, 0.53, 0.63, 0.58, 0.63, 0.7, 0.48, 0.72, 0.61, 0.67, 0.44, 0.57, 0.74, 0.72, 0.68, 0.75, 0.65, 0.67, 0.74, 0.75, 0.74, 0.71, 0.78, 0.66, 0.7, 0.46, 0.97, 0.96, 0.96, 0.78, 0.6, 0.56, 0.63, 0.69, 0.7, 0.67, 0.75, 0.78, 0.75, 0.75, 0.72, 0.77, 0.84, 0.83, 0.84, 0.82, 0.85, 0.52, 0.54, 0.46, 0.28, 0.82, 0.86, 0.94, 0.93, 0.97, 0.88, 0.79, 0.87, 0.89, 0.92, 0.97, 0.62, 0.44, 0.13, 0.67, 0.32, 0.6, 0.48, 0.63, 0.32, 0.35, 0.34, 0.88, 0.96, 0.98, 0.92, 1.0, 0.88, 0.81, 0.6, 0.23, 0.26, 0.36, 0.4, 0.32, 0.26, 0.65, 0.33, 0.67, 0.27, 0.84, 0.36, 0.28, 0.08]'>
+            <span class="mono track-no">01</span>
+            <img class="player-art" src="halfway-gone-cover.jpg" alt="halfway gone artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
+            <div class="player-meta">
+              <p class="player-title">halfway gone</p>
+              <span class="mono">Tashi Tash</span>
             </div>
-
-            <div class="player" data-title="before we know">
-              <span class="mono track-no">02</span>
-              <img class="player-art" src="before-we-know-cover.jpg" alt="before we know artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
-              <div class="player-body">
-                <div class="player-meta">
-                  <p class="player-title">before we know</p>
-                  <span class="mono">Tashi Tash</span>
-                </div>
-                <div class="player-controls">
-                  <button class="play-btn" type="button" aria-label="Play before we know" aria-pressed="false">
-                    <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
-                    <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
-                  </button>
-                  <div class="track-bar" role="slider" tabindex="0" aria-label="Seek within before we know" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                    <span class="track-fill"></span>
-                  </div>
-                  <span class="mono track-time">0:00</span>
-                </div>
-              </div>
-              <audio src="before-we-know.mp3" preload="metadata"></audio>
+            <button class="play-btn" type="button" aria-label="Play halfway gone" aria-pressed="false">
+              <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+              <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
+            </button>
+            <div class="wave" role="slider" tabindex="0" aria-label="Seek within halfway gone" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="wave-bars wave-base" aria-hidden="true"></div>
+              <div class="wave-bars wave-played" aria-hidden="true"></div>
             </div>
+            <span class="mono track-time">0:00 / 4:14</span>
+            <audio src="halfway-gone.mp3" preload="metadata"></audio>
+          </div>
 
+          <div class="player" data-title="before we know" data-peaks='[0.1, 0.35, 0.46, 0.46, 0.4, 0.67, 0.59, 0.58, 0.83, 0.57, 0.74, 0.7, 0.68, 0.65, 0.6, 0.65, 0.63, 0.66, 0.67, 0.76, 0.75, 0.75, 0.73, 0.76, 0.82, 0.79, 0.82, 0.77, 0.81, 0.77, 0.78, 0.79, 0.77, 0.87, 0.88, 0.87, 0.9, 0.92, 0.91, 0.86, 0.88, 0.89, 0.78, 0.59, 0.84, 0.82, 0.87, 0.88, 0.91, 0.85, 0.84, 0.85, 0.88, 0.93, 0.91, 0.92, 0.93, 0.93, 0.9, 0.87, 0.93, 0.91, 0.92, 0.9, 0.88, 0.93, 0.94, 0.89, 0.89, 0.92, 0.93, 0.91, 0.85, 0.9, 0.96, 0.94, 1.0, 0.95, 0.98, 1.0, 0.83, 0.28, 0.37, 0.32, 0.41, 0.79, 0.87, 0.85, 0.9, 0.87, 0.88, 0.85, 0.9, 0.92, 0.93, 0.89, 0.87, 0.94, 0.95, 0.92, 0.87, 0.9, 0.97, 0.97, 0.43, 0.37, 0.32, 0.38, 0.29, 0.21]'>
+            <span class="mono track-no">02</span>
+            <img class="player-art" src="before-we-know-cover.jpg" alt="before we know artwork" decoding="async" role="button" tabindex="0" aria-label="Cover vergroessern" />
+            <div class="player-meta">
+              <p class="player-title">before we know</p>
+              <span class="mono">Tashi Tash</span>
+            </div>
+            <button class="play-btn" type="button" aria-label="Play before we know" aria-pressed="false">
+              <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+              <svg class="ico-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg>
+            </button>
+            <div class="wave" role="slider" tabindex="0" aria-label="Seek within before we know" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="wave-bars wave-base" aria-hidden="true"></div>
+              <div class="wave-bars wave-played" aria-hidden="true"></div>
+            </div>
+            <span class="mono track-time">0:00 / 4:57</span>
+            <audio src="before-we-know.mp3" preload="metadata"></audio>
+          </div>
           </div>
 
           <aside class="listen-aside reveal" style="--d:.12s">
@@ -1846,7 +1822,7 @@
         /* each track cover opens large on click or Enter/Space */
         Array.prototype.forEach.call(document.querySelectorAll('.player-art'), function (art) {
           var row = art.closest('.player');
-          var t = row ? (row.getAttribute('data-title') || '').replace(/&rsquo;/g, '\u2019') : '';
+          var t = row ? (row.getAttribute('data-title') || '') : '';
           var openArt = function () { openSingle(art.getAttribute('src'), art.getAttribute('alt') || '', t, 'Tashi Tash'); };
           art.addEventListener('click', openArt);
           art.addEventListener('keydown', function (e) {
@@ -2041,11 +2017,10 @@
   </script>
 
   <script>
-    /* ---- track players: several tracks, one audio source at a time, same on phones ---- */
+    /* ---- tracklist: waveform players, one at a time, rolling on to the next ---- */
     (function () {
       var players = Array.prototype.slice.call(document.querySelectorAll('.player'));
       if (!players.length) return;
-
       var audios = [];
 
       function fmt(s) {
@@ -2053,32 +2028,42 @@
         var m = Math.floor(s / 60), r = Math.floor(s % 60);
         return m + ':' + (r < 10 ? '0' : '') + r;
       }
+      function soloOnly(keep) { audios.forEach(function (a) { if (a !== keep && !a.paused) a.pause(); }); }
 
-      /* pause every track except the one given */
-      function soloOnly(keep) {
-        audios.forEach(function (a) { if (a !== keep && !a.paused) a.pause(); });
-      }
-
-      players.forEach(function (root) {
+      players.forEach(function (root, index) {
         var audio  = root.querySelector('audio');
         var btn    = root.querySelector('.play-btn');
-        var bar    = root.querySelector('.track-bar');
-        var fill   = root.querySelector('.track-fill');
+        var wave   = root.querySelector('.wave');
+        var played = root.querySelector('.wave-played');
         var timeEl = root.querySelector('.track-time');
-        var title  = (root.getAttribute('data-title') || '').replace(/&rsquo;/g, '\u2019');
-        if (!audio || !btn || !bar) return;
+        var title  = root.getAttribute('data-title') || '';
+        if (!audio || !btn || !wave) return;
         audios.push(audio);
+
+        /* build the bars from the measured loudness of the track */
+        var peaks = [];
+        try { peaks = JSON.parse(root.getAttribute('data-peaks') || '[]'); } catch (err) {}
+        root.querySelectorAll('.wave-bars').forEach(function (layer) {
+          var frag = document.createDocumentFragment();
+          peaks.forEach(function (v) {
+            var i = document.createElement('i');
+            i.style.setProperty('--h', v);
+            frag.appendChild(i);
+          });
+          layer.appendChild(frag);
+        });
 
         function paint() {
           var d = audio.duration, t = audio.currentTime;
           var pct = d ? (t / d) * 100 : 0;
-          fill.style.width = pct + '%';
-          bar.setAttribute('aria-valuenow', Math.round(pct));
-          if (timeEl) timeEl.textContent = fmt(t) + (d ? ' / ' + fmt(d) : '');
+          if (played) played.style.clipPath = 'inset(0 ' + (100 - pct).toFixed(2) + '% 0 0)';
+          wave.setAttribute('aria-valuenow', Math.round(pct));
+          if (timeEl && d) timeEl.textContent = fmt(t) + ' / ' + fmt(d);
         }
 
         audio.addEventListener('play', function () {
           soloOnly(audio);
+          root.classList.add('is-playing');
           btn.classList.add('is-playing');
           btn.setAttribute('aria-pressed', 'true');
           btn.setAttribute('aria-label', 'Pause ' + title);
@@ -2086,23 +2071,31 @@
           if (window.ttPauseReels) window.ttPauseReels();
         });
         audio.addEventListener('pause', function () {
+          root.classList.remove('is-playing');
           btn.classList.remove('is-playing');
           btn.setAttribute('aria-pressed', 'false');
           btn.setAttribute('aria-label', 'Play ' + title);
         });
         audio.addEventListener('timeupdate', paint);
         audio.addEventListener('loadedmetadata', paint);
-        audio.addEventListener('ended', function () { audio.currentTime = 0; paint(); });
+
+        /* when a track ends, the next one takes over */
+        audio.addEventListener('ended', function () {
+          audio.currentTime = 0; paint();
+          var next = audios[index + 1];
+          if (next) next.play().catch(function () {});
+        });
 
         function toggle() { if (audio.paused) audio.play().catch(function () {}); else audio.pause(); }
         btn.addEventListener('click', toggle);
 
+        /* seek on the waveform: click, drag, keys */
         function seekTo(clientX) {
-          var r = bar.getBoundingClientRect();
+          var r = wave.getBoundingClientRect();
           var pct = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
           if (audio.duration) { audio.currentTime = pct * audio.duration; paint(); }
         }
-        bar.addEventListener('pointerdown', function (e) {
+        wave.addEventListener('pointerdown', function (e) {
           seekTo(e.clientX);
           var move = function (ev) { seekTo(ev.clientX); };
           var up = function () {
@@ -2112,14 +2105,13 @@
           document.addEventListener('pointermove', move);
           document.addEventListener('pointerup', up);
         });
-        bar.addEventListener('keydown', function (e) {
+        wave.addEventListener('keydown', function (e) {
           if (!audio.duration) return;
           if (e.key === 'ArrowRight') { audio.currentTime = Math.min(audio.duration, audio.currentTime + 5); paint(); }
           if (e.key === 'ArrowLeft')  { audio.currentTime = Math.max(0, audio.currentTime - 5); paint(); }
           if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
         });
 
-        /* start buffering the moment a finger lands on the play control */
         btn.addEventListener('pointerdown', function () {
           if (audio.preload !== 'auto' && audio.paused && !audio.currentTime) { audio.preload = 'auto'; audio.load(); }
         }, { passive: true });
@@ -2127,10 +2119,8 @@
         paint();
       });
 
-      /* the reels pause whatever track is running */
       window.ttPauseTrack = function () { audios.forEach(function (a) { a.pause(); }); };
 
-      /* the hero button starts the first (newest) track */
       var first = audios[0];
       if (first) {
         document.querySelectorAll('[data-play]').forEach(function (b) {
