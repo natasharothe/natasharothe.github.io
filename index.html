@@ -689,7 +689,7 @@
 
     .player {
       display: grid;
-      grid-template-columns: 28px 56px minmax(0, 1fr) auto minmax(160px, 2fr) auto;
+      grid-template-columns: 28px 56px minmax(0, 240px) auto minmax(160px, 1fr) auto;
       align-items: center;
       gap: 16px;
       padding: 12px 18px;
@@ -710,7 +710,8 @@
     .player-art:hover { transform: scale(1.04); }
     .player-art:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
 
-    .player-meta { min-width: 0; }
+    .player-meta { min-width: 0; padding-right: 8px; }
+    .player-meta .mono { white-space: nowrap; }
     .player-title {
       margin: 0 0 2px;
       font-weight: 700;
@@ -747,6 +748,8 @@
     .wave {
       position: relative;
       height: 34px;
+      min-width: 0;
+      overflow: hidden;
       cursor: pointer;
       touch-action: none;
     }
@@ -760,7 +763,7 @@
     }
     .wave-bars i {
       flex: 1 1 0;
-      min-width: 1px;
+      min-width: 0;
       height: calc(var(--h) * 100%);
       border-radius: 1px;
       background: rgba(244, 244, 242, 0.28);
@@ -2068,15 +2071,30 @@
         /* build the bars from the measured loudness of the track */
         var peaks = [];
         try { peaks = JSON.parse(root.getAttribute('data-peaks') || '[]'); } catch (err) {}
-        root.querySelectorAll('.wave-bars').forEach(function (layer) {
-          var frag = document.createDocumentFragment();
-          peaks.forEach(function (v) {
-            var i = document.createElement('i');
-            i.style.setProperty('--h', v);
-            frag.appendChild(i);
+        var builtCount = -1;
+        function buildBars() {
+          /* draw as many bars as fit at ~3px each, downsampling the peaks */
+          var w = wave.clientWidth || 0;
+          var count = w ? Math.max(24, Math.min(peaks.length, Math.floor(w / 3))) : peaks.length;
+          if (count === builtCount) return;
+          builtCount = count;
+          root.querySelectorAll('.wave-bars').forEach(function (layer) {
+            layer.innerHTML = '';
+            var frag = document.createDocumentFragment();
+            for (var k = 0; k < count; k++) {
+              var a = Math.floor(k * peaks.length / count);
+              var b = Math.max(a + 1, Math.floor((k + 1) * peaks.length / count));
+              var v = 0;
+              for (var j = a; j < b; j++) v = Math.max(v, peaks[j] || 0);
+              var i = document.createElement('i');
+              i.style.setProperty('--h', v);
+              frag.appendChild(i);
+            }
+            layer.appendChild(frag);
           });
-          layer.appendChild(frag);
-        });
+        }
+        buildBars();
+        window.addEventListener('resize', buildBars);
 
         function paint() {
           var d = audio.duration, t = audio.currentTime;
