@@ -2070,7 +2070,10 @@
             title:  root.getAttribute('data-title') || 'Tashi Tash',
             artist: artist ? artist.textContent.trim() : 'Tashi Tash',
             album:  'Tashi Tash',
-            artwork: art ? [{ src: art.src, sizes: '1000x1000', type: 'image/jpeg' }] : []
+            artwork: art ? [
+              { src: art.src, sizes: '512x512', type: 'image/jpeg' },
+              { src: art.src, sizes: '1000x1000', type: 'image/jpeg' }
+            ] : []
           });
         } catch (err) {}
       }
@@ -2090,20 +2093,24 @@
         a.currentTime = 0;
         a.play().catch(function () {});
       }
-      if (ms) {
+      /* iOS shows either track buttons or 10s-skip buttons, never both: registering
+         seekbackward/seekforward hides prev/next, so those two stay unset on purpose. */
+      function msRegister() {
+        if (!ms) return;
         var handlers = {
           play:          function () { var a = audios[current < 0 ? 0 : current]; if (a) a.play().catch(function () {}); },
           pause:         function () { audios.forEach(function (a) { a.pause(); }); },
           previoustrack: function () { msSkip(-1); },
           nexttrack:     function () { msSkip(1); },
           seekto:        function (d) { var a = audios[current]; if (a && d && typeof d.seekTime === 'number') { a.currentTime = d.seekTime; msSetPosition(a); } },
-          seekbackward:  function (d) { var a = audios[current]; if (a) { a.currentTime = Math.max(0, a.currentTime - ((d && d.seekOffset) || 10)); msSetPosition(a); } },
-          seekforward:   function (d) { var a = audios[current]; if (a) { a.currentTime = Math.min(a.duration || 0, a.currentTime + ((d && d.seekOffset) || 10)); msSetPosition(a); } }
+          seekbackward:  null,
+          seekforward:   null
         };
         Object.keys(handlers).forEach(function (k) {
           try { ms.setActionHandler(k, handlers[k]); } catch (err) {}
         });
       }
+      msRegister();
 
       players.forEach(function (root, index) {
         var audio  = root.querySelector('audio');
@@ -2170,6 +2177,14 @@
           btn.classList.remove('is-playing');
           btn.setAttribute('aria-pressed', 'false');
           btn.setAttribute('aria-label', 'Play ' + title);
+        });
+        /* Safari only trusts metadata once sound is really running, so repeat it here */
+        audio.addEventListener('playing', function () {
+          current = index;
+          msSetMeta(root);
+          msRegister();
+          if (ms) ms.playbackState = 'playing';
+          msSetPosition(audio);
         });
         audio.addEventListener('timeupdate', paint);
         audio.addEventListener('loadedmetadata', function () { paint(); if (current === index) msSetPosition(audio); });
