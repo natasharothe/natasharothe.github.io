@@ -2058,6 +2058,53 @@
       }
       function soloOnly(keep) { audios.forEach(function (a) { if (a !== keep && !a.paused) a.pause(); }); }
 
+      /* ---- Media Session: lock screen / control centre / AirPods show title, cover, prev & next ---- */
+      var ms = ('mediaSession' in navigator) ? navigator.mediaSession : null;
+      var current = -1; /* index of the track that last played */
+      function msSetMeta(root) {
+        if (!ms || !window.MediaMetadata) return;
+        var art = root.querySelector('.player-art');
+        var artist = root.querySelector('.player-meta .mono');
+        try {
+          ms.metadata = new MediaMetadata({
+            title:  root.getAttribute('data-title') || 'Tashi Tash',
+            artist: artist ? artist.textContent.trim() : 'Tashi Tash',
+            album:  'Tashi Tash',
+            artwork: art ? [{ src: art.src, sizes: '1000x1000', type: 'image/jpeg' }] : []
+          });
+        } catch (err) {}
+      }
+      function msSetPosition(audio) {
+        if (!ms || !ms.setPositionState || !isFinite(audio.duration)) return;
+        try {
+          ms.setPositionState({ duration: audio.duration, playbackRate: audio.playbackRate, position: Math.min(audio.currentTime, audio.duration) });
+        } catch (err) {}
+      }
+      function msSkip(dir) {
+        var i = current < 0 ? 0 : current + dir;
+        if (i < 0) i = audios.length - 1;
+        if (i >= audios.length) i = 0;
+        var a = audios[i];
+        if (!a) return;
+        audios.forEach(function (x) { if (x !== a) { x.pause(); } });
+        a.currentTime = 0;
+        a.play().catch(function () {});
+      }
+      if (ms) {
+        var handlers = {
+          play:          function () { var a = audios[current < 0 ? 0 : current]; if (a) a.play().catch(function () {}); },
+          pause:         function () { audios.forEach(function (a) { a.pause(); }); },
+          previoustrack: function () { msSkip(-1); },
+          nexttrack:     function () { msSkip(1); },
+          seekto:        function (d) { var a = audios[current]; if (a && d && typeof d.seekTime === 'number') { a.currentTime = d.seekTime; msSetPosition(a); } },
+          seekbackward:  function (d) { var a = audios[current]; if (a) { a.currentTime = Math.max(0, a.currentTime - ((d && d.seekOffset) || 10)); msSetPosition(a); } },
+          seekforward:   function (d) { var a = audios[current]; if (a) { a.currentTime = Math.min(a.duration || 0, a.currentTime + ((d && d.seekOffset) || 10)); msSetPosition(a); } }
+        };
+        Object.keys(handlers).forEach(function (k) {
+          try { ms.setActionHandler(k, handlers[k]); } catch (err) {}
+        });
+      }
+
       players.forEach(function (root, index) {
         var audio  = root.querySelector('audio');
         var btn    = root.querySelector('.play-btn');
@@ -2106,6 +2153,10 @@
 
         audio.addEventListener('play', function () {
           soloOnly(audio);
+          current = index;
+          msSetMeta(root);
+          if (ms) ms.playbackState = 'playing';
+          msSetPosition(audio);
           root.classList.add('is-playing');
           btn.classList.add('is-playing');
           btn.setAttribute('aria-pressed', 'true');
@@ -2114,13 +2165,15 @@
           if (window.ttPauseReels) window.ttPauseReels();
         });
         audio.addEventListener('pause', function () {
+          if (ms && current === index && !audio.ended) ms.playbackState = 'paused';
           root.classList.remove('is-playing');
           btn.classList.remove('is-playing');
           btn.setAttribute('aria-pressed', 'false');
           btn.setAttribute('aria-label', 'Play ' + title);
         });
         audio.addEventListener('timeupdate', paint);
-        audio.addEventListener('loadedmetadata', paint);
+        audio.addEventListener('loadedmetadata', function () { paint(); if (current === index) msSetPosition(audio); });
+        audio.addEventListener('seeked', function () { if (current === index) msSetPosition(audio); });
 
         /* when a track ends, the next one takes over */
         audio.addEventListener('ended', function () {
@@ -2163,6 +2216,7 @@
       });
 
       window.ttPauseTrack = function () { audios.forEach(function (a) { a.pause(); }); };
+      window.ttSkipTrack = msSkip;
 
       var first = audios[0];
       if (first) {
