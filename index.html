@@ -235,7 +235,6 @@
 
     .top-meta { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
 
-    .clock { color: var(--white); }
 
     .nav { display: flex; gap: 20px; flex-wrap: wrap; }
 
@@ -850,7 +849,9 @@
       align-items: start;
     }
 
-    .about-copy p { max-width: 56ch; color: var(--grey); margin: 0 0 16px; }
+    /* sits on the same baseline as the first row of the table beside it */
+    .about-copy { padding-top: 12px; }
+    .about-copy p { max-width: 56ch; color: var(--grey); margin: 0; }
     .about-copy p strong { color: var(--white); font-weight: 600; }
 
     .spec { border-top: 1px solid var(--line); }
@@ -1006,6 +1007,7 @@
 
     @media (max-width: 920px) {
       .hero-grid, .listen-grid, .about-grid { grid-template-columns: 1fr; }
+      .about-copy { padding-top: 0; }
       .series-grid { grid-template-columns: 1fr; }
       .hero-frame { max-width: 460px; margin: 0 auto; }
       .section-head { grid-template-columns: auto 1fr; }
@@ -1020,7 +1022,6 @@
     @media (max-width: 600px) {
       .journal-grid { grid-template-columns: 1fr; }
       .spec-row { grid-template-columns: 1fr; gap: 2px; }
-      .top-meta .clock { display: none; }
 
       /* tighter, cleaner phone layout */
       .hero { padding-top: 28px; }
@@ -1079,7 +1080,6 @@
       <a href="#" class="brand">Tashi&nbsp;Tash</a>
 
       <div class="top-meta">
-        <span class="mono clock" id="clock" aria-hidden="true"></span>
         <nav class="nav" aria-label="Main">
           <a href="#listen"><span>01</span>Listen</a>
           <a href="#reel"><span>02</span>Reel</a>
@@ -1559,10 +1559,9 @@
         <div class="about-grid">
           <div class="about-copy reveal">
             <p>
-              A personal archive of sound, movement, travel, and visual notes.
-            </p>
-            <p>
-              Tracks, skating, coastal light, and moments collected along the way. More tracks are coming soon.
+              A personal archive of sound, movement, travel, and visual notes.<br />
+              Tracks, skating, coastal light, and moments collected along the way.<br />
+              More tracks are coming soon.
             </p>
           </div>
 
@@ -1584,7 +1583,7 @@
   <footer>
     <div class="wrap">
       <div class="footer-grid">
-        <span class="mono">© 2026 Tashi Tash · Self-built in Munich · Shot on the way somewhere</span>
+        <span class="mono">© 2026 Tashi Tash · All rights reserved</span>
         <div class="footer-links">
           <a href="https://open.spotify.com/artist/7FUZtfPDdxJ5jMwZAiDwIK" target="_blank" rel="noopener noreferrer">Spotify</a>
           <a href="https://www.youtube.com/channel/UChlGxLLS810GARvKXGQAWwA" target="_blank" rel="noopener noreferrer">YouTube</a>
@@ -1638,19 +1637,6 @@
         }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
         items.forEach(function (el) { io.observe(el); });
-      }
-
-      /* local time in the top bar */
-      var clock = document.getElementById('clock');
-      if (clock) {
-        function tick() {
-          var d = new Date();
-          var h = String(d.getHours()).padStart(2, '0');
-          var m = String(d.getMinutes()).padStart(2, '0');
-          clock.textContent = 'Local — ' + h + ':' + m;
-        }
-        tick();
-        setInterval(tick, 30000);
       }
 
       /* ---- reel lightbox: tap the expand button to watch a clip large ---- */
@@ -2056,7 +2042,15 @@
         var m = Math.floor(s / 60), r = Math.floor(s % 60);
         return m + ':' + (r < 10 ? '0' : '') + r;
       }
-      function soloOnly(keep) { audios.forEach(function (a) { if (a !== keep && !a.paused) a.pause(); }); }
+      /* only the track that is playing keeps its position: every other one is
+         paused and rewound, so picking it again starts it from the beginning */
+      function soloOnly(keep) {
+        audios.forEach(function (a) {
+          if (a === keep) return;
+          if (!a.paused) a.pause();
+          if (a.currentTime > 0) { try { a.currentTime = 0; } catch (err) {} }
+        });
+      }
 
       /* ---- Media Session: lock screen / control centre / AirPods show title, cover, prev & next ---- */
       var ms = ('mediaSession' in navigator) ? navigator.mediaSession : null;
@@ -2194,7 +2188,7 @@
         audio.addEventListener('ended', function () {
           audio.currentTime = 0; paint();
           var next = audios[index + 1];
-          if (next) next.play().catch(function () {});
+          if (next) { try { next.currentTime = 0; } catch (err) {} next.play().catch(function () {}); }
         });
 
         function toggle() { if (audio.paused) audio.play().catch(function () {}); else audio.pause(); }
