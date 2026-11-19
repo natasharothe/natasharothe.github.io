@@ -2024,7 +2024,12 @@
             if (activeIdx < n - 1) {
               activate(activeIdx + 1);   // advance 1 -> 2 -> 3
             } else {
-              sequenceDone = true;       // last clip finished; the visitor decides when to move on
+              sequenceDone = true;       // last clip finished
+              /* glide on to the next section, unless the visitor asked for reduced motion */
+              if (inView && !reduced.matches) {
+                var next = document.getElementById('blue-series');
+                if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
             }
           });
         });
