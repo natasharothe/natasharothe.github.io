@@ -2073,7 +2073,7 @@
                 cStatus.textContent = 'That did not go through. Please try again.';
               }
             })
-            .catch(function () { cStatus.textContent = 'No connection. Please try again.'; })
+            .catch(function () { cStatus.textContent = 'That did not go through. Please check your connection and try again.'; })
             .then(function () { cBtn.disabled = false; });
         });
       }
