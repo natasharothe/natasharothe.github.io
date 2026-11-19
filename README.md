@@ -46,6 +46,7 @@ The page has five sections: Listen, Reel, Blue Series, Journal, and About.
 ├── index.html            # Main website, styles, and client-side interactions
 ├── CNAME                 # Custom domain configuration
 ├── README.md             # Repository documentation
+├── .gitignore            # Keeps system and local files out of the repository
 ├── <song>.mp3            # One audio file per track, e.g. nothing-out-loud.mp3
 ├── <song>-cover.jpg      # Square cover for that track, 1000 × 1000
 ├── tashi-clip*.mp4       # Reel clips, each with a *-poster.jpg frame
@@ -75,4 +76,4 @@ The current implementation deliberately keeps the project dependency-free. No bu
 
 All tracks play through a single audio element whose source changes from song to song. This is what allows skipping and auto-advance to keep working on a locked phone, where browsers refuse to start a different audio element in the background.
 
-Repository housekeeping files such as `.gitignore`, `.gitattributes`, and `.editorconfig` are included to keep local development and future commits consistent without changing the published site.
+A `.gitignore` keeps system files and local environment files from being committed by accident. It has no effect on the published site.
