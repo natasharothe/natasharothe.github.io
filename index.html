@@ -920,7 +920,8 @@
       -webkit-appearance: none;
       appearance: none;
     }
-    .field textarea { display: block; min-height: 124px; resize: vertical; }
+    /* starts two lines tall and grows with the message */
+    .field textarea { display: block; min-height: 52px; resize: vertical; }
     .field input:-webkit-autofill {
       -webkit-text-fill-color: var(--white);
       transition: background-color 99999s ease-out;
@@ -1737,7 +1738,7 @@
             </div>
             <div class="field">
               <label class="mono" for="cf-message">Message</label>
-              <textarea id="cf-message" name="message" rows="5" required maxlength="3000"></textarea>
+              <textarea id="cf-message" name="message" rows="2" required maxlength="3000"></textarea>
             </div>
 
             <div class="form-foot">
@@ -2053,6 +2054,16 @@
       /* ---- contact form: sends through Web3Forms without leaving the page.
               Without JavaScript the form still posts normally and Web3Forms shows its own thank-you page. ---- */
       var cForm = document.getElementById('contact-form');
+      var cMsg = document.getElementById('cf-message');
+      function fitMessage() {
+        cMsg.style.height = 'auto';
+        cMsg.style.height = cMsg.scrollHeight + 'px';
+      }
+      if (cMsg) {
+        cMsg.style.overflow = 'hidden';
+        cMsg.style.resize = 'none';
+        cMsg.addEventListener('input', fitMessage);
+      }
       if (cForm && window.fetch && window.FormData) {
         var cStatus = document.getElementById('cf-status');
         var cBtn = cForm.querySelector('button[type="submit"]');
