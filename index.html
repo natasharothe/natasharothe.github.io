@@ -2566,6 +2566,40 @@
     })();
   </script>
 
+  <script>
+    /* ---- an image that fails to load (a dropped connection on mobile data, say)
+            is fetched again a few times instead of staying broken ---- */
+    (function () {
+      var MAX = 4;
+      function retry(img) {
+        var base = (img.getAttribute('src') || '').replace(/[?&]r=\d+$/, '');
+        if (!base) return;
+        var n = +(img.getAttribute('data-retry') || 0);
+        if (n >= MAX) return;
+        img.setAttribute('data-retry', n + 1);
+        setTimeout(function () {
+          img.src = base + (base.indexOf('?') < 0 ? '?' : '&') + 'r=' + (n + 1);
+        }, 600 * Math.pow(2, n));
+      }
+      document.addEventListener('error', function (e) {
+        var t = e.target;
+        if (t && t.tagName === 'IMG') retry(t);
+      }, true);
+      function sweep() {
+        document.querySelectorAll('img').forEach(function (img) {
+          if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) retry(img);
+        });
+      }
+      sweep();
+      window.addEventListener('load', sweep);
+      window.addEventListener('online', function () {
+        document.querySelectorAll('img[data-retry]').forEach(function (img) {
+          if (img.naturalWidth === 0) { img.setAttribute('data-retry', 0); retry(img); }
+        });
+      });
+    })();
+  </script>
+
   <!-- analytics: pinned to a fixed version; the integrity hash makes the browser
        refuse the file if it is ever changed on GoatCounter's server -->
   <script data-goatcounter="https://tashitash.goatcounter.com/count"
