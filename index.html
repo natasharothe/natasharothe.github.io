@@ -937,7 +937,12 @@
     button.btn:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
     button.btn[disabled] { opacity: 0.55; cursor: default; }
     .form-status { margin: 0; color: var(--white); }
-    .form-note { margin: 16px 0 0; max-width: 48ch; font-size: 12.5px; line-height: 1.6; color: var(--grey); }
+    .form-status:focus { outline: none; }
+
+    /* once a message is sent, the fields and button step aside for the thank-you line */
+    .contact-form.is-sent .field,
+    .contact-form.is-sent button { display: none; }
+    .contact-form.is-sent .form-foot { padding: 16px 2px 12px; border-bottom: 1px solid var(--line); }
 
     .spec-row .value a {
       border-bottom: 1px solid var(--grey-dark);
@@ -1739,7 +1744,6 @@
               <button class="btn solid" type="submit">Send message</button>
               <p class="mono form-status" id="cf-status" role="status" aria-live="polite"></p>
             </div>
-            <p class="form-note">Your message is delivered by email through Web3Forms and used only to answer you.</p>
           </form>
         </div>
       </div>
@@ -2067,6 +2071,9 @@
               if (res.ok) {
                 cForm.reset();
                 cStatus.textContent = 'Thank you. Your message is on its way.';
+                cForm.classList.add('is-sent');
+                cStatus.setAttribute('tabindex', '-1');
+                cStatus.focus();
               } else if (res.code === 429) {
                 cStatus.textContent = 'Too many messages just now. Please try again in a little while.';
               } else {
