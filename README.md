@@ -12,7 +12,7 @@ This repository contains the source for the Tashi Tash website, published via Gi
 
 The site is intentionally lightweight and framework-free. It is built with HTML, CSS, and vanilla JavaScript in a single `index.html`, with web fonts and privacy-conscious analytics as the only third-party services.
 
-The page has five sections: Listen, Reel, Blue Series, Journal, and About.
+The page has six sections: Listen, Reel, Blue Series, Journal, About, and Contact.
 
 ## Features
 
@@ -24,6 +24,7 @@ The page has five sections: Listen, Reel, Blue Series, Journal, and About.
 - Cover and photo lightbox that opens by click or keyboard and keeps focus inside the open dialog
 - Photos served in smaller WebP sizes that match the screen, with the full-size original loaded only in the lightbox
 - A visible message with a retry when a track cannot be loaded
+- Contact form that sends messages by email through Web3Forms, so no address appears on the site
 - Custom reel with video playback, navigation, progress indicators, and audio state handling
 - Scroll reveal interactions using `IntersectionObserver`
 - Reduced-motion support via `prefers-reduced-motion`
@@ -38,6 +39,7 @@ The page has five sections: Listen, Reel, Blue Series, Journal, and About.
 - Vanilla JavaScript
 - Media Session API
 - Google Fonts (Archivo, Space Mono)
+- Web3Forms (contact form delivery)
 - GitHub Pages
 - GoatCounter
 
@@ -70,6 +72,10 @@ The player picks up every `.player` block on the page automatically, including f
 ## Replacing a photo
 
 Each photo exists as a full-size `.jpeg` in the root and as smaller `.webp` versions in `img/`, listed in the image's `srcset` in `index.html`. When a photo is replaced, regenerate its versions in `img/` under the same names, otherwise phones keep showing the old picture.
+
+## Contact form
+
+The form in the Contact section posts to Web3Forms, which forwards each message by email. The `access_key` in the form is public by design: it identifies the form and can only be used to send a message to it. The receiving address is set in the Web3Forms account and is not part of this repository. A hidden `botcheck` field catches simple spam bots.
 
 ## Deployment
 

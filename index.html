@@ -4,8 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- content security policy: the page may only load scripts, styles, fonts, images
-       and media from itself and the few services listed here -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tashitash.goatcounter.com; media-src 'self' blob:; connect-src 'self' https://tashitash.goatcounter.com; object-src 'none'; base-uri 'self'; form-action 'none'" />
+       and media from itself and the few services listed here; the contact form may
+       post to Web3Forms only -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://tashitash.goatcounter.com; media-src 'self' blob:; connect-src 'self' https://tashitash.goatcounter.com https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action https://api.web3forms.com" />
   <title>Tashi Tash — Sets, Movement, Journal</title>
   <meta
     name="description"
@@ -886,6 +887,58 @@
 
     .spec-row .value { font-size: 15.5px; word-break: break-word; }
 
+    /* ---------- contact form: same ruled rows as the table above ---------- */
+
+    .contact-form { border-top: 1px solid var(--line); }
+    .contact-form .hp { display: none; }
+
+    .field {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 16px;
+      padding: 12px 2px;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+      transition: border-color 0.18s ease;
+    }
+    .field:focus-within { border-bottom-color: var(--line-strong); }
+    .field:focus-within label { color: var(--white); }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      outline: none;
+      background: transparent;
+      color: var(--white);
+      font: inherit;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .field textarea { display: block; min-height: 124px; resize: vertical; }
+    .field input:-webkit-autofill {
+      -webkit-text-fill-color: var(--white);
+      transition: background-color 99999s ease-out;
+    }
+
+    .form-foot {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px 20px;
+      padding-top: 20px;
+    }
+    button.btn { cursor: pointer; }
+    button.btn:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+    button.btn[disabled] { opacity: 0.55; cursor: default; }
+    .form-status { margin: 0; color: var(--white); }
+    .form-note { margin: 16px 0 0; max-width: 48ch; font-size: 12.5px; line-height: 1.6; color: var(--grey); }
+
     .spec-row .value a {
       border-bottom: 1px solid var(--grey-dark);
       transition: border-color 0.18s ease;
@@ -1041,6 +1094,7 @@
     @media (max-width: 600px) {
       .journal-grid { grid-template-columns: 1fr; }
       .spec-row { grid-template-columns: 1fr; gap: 2px; }
+      .field { grid-template-columns: 1fr; gap: 4px; }
 
       /* tighter, cleaner phone layout */
       .hero { padding-top: 28px; }
@@ -1075,8 +1129,8 @@
       }
       .nav::-webkit-scrollbar { display: none; }
       .nav a { font-size: 11px; letter-spacing: 0.06em; white-space: nowrap; flex: 0 0 auto; }
-      .nav a span:not(.sm-hide) { margin-right: 3px; }
-      .nav a .sm-hide { display: none; }
+      /* six links only fit a phone without their numbers */
+      .nav a span { display: none; }
     }
 
     @media (max-width: 380px) {
@@ -1105,6 +1159,7 @@
           <a href="#blue-series"><span>03</span>Blue<span class="sm-hide">&nbsp;Series</span></a>
           <a href="#journal"><span>04</span>Journal</a>
           <a href="#about"><span>05</span>About</a>
+          <a href="#contact"><span>06</span>Contact</a>
         </nav>
       </div>
     </div>
@@ -1644,6 +1699,51 @@
         </div>
       </div>
     </section>
+
+    <section class="section" id="contact">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="track-no">06</span>
+          <h2>Contact</h2>
+          <span class="mono">Say hello</span>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-copy reveal">
+            <p>
+              Collaborations, questions, or a few words about a song.<br />
+              Write here and you will get a reply by email.
+            </p>
+          </div>
+
+          <form class="contact-form reveal" id="contact-form" style="--d:.12s" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="1d3dc907-39e2-4033-a2f5-32935836cc1b" />
+            <input type="hidden" name="subject" value="New message from tashitash.com" />
+            <input type="hidden" name="from_name" value="tashitash.com contact form" />
+            <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+            <div class="field">
+              <label class="mono" for="cf-name">Name</label>
+              <input id="cf-name" name="name" type="text" autocomplete="name" required maxlength="80" />
+            </div>
+            <div class="field">
+              <label class="mono" for="cf-email">Email</label>
+              <input id="cf-email" name="email" type="email" autocomplete="email" required maxlength="120" />
+            </div>
+            <div class="field">
+              <label class="mono" for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" rows="5" required maxlength="3000"></textarea>
+            </div>
+
+            <div class="form-foot">
+              <button class="btn solid" type="submit">Send message</button>
+              <p class="mono form-status" id="cf-status" role="status" aria-live="polite"></p>
+            </div>
+            <p class="form-note">Your message is delivered by email through Web3Forms and used only to answer you.</p>
+          </form>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -1943,6 +2043,38 @@
           if (e.key === 'Escape') closeLb();
           if (e.key === 'ArrowLeft') step(-1);
           if (e.key === 'ArrowRight') step(1);
+        });
+      }
+
+      /* ---- contact form: sends through Web3Forms without leaving the page.
+              Without JavaScript the form still posts normally and Web3Forms shows its own thank-you page. ---- */
+      var cForm = document.getElementById('contact-form');
+      if (cForm && window.fetch && window.FormData) {
+        var cStatus = document.getElementById('cf-status');
+        var cBtn = cForm.querySelector('button[type="submit"]');
+        cForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (cBtn.disabled) return;
+          cBtn.disabled = true;
+          cStatus.textContent = 'Sending…';
+          fetch(cForm.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(cForm) })
+            .then(function (r) {
+              return r.json().then(
+                function (j) { return { ok: r.ok && j && j.success === true, code: r.status }; },
+                function () { return { ok: false, code: r.status }; });
+            })
+            .then(function (res) {
+              if (res.ok) {
+                cForm.reset();
+                cStatus.textContent = 'Thank you. Your message is on its way.';
+              } else if (res.code === 429) {
+                cStatus.textContent = 'Too many messages just now. Please try again in a little while.';
+              } else {
+                cStatus.textContent = 'That did not go through. Please try again.';
+              }
+            })
+            .catch(function () { cStatus.textContent = 'No connection. Please try again.'; })
+            .then(function () { cBtn.disabled = false; });
         });
       }
 
