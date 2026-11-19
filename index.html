@@ -335,6 +335,21 @@
 
     .frame:hover img { transform: scale(1.025); }
 
+    /* each photo sits in a real button, so it opens by keyboard as well as by click */
+    .frame-open {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font: inherit;
+      line-height: 0;
+      cursor: zoom-in;
+    }
+    .frame-open:focus-visible { outline: 2px solid var(--white); outline-offset: -4px; }
+
     .frame-bar {
       display: flex;
       justify-content: space-between;
@@ -713,6 +728,8 @@
 
     .player-meta { min-width: 0; padding-right: 8px; }
     .player-meta .mono { white-space: nowrap; }
+    .player-meta .track-error { display: block; margin-top: 4px; color: var(--white); white-space: normal; }
+    .player-meta .track-error[hidden] { display: none; }
     .player-title {
       margin: 0 0 2px;
       font-weight: 700;
@@ -1116,7 +1133,9 @@
         </div>
 
         <figure class="frame hero-frame">
-          <img src="tashitashonherway.jpeg" alt="Tashi Tash on her way" decoding="async" fetchpriority="high" />
+          <button class="frame-open" type="button" aria-label="Open photo: Tashi Tash on her way">
+            <img src="tashitashonherway.jpeg" srcset="img/tashitashonherway-480.webp 480w, img/tashitashonherway-960.webp 960w, tashitashonherway.jpeg 1050w" sizes="(max-width: 920px) 92vw, 31vw" alt="Tashi Tash on her way" decoding="async" fetchpriority="high" />
+          </button>
           <figcaption class="frame-bar">
             <p class="note">On her way.</p>
             <span class="mono">En route</span>
@@ -1452,7 +1471,9 @@
         <div class="series-grid">
           <figure class="frame reveal">
             <div class="frame-head"><span class="mono">BS 01</span><span class="mono">Blue</span></div>
-            <img src="blueseriestashi.jpeg" alt="Tashi, blue series" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Tashi, blue series">
+              <img src="blueseriestashi.jpeg" srcset="img/blueseriestashi-480.webp 480w, img/blueseriestashi-960.webp 960w, img/blueseriestashi-1280.webp 1280w, blueseriestashi.jpeg 1920w" sizes="(max-width: 920px) 92vw, 28vw" alt="Tashi, blue series" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Tashi.</p>
             </figcaption>
@@ -1460,7 +1481,9 @@
 
           <figure class="frame reveal" style="--d:.12s">
             <div class="frame-head"><span class="mono">BS 02</span><span class="mono">Blue</span></div>
-            <img src="blueserieshandinhandwithmartin.jpeg" alt="Hand in hand with Martin, blue series" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Hand in hand with Martin, blue series">
+              <img src="blueserieshandinhandwithmartin.jpeg" srcset="img/blueserieshandinhandwithmartin-480.webp 480w, img/blueserieshandinhandwithmartin-960.webp 960w, img/blueserieshandinhandwithmartin-1280.webp 1280w, blueserieshandinhandwithmartin.jpeg 1440w" sizes="(max-width: 920px) 92vw, 28vw" alt="Hand in hand with Martin, blue series" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Hand in hand for 19 years.</p>
             </figcaption>
@@ -1468,7 +1491,9 @@
 
           <figure class="frame reveal" style="--d:.24s">
             <div class="frame-head"><span class="mono">BS 03</span><span class="mono">Blue</span></div>
-            <img src="blueseriesmartinandtashi.jpeg" alt="Martin and Tashi, blue series" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Martin and Tashi, blue series">
+              <img src="blueseriesmartinandtashi.jpeg" srcset="img/blueseriesmartinandtashi-480.webp 480w, img/blueseriesmartinandtashi-960.webp 960w, img/blueseriesmartinandtashi-1280.webp 1280w, blueseriesmartinandtashi.jpeg 2560w" sizes="(max-width: 920px) 92vw, 28vw" alt="Martin and Tashi, blue series" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Martin &amp; Tashi.</p>
             </figcaption>
@@ -1488,7 +1513,9 @@
         <div class="journal-grid">
           <figure class="frame reveal">
             <div class="frame-head"><span class="mono">FR 01</span><span class="mono">Zion</span></div>
-            <img src="cyclinginzion.jpeg" alt="Cycling in Zion" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Cycling in Zion">
+              <img src="cyclinginzion.jpeg" srcset="img/cyclinginzion-480.webp 480w, img/cyclinginzion-960.webp 960w, img/cyclinginzion-1280.webp 1280w, cyclinginzion.jpeg 1920w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Cycling in Zion" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Cycling out of Zion NP.</p>
             </figcaption>
@@ -1496,7 +1523,9 @@
 
           <figure class="frame reveal" style="--d:.1s">
             <div class="frame-head"><span class="mono">FR 02</span><span class="mono">Finland</span></div>
-            <img src="freezinginfinland.jpeg" alt="Freezing in Finland" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Freezing in Finland">
+              <img src="freezinginfinland.jpeg" srcset="img/freezinginfinland-480.webp 480w, img/freezinginfinland-960.webp 960w, img/freezinginfinland-1280.webp 1280w, freezinginfinland.jpeg 1440w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Freezing in Finland" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Freezing, worth it.</p>
             </figcaption>
@@ -1504,7 +1533,9 @@
 
           <figure class="frame reveal" style="--d:.2s">
             <div class="frame-head"><span class="mono">FR 03</span><span class="mono">Malibu</span></div>
-            <img src="malibustop.jpeg" alt="Stop in Malibu" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Stop in Malibu">
+              <img src="malibustop.jpeg" srcset="img/malibustop-480.webp 480w, img/malibustop-960.webp 960w, img/malibustop-1280.webp 1280w, malibustop.jpeg 1320w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Stop in Malibu" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Malibu, waiting on the light.</p>
             </figcaption>
@@ -1512,7 +1543,9 @@
 
           <figure class="frame reveal" style="--d:.3s">
             <div class="frame-head"><span class="mono">FR 04</span><span class="mono">Napa Valley</span></div>
-            <img src="napastop.jpeg" alt="Stop in Napa Valley" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Stop in Napa Valley">
+              <img src="napastop.jpeg" srcset="img/napastop-480.webp 480w, img/napastop-960.webp 960w, img/napastop-1280.webp 1280w, napastop.jpeg 1440w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Stop in Napa Valley" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Napa Valley, quick stop.</p>
             </figcaption>
@@ -1520,7 +1553,9 @@
 
           <figure class="frame reveal" style="--d:.4s">
             <div class="frame-head"><span class="mono">FR 05</span><span class="mono">Bahamas</span></div>
-            <img src="sailingbahamas.jpeg" alt="Sailing in the Bahamas" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Sailing in the Bahamas">
+              <img src="sailingbahamas.jpeg" srcset="img/sailingbahamas-480.webp 480w, img/sailingbahamas-960.webp 960w, img/sailingbahamas-1280.webp 1280w, sailingbahamas.jpeg 2560w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Sailing in the Bahamas" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Under sail, Bahamas.</p>
             </figcaption>
@@ -1528,7 +1563,9 @@
 
           <figure class="frame reveal">
             <div class="frame-head"><span class="mono">FR 06</span><span class="mono">Greece</span></div>
-            <img src="intothedeepblueocean.jpeg" alt="Deep blue sea in Greece" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Deep blue sea in Greece">
+              <img src="intothedeepblueocean.jpeg" srcset="img/intothedeepblueocean-480.webp 480w, img/intothedeepblueocean-960.webp 960w, img/intothedeepblueocean-1280.webp 1280w, intothedeepblueocean.jpeg 1920w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Deep blue sea in Greece" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Into the deep blue.</p>
             </figcaption>
@@ -1536,7 +1573,9 @@
 
           <figure class="frame reveal" style="--d:.08s">
             <div class="frame-head"><span class="mono">FR 07</span><span class="mono">Miami</span></div>
-            <img src="miami.jpeg" alt="Miami" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Miami">
+              <img src="miami.jpeg" srcset="img/miami-480.webp 480w, img/miami-960.webp 960w, img/miami-1280.webp 1280w, miami.jpeg 1440w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Miami" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Miami light.</p>
             </figcaption>
@@ -1544,7 +1583,9 @@
 
           <figure class="frame reveal" style="--d:.16s">
             <div class="frame-head"><span class="mono">FR 08</span><span class="mono">Malibu</span></div>
-            <img src="malibu.jpeg" alt="Malibu" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Malibu">
+              <img src="malibu.jpeg" srcset="img/malibu-480.webp 480w, img/malibu-960.webp 960w, img/malibu-1280.webp 1280w, malibu.jpeg 1920w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Malibu" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Back in Malibu.</p>
             </figcaption>
@@ -1552,7 +1593,9 @@
 
           <figure class="frame reveal" style="--d:.24s">
             <div class="frame-head"><span class="mono">FR 09</span><span class="mono">Santa Monica</span></div>
-            <img src="santamonica.jpeg" alt="Santa Monica" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Santa Monica">
+              <img src="santamonica.jpeg" srcset="img/santamonica-480.webp 480w, img/santamonica-960.webp 960w, img/santamonica-1280.webp 1280w, santamonica.jpeg 1920w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Santa Monica" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Santa Monica.</p>
             </figcaption>
@@ -1560,7 +1603,9 @@
 
           <figure class="frame reveal" style="--d:.32s">
             <div class="frame-head"><span class="mono">FR 10</span><span class="mono">Venice</span></div>
-            <img src="tashiinvenice.jpeg" alt="Tashi at Venice skatepark" loading="lazy" decoding="async" />
+            <button class="frame-open" type="button" aria-label="Open photo: Tashi at Venice skatepark">
+              <img src="tashiinvenice.jpeg" srcset="img/tashiinvenice-480.webp 480w, img/tashiinvenice-960.webp 960w, img/tashiinvenice-1280.webp 1280w, tashiinvenice.jpeg 1920w" sizes="(max-width: 600px) 92vw, (max-width: 1080px) 46vw, 16vw" alt="Tashi at Venice skatepark" loading="lazy" decoding="async" />
+            </button>
             <figcaption class="frame-bar">
               <p class="note">Venice skatepark.</p>
             </figcaption>
@@ -1641,6 +1686,19 @@
     (function () {
       var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
       if (reduced.matches) document.documentElement.classList.add('reduced-motion');
+
+      /* keep Tab inside an open dialog instead of letting it wander to the page behind */
+      function trapTab(dialog, e) {
+        if (e.key !== 'Tab') return;
+        var stops = Array.prototype.filter.call(
+          dialog.querySelectorAll('button, [href], video[controls], [tabindex]:not([tabindex="-1"])'),
+          function (el) { return !el.disabled && el.offsetParent !== null; });
+        if (!stops.length) { e.preventDefault(); return; }
+        var first = stops[0], last = stops[stops.length - 1], active = document.activeElement;
+        if (!dialog.contains(active)) { e.preventDefault(); first.focus(); }
+        else if (e.shiftKey && active === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && active === last) { e.preventDefault(); first.focus(); }
+      }
 
       /* scroll reveal */
       var items = document.querySelectorAll('.reveal');
@@ -1730,6 +1788,7 @@
 
         document.addEventListener('keydown', function (e) {
           if (!rlb.classList.contains('open')) return;
+          trapTab(rlb, e);
           if (e.key === 'Escape') rlbClose();
           if (e.key === 'ArrowLeft') rlbStep(-1);
           if (e.key === 'ArrowRight') rlbStep(1);
@@ -1866,10 +1925,8 @@
         });
 
         frames.forEach(function (frame, i) {
-          var img = frame.querySelector('img');
-          if (img) {
-            img.addEventListener('click', function () { openLb(i); });
-          }
+          var opener = frame.querySelector('.frame-open') || frame.querySelector('img');
+          if (opener) opener.addEventListener('click', function () { openLb(i); });
         });
 
         lb.querySelector('.lb-close').addEventListener('click', closeLb);
@@ -1882,6 +1939,7 @@
 
         document.addEventListener('keydown', function (e) {
           if (!lb.classList.contains('open')) return;
+          trapTab(lb, e);
           if (e.key === 'Escape') closeLb();
           if (e.key === 'ArrowLeft') step(-1);
           if (e.key === 'ArrowRight') step(1);
@@ -1966,11 +2024,7 @@
             if (activeIdx < n - 1) {
               activate(activeIdx + 1);   // advance 1 -> 2 -> 3
             } else {
-              sequenceDone = true;       // clip 3 finished
-              if (inView) {              // glide on to the next section
-                var next = document.getElementById('blue-series');
-                if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
+              sequenceDone = true;       // last clip finished; the visitor decides when to move on
             }
           });
         });
@@ -2124,9 +2178,10 @@
       function start(i, fraction) {
         var t = tracks[i];
         if (!t) return;
-        if (i !== current) {
+        if (i !== current || t.failed) {
           var old = tracks[current];
-          if (old) { setPlayingUI(old, false); paint(old, 0); }
+          if (old && old !== t) { setPlayingUI(old, false); paint(old, 0); clearError(old); }
+          clearError(t);
           current = i;
           pendingSeek = (typeof fraction === 'number') ? fraction : null;
           engine.src = t.src;
@@ -2136,7 +2191,27 @@
           seekFraction(fraction);
         }
         var p = engine.play();
-        if (p && p.catch) p.catch(function () {});
+        if (p && p.catch) p.catch(function (err) { playFailed(t, err); });
+      }
+      /* a track that cannot be loaded says so in its row; pressing play tries again */
+      function showError(t) {
+        if (!t) return;
+        t.failed = true;
+        setPlayingUI(t, false);
+        t.root.classList.add('has-error');
+        if (t.errEl) t.errEl.hidden = false;
+      }
+      function clearError(t) {
+        if (!t || !t.failed) return;
+        t.failed = false;
+        t.root.classList.remove('has-error');
+        if (t.errEl) t.errEl.hidden = true;
+      }
+      function playFailed(t, err) {
+        var name = err && err.name;
+        /* AbortError: a newer track took over. NotAllowedError: the browser wants a tap first. */
+        if (name === 'AbortError' || name === 'NotAllowedError') return;
+        if (t === tracks[current]) showError(t);
       }
       function seekFraction(f) {
         var t = tracks[current];
@@ -2198,6 +2273,7 @@
       /* Safari only trusts metadata once sound is really running, so repeat it here */
       engine.addEventListener('playing', function () {
         var t = tracks[current]; if (!t) return;
+        clearError(t);
         setPlayingUI(t, true);
         msSetMeta(t);
         msRegister();
@@ -2221,6 +2297,9 @@
       });
       engine.addEventListener('timeupdate', function () {
         var t = tracks[current]; if (t && pendingSeek === null) paint(t, engine.currentTime);
+      });
+      engine.addEventListener('error', function () {
+        if (engine.getAttribute('src')) showError(tracks[current]);
       });
       engine.addEventListener('seeked', msSetPosition);
       engine.addEventListener('ratechange', msSetPosition);
@@ -2255,6 +2334,16 @@
           total: parseTotal(timeEl ? timeEl.textContent : '')
         };
         var index = tracks.push(t) - 1;
+
+        var meta = root.querySelector('.player-meta');
+        if (meta) {
+          t.errEl = document.createElement('span');
+          t.errEl.className = 'mono track-error';
+          t.errEl.setAttribute('role', 'status');
+          t.errEl.hidden = true;
+          t.errEl.textContent = "Couldn't load. Press play to try again.";
+          meta.appendChild(t.errEl);
+        }
 
         /* build the bars from the measured loudness of the track */
         var peaks = [];

@@ -21,7 +21,9 @@ The page has five sections: Listen, Reel, Blue Series, Journal, and About.
 - Waveforms drawn from the measured loudness of each track, redrawn to fit the available width
 - Continuous playback: one track at a time, rolling on to the next when a song ends
 - Media Session support, so the lock screen, control centre, AirPods, and car controls show title, artist, and cover and can pause, skip, and seek
-- Cover and photo lightbox with keyboard navigation
+- Cover and photo lightbox that opens by click or keyboard and keeps focus inside the open dialog
+- Photos served in smaller WebP sizes that match the screen, with the full-size original loaded only in the lightbox
+- A visible message with a retry when a track cannot be loaded
 - Custom reel with video playback, navigation, progress indicators, and audio state handling
 - Scroll reveal interactions using `IntersectionObserver`
 - Reduced-motion support via `prefers-reduced-motion`
@@ -50,7 +52,8 @@ The page has five sections: Listen, Reel, Blue Series, Journal, and About.
 ├── <song>.mp3            # One audio file per track, e.g. nothing-out-loud.mp3
 ├── <song>-cover.jpg      # Square cover for that track, 1000 × 1000
 ├── tashi-clip*.mp4       # Reel clips, each with a *-poster.jpg frame
-├── *.jpeg                # Blue Series and Journal photos
+├── *.jpeg                # Blue Series and Journal photos, full size
+├── img/                  # Smaller WebP versions of those photos (480, 960, 1280 px wide)
 └── icons and og-image    # Favicons, touch icons, and the link preview image
 ```
 
@@ -63,6 +66,10 @@ Each song is one `.player` block in the Listen section of `index.html`. A new tr
 3. The song's length in the time label (`0:00 / 3:37`) and its loudness curve in `data-peaks` (110 values between 0 and 1).
 
 The player picks up every `.player` block on the page automatically, including for skip and lock-screen controls.
+
+## Replacing a photo
+
+Each photo exists as a full-size `.jpeg` in the root and as smaller `.webp` versions in `img/`, listed in the image's `srcset` in `index.html`. When a photo is replaced, regenerate its versions in `img/` under the same names, otherwise phones keep showing the old picture.
 
 ## Deployment
 
