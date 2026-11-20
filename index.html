@@ -2600,6 +2600,52 @@
     })();
   </script>
 
+  <script>
+    /* ---- anonymous counters for what visitors do: which song is started and
+            finished, clicks out to Spotify and the like, and messages sent.
+            No names, no cookies, nothing about the person. ---- */
+    (function () {
+      var sent = {};
+      function track(name, title) {
+        if (sent[name]) return;
+        sent[name] = true;
+        var tries = 0;
+        (function send() {
+          if (window.goatcounter && window.goatcounter.count) {
+            try { window.goatcounter.count({ path: name, title: title || name, event: true }); } catch (e) {}
+          } else if (tries++ < 20) { setTimeout(send, 500); }
+        })();
+      }
+      function song(el) {
+        var m = (el.currentSrc || el.src || '').match(/([a-z0-9-]+)\.mp3/i);
+        return m ? m[1] : '';
+      }
+      var engine = document.querySelector('audio[data-engine]');
+      if (engine) {
+        var now = '';   /* the player swaps the source when a song ends, so remember what was playing */
+        engine.addEventListener('playing', function () {
+          now = song(engine);
+          if (now) track('play-' + now, 'Play: ' + now.replace(/-/g, ' '));
+        });
+        engine.addEventListener('ended', function () {
+          if (now) track('finished-' + now, 'Finished: ' + now.replace(/-/g, ' '));
+        });
+      }
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest ? e.target.closest('a[href^="http"]') : null;
+        if (!a || a.hostname === location.hostname) return;
+        var site = a.hostname.replace(/^(www|open)\./, '').split('.')[0];
+        track('click-' + site, 'Click: ' + site);
+      }, true);
+      var form = document.getElementById('contact-form');
+      if (form && window.MutationObserver) {
+        new MutationObserver(function () {
+          if (form.classList.contains('is-sent')) track('contact-sent', 'Contact form sent');
+        }).observe(form, { attributes: true, attributeFilter: ['class'] });
+      }
+    })();
+  </script>
+
   <!-- analytics: pinned to a fixed version; the integrity hash makes the browser
        refuse the file if it is ever changed on GoatCounter's server -->
   <script data-goatcounter="https://tashitash.goatcounter.com/count"

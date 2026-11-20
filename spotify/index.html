@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="canonical" href="https://open.spotify.com/artist/7FUZtfPDdxJ5jMwZAiDwIK" />
-  <meta http-equiv="refresh" content="0; url=https://open.spotify.com/artist/7FUZtfPDdxJ5jMwZAiDwIK" />
+  <noscript><meta http-equiv="refresh" content="0; url=https://open.spotify.com/artist/7FUZtfPDdxJ5jMwZAiDwIK" /></noscript>
   <style>
     body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0d0d0d; color: #f4f4f1; font: 16px/1.6 system-ui, sans-serif; }
     a { color: inherit; }
@@ -14,5 +14,23 @@
 </head>
 <body>
   <p>Opening Spotify… <a href="https://open.spotify.com/artist/7FUZtfPDdxJ5jMwZAiDwIK">Tap here if nothing happens.</a></p>
+  <script>
+    /* count the visit anonymously, then go on to Spotify; never wait longer than a moment */
+    (function () {
+      var url = 'https://open.spotify.com/artist/7FUZtfPDdxJ5jMwZAiDwIK', gone = false;
+      function go() { if (!gone) { gone = true; location.replace(url); } }
+      window.counted = function () {
+        try { window.goatcounter.count({ path: '/spotify', title: 'Short link to Spotify' }); } catch (e) {}
+        setTimeout(go, 120);
+      };
+      setTimeout(go, 1200);
+    })();
+  </script>
+  <script data-goatcounter="https://tashitash.goatcounter.com/count"
+    data-goatcounter-settings='{"no_onload": true}'
+    async src="https://gc.zgo.at/count.v5.js"
+    crossorigin="anonymous"
+    integrity="sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ"
+    onload="counted()" onerror="location.replace('https://open.spotify.com/artist/7FUZtfPDdxJ5jMwZAiDwIK')"></script>
 </body>
 </html>

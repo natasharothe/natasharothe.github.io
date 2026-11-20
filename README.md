@@ -30,7 +30,7 @@ The page has six sections: Listen, Reel, Blue Series, Journal, About, and Contac
 - Reduced-motion support via `prefers-reduced-motion`
 - Open Graph tags and JSON-LD structured data for link previews and search
 - Custom GitHub Pages domain via `CNAME`
-- GoatCounter analytics
+- GoatCounter analytics, including anonymous counters for song plays, songs played to the end, outbound clicks, and sent contact messages
 
 ## Technology
 
@@ -77,6 +77,10 @@ Each photo exists as a full-size `.jpeg` in the root and as smaller `.webp` vers
 ## Contact form
 
 The form in the Contact section posts to Web3Forms, which forwards each message by email. The `access_key` in the form is public by design: it identifies the form and can only be used to send a message to it. The receiving address is set in the Web3Forms account and is not part of this repository. A hidden `botcheck` field catches simple spam bots.
+
+## Analytics
+
+GoatCounter counts page views without cookies. On top of that, `index.html` sends anonymous events: `play-<song>` and `finished-<song>` (once per song per visit), `click-<site>` for links that leave the site, and `contact-sent`. The short link `tashitash.com/spotify` counts itself as a page view before forwarding. Opening `https://tashitash.com/#toggle-goatcounter` once in a browser excludes that browser from the statistics.
 
 ## Deployment
 
