@@ -55,6 +55,7 @@ The page has six sections: Listen, Reel, Blue Series, Journal, About, and Contac
 ├── <song>-cover.jpg      # Square cover for that track, 1000 × 1000
 ├── tashi-clip*.mp4       # Reel clips, each with a *-poster.jpg frame
 ├── *.jpeg                # Blue Series and Journal photos, full size
+├── spotify/index.html    # Short link: tashitash.com/spotify forwards to the Spotify artist page
 ├── img/                  # Smaller WebP versions of those photos (480, 960, 1280 px wide)
 └── icons and og-image    # Favicons, touch icons, and the link preview image
 ```
